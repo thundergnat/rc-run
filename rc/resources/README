@@ -16,8 +16,6 @@ camelia.png                     Bitmap/Read_an_image_through_a_pipe, Bitmap/Read
 
 comments.txt                    Strip_comments_from_a_string
 
-whatever.csv                    CSV_data_manipulation0, CSV_data_manipulation1
-
 DoWAKA.txt                      Abreviations,_automatic
 
 favicon.ico                     Base64_encode_data
@@ -47,5 +45,9 @@ test-case-3.txt                 Compiler/lexical_analyzer
 test.cfg                        Update_a_configuration_file
 
 unixdict.txt                    Anagrams, Anagrams/Deranged_anagrams,
-                                I_before_E_except_after_C0, Ordered_words, Textonyms 
+                                I_before_E_except_after_C0, Ordered_words, Textonyms
+
+whatever.csv                    CSV_data_manipulation0, CSV_data_manipulation1
+
+whatever                        Read_a_file_character_by_character/UTF8
 
