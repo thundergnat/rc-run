@@ -1,0 +1,26 @@
+Bells and whistles task implementation for http://rosettacode.org/wiki/Rosetta_Code/Run_examples
+
+Adjust the %resources hash to customize handling of the various tasks. By default is set up to be
+an fairly hands-off smoke tester. Will attempt to download all of the Perl 6 code for tasks that
+claim to have a Perl 6 eample, extracts blocks of code within <lang perl6> ... </lang> markup, then
+runs each block. The resources hash is configured to skip tasks with no code and fragment code blocks:
+blocks that will not compile or run because of missing features (mostly fragments of example code).
+It will skip blocks that require heavey user interaction (Probably will be adjustable with a
+paramter in the future), and limits very long or infinite running code to 15 CPU seconds or less.
+
+Run at a command line: perl6 RC-run.p6
+to try every implemented task.
+
+Feed it a task name to try only that task: perl6 RC-run.p6 Lucky_and_even_lucky_numbers
+(Replace spaces with underscores.)
+
+
+AUTHOR
+
+Stephen Schulze (often seen lurking on perlmonks.org and #perl6 IRC as
+thundergnat)
+
+LICENSE
+
+Licensed under The Artistic 2.0; see LICENSE.
+
