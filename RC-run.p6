@@ -250,6 +250,7 @@ sub load-resources {
     'Total_circles_area' => {'cmd' => "ulimit -t 10\n$exe Total_circles_area.p6"},
     'Rosetta_Code_Count_examples' => {'skip' => 'long & tested often'},
     'Rosetta_Code_List_authors_of_task_descriptions' => {'skip' => 'long & tested often'},
+    'Rosetta_Code_Run_examples' => {'skip' => 'it\'s this task!'},
     'Nautical_bell' => {'skip' => 'long (24 hours)'},
     'Self_referential_sequence' => {'cmd' => "ulimit -t 10\n$exe Self_referential_sequence.p6"},
     'Rosetta_Code_Tasks_without_examples' => {'skip' => 'long, net connection'},
