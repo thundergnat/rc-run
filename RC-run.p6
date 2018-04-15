@@ -93,7 +93,7 @@ sub run-it ($dir, $code) {
     }
     my @cmd = %resource{$code}<cmd> ?? |%resource{$code}<cmd> !! "$exe $code.p6";
     for @cmd -> $cmd {
-        say "Command line: $cmd\n";
+        say "\nCommand line: $cmd";
         try EVAL(shell $cmd);
     }
     chdir $current;
