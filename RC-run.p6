@@ -1,7 +1,6 @@
 use HTTP::UserAgent;
 use URI::Escape;
 use JSON::Fast;
-use Sort::Naturally;
 use MONKEY-SEE-NO-EVAL;
 
 my $client   = HTTP::UserAgent.new;
@@ -67,9 +66,9 @@ for @tasks -> $title {
     my @blocks = $entry.comb: $tag;
 
     unless @blocks {
-        if %resource{"$name$n"}<skip> {
+        if %resource{"$name"}<skip> {
             whoops;
-            say "Skipping $name$n: ", %resource{"$name$n"}<skip>, "\n";
+            say "Skipping $name: ", %resource{"$name"}<skip>, "\n";
         }
     }
 
