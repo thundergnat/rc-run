@@ -3,25 +3,73 @@ http://rosettacode.org/wiki/Rosetta_Code/Run_examples
 
 Adjust the %resources hash to customize handling of the various tasks. By
 default is set up to be an fairly hands-off smoke tester. Will attempt to
-download all of the Perl 6 code for tasks that claim to have a Perl 6 eample,
+download all of the Perl 6 code for tasks that claim to have a Perl 6 example,
 extracts blocks of code within <lang perl6> ... </lang> markup, then runs each
 block. The resources hash is configured to skip tasks with no code and fragment
 code blocks: blocks that will not compile or run because of missing features
 (mostly fragments of example code). It will skip blocks that require heavy user
-interaction (Probably will be adjustable with a paramter in the future), and
+interaction (Probably will be adjustable with a parameter in the future), and
 limits very long or infinite running code to 15 CPU seconds or less.
+
+Now displays each block of code it is trying to run before it tries to run it.
+Added some color to the various outputs to make it easier to discern what it is
+displaying.
+
+There is a configurable hash <%l> to set up to run for other languages. It
+should be pretty self-evident what each parameter is for.
+
+There are now several command line switches.
+
+RC-run.p6 [-f|--force] [-l|--local] [-r|--remote] [<run>]
+
+--force (-f) will force running of tasks that would normally be skipped due to a skip
+  parameter in the %resource hash. Does nothing unless the %resource hash has
+  been loaded.
+
+--local (-l) will try to use only local copies of already downloaded tasks.
+
+--remote (-r) will always try to download fresh copies of tasks.
+
+By default, if neither --local nor --remote are set, will download tasks if are
+not locally cached or are more than 7 days old (since the last time they were
+downloaded.)
 
 Run at a command line:
 
     perl6 RC-run.p6
 
-to try every implemented task.
+to try every implemented task. Or;
 
-Feed it a task name to try only that task:
+    perl6 RC-run.p6 -l
+
+to only use locally cached task files. Or,
+
+   perl6 RC-run.p6 -r
+
+to force downloading of tasks from the site. Or
+feed it a task name to try only that task:
 
     perl6 RC-run.p6 Lucky_and_even_lucky_numbers
 
-(Replace spaces with underscores.)
+(Replace spaces with underscores, or enclose in quotes)
+
+Or, pass in a file containing a list of tasks (one per line) and whatever other
+combination of parameters desired to try only that list of tasks.
+
+Parameters may be in any order but must be separate.
+
+    perl6 RC-run.p6 -l -f Anagrams
+
+is valid.
+
+    perl6 RC-run.p6 -lf Anagrams
+
+ is not.
+
+When running Perl 6 tasks, any task that requires an external module will
+trigger a module loading routine which will determine if the module is loaded
+and will download and install it if it is not.
+
 
 
 AUTHOR
