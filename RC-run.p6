@@ -5,23 +5,22 @@ use MONKEY-SEE-NO-EVAL;
 
 my %*SUB-MAIN-OPTS = :named-anywhere;
 
-unit sub MAIN( Str $run = '', Bool :f(:$force), Bool :l(:$local), Bool :r(:$remote) );
+unit sub MAIN(
+    Str $run = '',        # Task or file name
+    Str :$lang = 'perl6', # Language, default perl6
+    Int :$skip = 0,       # Skip # to continue partially into a list
+    Bool :f(:$force),     # Override any task skip parameter in %resource hash
+    Bool :l(:$local),     # Only use tasks from local cache
+    Bool :r(:$remote),    # Only use code from remote server (refresh local cache)
+    Bool :q(:$quiet),     # Less verbose, don't display source code
+    Bool :d(:$deps),      # Load dependencies
+    Bool :p(:$pause),     # pause after each task
+);
 
 die 'You can select local or remote, but not both...' if $local && $remote;
 
 my $client   = HTTP::UserAgent.new;
 my $url      = 'http://rosettacode.org/mw';
-
-my %l = ( # Language specific variables Adjust to suit
-    language => 'Perl_6', # language category name
-    exe      => 'perl6',  # executable name to run perl6 in a shell
-    ext      => '.p6',    # file extension for perl6 code
-    dir      => 'perl6',  # directory to save tasks to
-    header   => 'Perl 6', # header text
-    # tags marking blocks of code - spaced out to placate wiki formatter
-    # and to avoid getting tripped up when trying to run _this_ task
-    tag => rx/<?after '<lang ' 'perl6' '>' > .*? <?before '</' 'lang>'>/,
-);
 
 my %c = ( # text colors
     code  => "\e[0;92m", # green
@@ -31,8 +30,9 @@ my %c = ( # text colors
     clr   => "\e[0m",    # clear formatting
 );
 
-my $view     = 'xdg-open';  # image viewer, this will open default under Linux
-my %resource = load-resources();
+my $view      = 'xdg-open';       # image viewer, this will open default under Linux
+my %l         = load-lang($lang); # load languge paramters
+my %resource  = load-resources($lang);
 my $get-tasks = True;
 
 my @tasks;
@@ -41,17 +41,17 @@ run('clear');
 note 'Retrieving tasks';
 
 if $run {
-    if $run.IO.e and $run.IO.f {
-        @tasks = $run.IO.lines;
-    } else {
-        @tasks = ($run);
+    if $run.IO.e and $run.IO.f {# is it a file?
+        @tasks = $run.IO.lines; # yep, treat each line as a task name
+    } else {                    # must be a single task name
+        @tasks = ($run);        # treat it so
     }
-    $get-tasks = False;
+    $get-tasks = False;         # don't need to retreive task names from web
 }
 
-if $get-tasks {
-    if (("%l<language>.tasks".IO.modified//0 - now) > 86400 ) or $remote {
-        @tasks = mediawiki-query(
+if $get-tasks { # load tasks from web if no cache is not found, older than one day or forced
+    if !"%l<language>.tasks".IO.e or ("%l<language>.tasks".IO.modified - now) > 86400 or $remote {
+        @tasks = mediawiki-query( # get tasks from web
         $url, 'pages',
         :generator<categorymembers>,
         :gcmtitle("Category:%l<language>"),
@@ -61,18 +61,16 @@ if $get-tasks {
         )»<title>.grep( * !~~ /^'Category:'/ ).sort;
         "%l<exe>.tasks".IO.spurt: @tasks.sort.join("\n");
     } else {
-        @tasks = "%l<language>.tasks".IO.slurp;
+        @tasks = "%l<language>.tasks".IO.slurp; # load tasks from file
     }
 }
 
+note "Skipping first $skip tasks..." if $skip;
+
 for @tasks -> $title {
-    # If you want to resume partially into automatic
-    # downloads, adjust $skip to skip that many tasks
-    my $skip = 0;
     next if $++ < $skip;
-    note "Skipping first $skip tasks..." if $skip;
-    next unless $title ~~ /\S/; # filter blank lines
-    say $skip + ++$, " $title";
+    next unless $title ~~ /\S/; # filter blank lines (from files)
+    say $skip + ++$, ")  $title";
 
     my $name = $title.subst(/<-[-0..9A..Za..z]>/, '_', :g);
     my $taskdir = "./rc/%l<dir>/$name";
@@ -80,14 +78,15 @@ for @tasks -> $title {
     my $modified = "$taskdir/name.txt".IO.e ?? "$taskdir/name.txt".IO.modified !! 0;
 
     my $entry;
-    if $remote or (($modified - now) > 86400 * 7) {
+    if $remote or !"$taskdir/name.txt".IO.e or (($modified - now) > 86400 * 7) {
         my $page = $client.get("{ $url }/index.php?title={ uri-escape $title }&action=raw").content;
 
-        say %c<warn>, "Whoops, can't find page: $url/$title :check spelling.", %c<clr> and next if $page.elems == 0;
+        uh-oh("Whoops, can't find page: $url/$title :check spelling.") and next if $page.elems == 0;
         say "Getting code from: http://rosettacode.org/wiki/{ $title.subst(' ', '_', :g) }#%l<language>";
 
         my $header = %l<header>; # can't interpolate hash into regex
-        $entry = $page.comb(/'=={{header|' $header '}}==' .+? [<?before \n'=='<-[={]>*'{{header'> || $] /).Str // whoops;
+        $entry = $page.comb(/'=={{header|' $header '}}==' .+? [<?before \n'=='<-[={]>*'{{header'> || $] /).Str //
+          uh-oh("No code found\nMay be bad markup");
 
         my $lang = %l<language>; # can't interpolate hash into regex
         if $entry ~~ /^^ 'See [[' (.+?) '/' $lang / { # no code on main page, check sub page
@@ -108,7 +107,7 @@ for @tasks -> $title {
     my @blocks = $entry.comb: %l<tag>;
 
     unless @blocks {
-        whoops unless %resource{"$name"}<skip> ~~ /'ok to skip'/;
+        uh-oh("No code found\nMay be bad markup") unless %resource{"$name"}<skip> ~~ /'ok to skip'/;
         say "Skipping $name: ", %resource{"$name"}<skip>, "\n" if %resource{"$name"}<skip>
     }
 
@@ -127,7 +126,8 @@ for @tasks -> $title {
         say "\nTesting $name$n";
         run-it($taskdir, "$name$n");
     }
-    say '=' x 79;
+    say  %c<delim>, '=' x 79, %c<clr>;
+    pause if $pause;
 }
 
 sub mediawiki-query ($site, $type, *%query) {
@@ -149,8 +149,8 @@ sub run-it ($dir, $code) {
     if %resource{$code}<file> -> $fn {
         copy "$current/rc/resources/{$fn}", "./{$fn}"
     }
-    dump-code ("$code%l<ext>");
-    check-modules("$code%l<ext>") if %l<language> eq 'Perl_6';
+    dump-code ("$code%l<ext>") unless $quiet;
+    check-dependencies("$code%l<ext>", $lang) if $deps;
     my @cmd = %resource{$code}<cmd> ?? |%resource{$code}<cmd> !! "%l<exe> $code%l<ext>\n";
     for @cmd -> $cmd {
         say "\nCommand line: {%c<cmd>}$cmd",%c<clr>;
@@ -158,6 +158,12 @@ sub run-it ($dir, $code) {
     }
     chdir $current;
     say "\nDone $code";
+}
+
+sub pause {
+    prompt "Press enter to procede: >";
+    # or
+    # sleep 5;
 }
 
 sub dump-code ($fn) {
@@ -170,11 +176,9 @@ sub uri-query-string (*%fields) { %fields.map({ "{.key}={uri-escape .value}" }).
 
 sub clear { "\r" ~ ' ' x 100 ~ "\r" }
 
-sub whoops { say %c<warn>,"{'#' x 79}\n\nNo code found\nMay be bad markup\n\n{'#' x 79}",%c<clr> }
+sub uh-oh ($err) { put %c<warn>, "{'#' x 79}\n\n $err \n\n{'#' x 79}", %c<clr> }
 
-sub uh-oh ($err) { put %c<warn>, "{'#' x 79}\n\n$err;\n\n{'#' x 79}", %c<clr> }
-
-sub check-modules ($fn) {
+multi check-dependencies ($fn, 'perl6') {
     my @use = $fn.IO.slurp.comb(/<?after $$ 'use '> \N+? <?before \h* ';'>/);
     if +@use {
         for @use -> $module {
@@ -185,8 +189,44 @@ sub check-modules ($fn) {
     }
 }
 
-sub load-resources {
-    (
+multi check-dependencies  ($fn, $unknown) {
+    note "Sorry, don't know how to handle dependancies for $unknown language."
+};
+
+multi load-lang ('perl6') { ( # Language specific variables. Adjust to suit.
+    language => 'Perl_6', # language category name
+    exe      => 'perl6',  # executable name to run perl6 in a shell
+    ext      => '.p6',    # file extension for perl6 code
+    dir      => 'perl6',  # directory to save tasks to
+    header   => 'Perl 6', # header text
+    # tags marking blocks of code - spaced out to placate wiki formatter
+    # and to avoid getting tripped up when trying to run _this_ task
+    tag => rx/<?after '<lang ' 'perl6' '>' > .*? <?before '</' 'lang>'>/,
+) }
+
+multi load-lang ('perl') { (
+    language => 'Perl',
+    exe      => 'perl',
+    ext      => '.pl',
+    dir      => 'perl',
+    header   => 'Perl',
+    tag => rx/<?after '<lang ' 'perl' '>' > .*? <?before '</' 'lang>'>/,
+) }
+
+multi load-lang ('python') { (
+    language => 'Python',
+    exe      => 'python',
+    ext      => '.py',
+    dir      => 'python',
+    header   => 'Python',
+    tag => rx/<?after '<lang ' 'python' '>' > .*? <?before '</' 'lang>'>/,
+) }
+
+multi load-lang ($unknown) { die "Sorry, don't know how to handle $unknown language." };
+
+multi load-resources ($unknown) { () };
+
+multi load-resources ('perl6') { (
     'Amb1' => {'skip' => 'broken'},
     'Amb2' => {'skip' => 'broken'},
     'Formal_power_series' => {'skip' => 'broken'},
@@ -300,6 +340,7 @@ sub load-resources {
     'Dining_philosophers' => {'cmd' => "ulimit -t 1\n%l<exe> Dining_philosophers%l<ext>"},
     'Find_largest_left_truncatable_prime_in_a_given_base' => {'cmd' => "ulimit -t 15\n%l<exe> Find_largest_left_truncatable_prime_in_a_given_base%l<ext>"},
     'Four_is_the_number_of_letters_in_the____' => {'cmd' => "ulimit -t 13\n%l<exe> Four_is_the_number_of_letters_in_the____%l<ext>"},
+    '4-rings_or_4-squares_puzzle' =>{'cmd' => "ulimit -t 10\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
     'Iterated_digits_squaring0' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring0%l<ext>"},
     'Iterated_digits_squaring1' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring1%l<ext>"},
     'Iterated_digits_squaring2' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring2%l<ext>"},
@@ -362,7 +403,7 @@ sub load-resources {
     'A_B1' => { cmd => "echo '13 9' | %l<exe> A_B1%l<ext>" },
     'A_B2' => { cmd => "echo '13 9' | %l<exe> A_B2%l<ext>" },
     'Abbreviations__automatic' => {'file' => 'DoWAKA.txt'},
-    'Align_columns1' => {'file' => 'Align_columns1.txt'},
+    'Align_columns1' => {'file' => 'Align_columns1.txt', 'cmd' => "%l<exe> Align_columns1%l<ext> right Align_columns1.txt"},
     'Base64_encode_data' => { 'file' => 'favicon.ico' },
     'CSV_data_manipulation0' => {'file' => 'whatever.csv'},
     'CSV_data_manipulation1' => {'skip' => 'fragment'},
@@ -582,5 +623,4 @@ sub load-resources {
     'Munching_squares1' => {'cmd' => ["%l<exe> Munching_squares1%l<ext>\n","$view munching1.ppm"]},
     'Pinstripe_Display' => {'cmd' => ["%l<exe> Pinstripe_Display%l<ext>\n","$view pinstripes.pgm"]},
     'Plasma_effect' => {'cmd' => ["%l<exe> Plasma_effect%l<ext>\n","$view Plasma-perl6.png"]},
-    )
-}
+) }

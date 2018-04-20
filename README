@@ -20,7 +20,12 @@ should be pretty self-evident what each parameter is for.
 
 There are now several command line switches.
 
-RC-run.p6 [-f|--force] [-l|--local] [-r|--remote] [<run>]
+RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
+          [-q|--quiet] [-d|--deps] [-p|--pause] [<run>]
+
+ --lang (Default perl6) Same as in <lang *> markup on site
+
+ --skip Skip (int) number of tasks. Only meaningful if run from a file or web.
 
 --force (-f) will force running of tasks that would normally be skipped due to a skip
   parameter in the %resource hash. Does nothing unless the %resource hash has
@@ -29,6 +34,12 @@ RC-run.p6 [-f|--force] [-l|--local] [-r|--remote] [<run>]
 --local (-l) will try to use only local copies of already downloaded tasks.
 
 --remote (-r) will always try to download fresh copies of tasks.
+
+--quiet (-q) A little less verbose. Does not dump source code to screen.
+
+--deps (-d) Try to install dependencies if they are not.
+
+--pause (-p) Pause after every task.
 
 By default, if neither --local nor --remote are set, will download tasks if are
 not locally cached or are more than 7 days old (since the last time they were
@@ -66,9 +77,6 @@ is valid.
 
  is not.
 
-When running Perl 6 tasks, any task that requires an external module will
-trigger a module loading routine which will determine if the module is loaded
-and will download and install it if it is not.
 
 
 
