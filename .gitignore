@@ -2,3 +2,10 @@ rc/tasks
 rc/tasks/*
 rc/perl6
 rc/perl6/*
+rc/perl
+rc/perl/*
+rc/python
+rc/python/*
+perl6.tasks
+python.tasks
+perl.tasks
