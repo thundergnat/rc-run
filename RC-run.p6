@@ -7,10 +7,10 @@ my %*SUB-MAIN-OPTS = :named-anywhere;
 
 unit sub MAIN(
     Str $run = '',        # Task or file name
-    Str :$lang = 'perl6', # Language, default perl6
+    Str :$lang = 'perl6', # Language, default perl6 - should be same as in <lang *> markup
     Int :$skip = 0,       # Skip # to continue partially into a list
     Bool :f(:$force),     # Override any task skip parameter in %resource hash
-    Bool :l(:$local),     # Only use tasks from local cache
+    Bool :l(:$local),     # Only use code from local cache
     Bool :r(:$remote),    # Only use code from remote server (refresh local cache)
     Bool :q(:$quiet),     # Less verbose, don't display source code
     Bool :d(:$deps),      # Load dependencies
@@ -31,7 +31,7 @@ my %c = ( # text colors
 );
 
 my $view      = 'xdg-open';       # image viewer, this will open default under Linux
-my %l         = load-lang($lang); # load languge paramters
+my %l         = load-lang($lang); # load languge parameters
 my %resource  = load-resources($lang);
 my $get-tasks = True;
 
@@ -46,10 +46,10 @@ if $run {
     } else {                    # must be a single task name
         @tasks = ($run);        # treat it so
     }
-    $get-tasks = False;         # don't need to retreive task names from web
+    $get-tasks = False;         # don't need to retrieve task names from web
 }
 
-if $get-tasks { # load tasks from web if no cache is not found, older than one day or forced
+if $get-tasks { # load tasks from web if cache is not found, older than one day or forced
     if !"%l<language>.tasks".IO.e or ("%l<language>.tasks".IO.modified - now) > 86400 or $remote {
         @tasks = mediawiki-query( # get tasks from web
         $url, 'pages',
