@@ -21,7 +21,7 @@ should be pretty self-evident what each parameter is for.
 There are now several command line switches.
 
 RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
-          [-q|--quiet] [-d|--deps] [-p|--pause] [<run>]
+          [-q|--quiet] [-d|--deps] [-p|--pause] [-b|--broken] [<run>]
 
  --lang (Default perl6) Same as in <lang *> markup on site
 
@@ -41,9 +41,11 @@ RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
 
 --pause (-p) Pause after every task.
 
-By default, if neither --local nor --remote are set, will download tasks if are
-not locally cached or are more than 7 days old (since the last time they were
-downloaded.)
+--broken (-b) Pause after every task marked as broken in the resource hash
+
+By default, if neither --local nor --remote are set, will update task list if
+more than 24 hours old and will download tasks if they are not locally cached or
+are more than 7 days old (since the last time they were downloaded.)
 
 Run at a command line:
 

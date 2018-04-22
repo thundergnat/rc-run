@@ -15,6 +15,7 @@ unit sub MAIN(
     Bool :q(:$quiet),     # Less verbose, don't display source code
     Bool :d(:$deps),      # Load dependencies
     Bool :p(:$pause),     # pause after each task
+    Bool :b(:$broken),     # pause after each task marked broken
 );
 
 die 'You can select local or remote, but not both...' if $local && $remote;
@@ -38,7 +39,7 @@ my $get-tasks = True;
 my @tasks;
 
 run('clear');
-note 'Retrieving tasks';
+
 
 if $run {
     if $run.IO.e and $run.IO.f {# is it a file?
@@ -50,7 +51,8 @@ if $run {
 }
 
 if $get-tasks { # load tasks from web if cache is not found, older than one day or forced
-    if !"%l<language>.tasks".IO.e or ("%l<language>.tasks".IO.modified - now) > 86400 or $remote {
+    if !"%l<dir>.tasks".IO.e or ("%l<dir>.tasks".IO.modified - now) > 86400 or $remote {
+        note 'Retrieving task list from site.';
         @tasks = mediawiki-query( # get tasks from web
         $url, 'pages',
         :generator<categorymembers>,
@@ -59,9 +61,10 @@ if $get-tasks { # load tasks from web if cache is not found, older than one day 
         :rawcontinue(),
         :prop<title>
         )»<title>.grep( * !~~ /^'Category:'/ ).sort;
-        "%l<exe>.tasks".IO.spurt: @tasks.sort.join("\n");
+        "%l<dir>.tasks".IO.spurt: @tasks.sort.join("\n");
     } else {
-        @tasks = "%l<language>.tasks".IO.slurp; # load tasks from file
+        note 'Using cached task list.';
+        @tasks = "%l<dir>.tasks".IO.slurp.lines; # load tasks from file
     }
 }
 
@@ -118,8 +121,9 @@ for @tasks -> $title {
             dump-code ("$taskdir/$name$n%l<ext>");
             if %resource{"$name$n"}<skip> ~~ /'broken'/ {
                 uh-oh(%resource{"$name$n"}<skip>);
+                pause if $broken;
             } else {
-                say "Skipping $name$n: ", %resource{"$name$n"}<skip>, "\n"
+                say "Skipping $name$n: ", %resource{"$name$n"}<skip>, "\n";
             }
             next;
         }
@@ -128,6 +132,7 @@ for @tasks -> $title {
     }
     say  %c<delim>, '=' x 79, %c<clr>;
     pause if $pause;
+
 }
 
 sub mediawiki-query ($site, $type, *%query) {
@@ -161,7 +166,7 @@ sub run-it ($dir, $code) {
 }
 
 sub pause {
-    prompt "Press enter to procede: >";
+    prompt "Press enter to procede:>";
     # or
     # sleep 5;
 }
@@ -335,6 +340,12 @@ multi load-resources ('perl6') { (
     'Mouse_position' => {'skip' => 'jvm only'},
     'HTTPS0' => {'skip' => 'large'},
     'HTTPS1' => {'skip' => 'large'},
+    'Solve_a_Numbrix_puzzle' => {'cmd' => "for n in {1..9}; do echo \"\f\"; done\n%l<exe> Solve_a_Numbrix_puzzle%l<ext>"},
+    'Solve_a_Hidato_puzzle' => {'cmd' => "for n in {1..9}; do echo \"\f\"; done\n%l<exe> 'Solve_a_Hidato_puzzle'<ext>"},
+    'Solve_a_Hopido_puzzle' => {'cmd' => "for n in {1..9}; do echo \"\f\"; done\n%l<exe> 'Solve_a_Hopido_puzzle'<ext>"},
+    'Solve_a_Holy_Knight_s_tour' => {'cmd' => "for n in {1..9}; do echo \"\f\"; done\n%l<exe> Solve_a_Holy_Knight_s_tour%l<ext>"},
+    'Solve_the_no_connection_puzzle' => {'cmd' => "for n in {1..9}; do echo \"\f\"; done\n%l<exe> Solve_the_no_connection_puzzle%l<ext>"},
+
     '9_billion_names_of_God_the_integer' => {'cmd' => "ulimit -t 10\n%l<exe> 9_billion_names_of_God_the_integer%l<ext>"},
     'Arithmetic_Rational0' => {'cmd' => "ulimit -t 10\n%l<exe> Arithmetic_Rational0%l<ext>"},
     'Dining_philosophers' => {'cmd' => "ulimit -t 1\n%l<exe> Dining_philosophers%l<ext>"},
