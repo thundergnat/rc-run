@@ -75,10 +75,10 @@ for @tasks -> $title {
     my $name = $title.subst(/<-[-0..9A..Za..z]>/, '_', :g);
     my $taskdir = "./rc/%l<dir>/$name";
 
-    my $modified = "$taskdir/name.txt".IO.e ?? "$taskdir/name.txt".IO.modified !! 0;
+    my $modified = "$taskdir/$name.txt".IO.e ?? "$taskdir/$name.txt".IO.modified !! 0;
 
     my $entry;
-    if $remote or !"$taskdir/name.txt".IO.e or (($modified - now) > 86400 * 7) {
+    if $remote or !"$taskdir/$name.txt".IO.e or (($modified - now) > 86400 * 7) {
         my $page = $client.get("{ $url }/index.php?title={ uri-escape $title }&action=raw").content;
 
         uh-oh("Whoops, can't find page: $url/$title :check spelling.") and next if $page.elems == 0;
@@ -340,7 +340,7 @@ multi load-resources ('perl6') { (
     'Dining_philosophers' => {'cmd' => "ulimit -t 1\n%l<exe> Dining_philosophers%l<ext>"},
     'Find_largest_left_truncatable_prime_in_a_given_base' => {'cmd' => "ulimit -t 15\n%l<exe> Find_largest_left_truncatable_prime_in_a_given_base%l<ext>"},
     'Four_is_the_number_of_letters_in_the____' => {'cmd' => "ulimit -t 13\n%l<exe> Four_is_the_number_of_letters_in_the____%l<ext>"},
-    '4-rings_or_4-squares_puzzle' =>{'cmd' => "ulimit -t 10\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
+    '4-rings_or_4-squares_puzzle' =>{'cmd' => "ulimit -t 5\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
     'Iterated_digits_squaring0' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring0%l<ext>"},
     'Iterated_digits_squaring1' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring1%l<ext>"},
     'Iterated_digits_squaring2' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring2%l<ext>"},
@@ -351,7 +351,6 @@ multi load-resources ('perl6') { (
     'Last_letter-first_letter' => {'cmd' => "ulimit -t 15\n%l<exe> Last_letter-first_letter%l<ext>"},
     'Left_factorials0' => {'cmd' => "ulimit -t 10\n%l<exe> Left_factorials0%l<ext>"},
     'Lucas-Lehmer_test' => {'cmd' => "ulimit -t 10\n%l<exe> Lucas-Lehmer_test%l<ext>"},
-    'Lychrel_numbers' => {'cmd' => "ulimit -t 15\n%l<exe> Lychrel_numbers%l<ext>"},
     'Metronome' => {'skip' => 'long'},
     'Multiple_regression' => {'cmd' => "ulimit -t 10\n%l<exe> Multiple_regression%l<ext>"},
     'Narcissistic_decimal_number0' => {'cmd' => "ulimit -t 10\n%l<exe> Narcissistic_decimal_number0%l<ext>"},
@@ -403,7 +402,7 @@ multi load-resources ('perl6') { (
     'A_B1' => { cmd => "echo '13 9' | %l<exe> A_B1%l<ext>" },
     'A_B2' => { cmd => "echo '13 9' | %l<exe> A_B2%l<ext>" },
     'Abbreviations__automatic' => {'file' => 'DoWAKA.txt'},
-    'Align_columns1' => {'file' => 'Align_columns1.txt', 'cmd' => "%l<exe> Align_columns1%l<ext> right Align_columns1.txt"},
+    'Align_columns1' => {'file' => 'Align_columns1.txt', 'cmd' => "%l<exe> Align_columns1%l<ext> left Align_columns1.txt"},
     'Base64_encode_data' => { 'file' => 'favicon.ico' },
     'CSV_data_manipulation0' => {'file' => 'whatever.csv'},
     'CSV_data_manipulation1' => {'skip' => 'fragment'},
@@ -468,7 +467,8 @@ multi load-resources ('perl6') { (
     'Count_in_factors0' => {'cmd' => "ulimit -t 1\n%l<exe> Count_in_factors0%l<ext>\n"},
     'Count_in_octal' => {'cmd' => "ulimit -t 1\n%l<exe> Count_in_octal%l<ext>\n"},
     'Draw_a_clock' => {'cmd' => "ulimit -t 1\n%l<exe> Draw_a_clock%l<ext>\n"},
-    'Echo_server' => {'skip' => 'runs forever'},
+    'Echo_server0' => {'skip' => 'runs forever'},
+    'Echo_server1' => {'skip' => 'runs forever'},
     'Chat_server' => {'skip' => 'runs forever'},
     'Elementary_cellular_automaton_Infinite_length' => {'cmd' => "ulimit -t 2\n%l<exe> Elementary_cellular_automaton_Infinite_length%l<ext>\n"},
     'Find_limit_of_recursion' => {'cmd' => "ulimit -t 6\n%l<exe> Find_limit_of_recursion%l<ext>\n"},
@@ -582,6 +582,8 @@ multi load-resources ('perl6') { (
 
 # image producing tasks
     'Dragon_curve' => { 'cmd' => ["%l<exe> Dragon_curve%l<ext> > Dragon-curve-perl6.svg\n","$view Dragon-curve-perl6.svg"]},
+    'Koch_curve0' => { 'cmd' => ["%l<exe> Koch_curve0%l<ext> > Koch_curve0-perl6.svg\n","$view Koch_curve0-perl6.svg"]},
+    'Koch_curve1' => { 'cmd' => ["%l<exe> Koch_curve1%l<ext> > Koch_curve1-perl6.svg\n","$view Koch_curve1-perl6.svg"]},
     'Bitmap_B_zier_curves_Cubic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Cubic%l<ext> > Bezier-cubic-perl6.ppm\n","$view Bezier-cubic-perl6.ppm"]},
     'Bitmap_B_zier_curves_Quadratic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Quadratic%l<ext> > Bezier-quadratic-perl6.ppm\n","$view Bezier-quadratic-perl6.ppm"]},
     'Bitmap_Write_a_PPM_file' => { 'cmd' => ["%l<exe> Bitmap_Write_a_PPM_file%l<ext> > Bitmap-write-ppm-perl6.ppm\n","$view Bitmap-write-ppm-perl6.ppm"]},
