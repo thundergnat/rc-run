@@ -15,7 +15,7 @@ unit sub MAIN(
     Bool :q(:$quiet),     # Less verbose, don't display source code
     Bool :d(:$deps),      # Load dependencies
     Bool :p(:$pause),     # pause after each task
-    Bool :b(:$broken),     # pause after each task marked broken
+    Bool :b(:$broken),    # pause after each task which is broken or fails in some way
 );
 
 die 'You can select local or remote, but not both...' if $local && $remote;
@@ -69,8 +69,10 @@ if $get-tasks { # load tasks from web if cache is not found, older than one day 
 }
 
 note "Skipping first $skip tasks..." if $skip;
+my $redo;
 
 for @tasks -> $title {
+    $redo = False;
     next if $++ < $skip;
     next unless $title ~~ /\S/; # filter blank lines (from files)
     say $skip + ++$, ")  $title";
@@ -131,6 +133,7 @@ for @tasks -> $title {
         run-it($taskdir, "$name$n");
     }
     say  %c<delim>, '=' x 79, %c<clr>;
+    redo if $redo;
     pause if $pause;
 
 }
@@ -160,13 +163,24 @@ sub run-it ($dir, $code) {
     for @cmd -> $cmd {
         say "\nCommand line: {%c<cmd>}$cmd",%c<clr>;
         try shell $cmd;
+        CATCH {
+            when /'exit code: 137'/ { }
+            default {
+                return unless $broken;
+                uh-oh($_);
+                if pause.lc eq 'r' {
+                   unlink "$code.txt";
+                   $redo = True;
+               }
+           }
+        }
     }
     chdir $current;
     say "\nDone $code";
 }
 
 sub pause {
-    prompt "Press enter to procede:>";
+    prompt "Press enter to procede:> ";
     # or
     # sleep 5;
 }
@@ -184,10 +198,10 @@ sub clear { "\r" ~ ' ' x 100 ~ "\r" }
 sub uh-oh ($err) { put %c<warn>, "{'#' x 79}\n\n $err \n\n{'#' x 79}", %c<clr> }
 
 multi check-dependencies ($fn, 'perl6') {
-    my @use = $fn.IO.slurp.comb(/<?after $$ 'use '> \N+? <?before \h* ';'>/);
+    my @use = $fn.IO.slurp.comb(/<?after $$ \h* 'use '> \N+? <?before \h* ';'>/);
     if +@use {
         for @use -> $module {
-            next if $module eq any('v6','nqp') or $module.contains('MONKEY');
+            next if $module eq any('v6','nqp') or $module.contains('MONKEY') or $module.starts-with('lib');
             my $installed = $*REPO.resolve(CompUnit::DependencySpecification.new(:short-name($module)));
             shell("zef install $module") unless $installed;
         }
@@ -242,6 +256,7 @@ multi load-resources ('perl6') { (
     'Sorting_algorithms_Strand_sort' => {'skip' => 'broken'},
     'Window_creation_X11' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
+    'Ordered_Partitions' => {'skip' => 'broken'},
     'FTP' => {'skip' => 'broken'}, # fixed in Rakudo 2018.04
     'GUI_component_interaction' => {'skip' => 'broken module'},
     'GUI_enabling_disabling_of_controls' => {'skip' => 'broken module'},
@@ -314,7 +329,6 @@ multi load-resources ('perl6') { (
     'Pointers_and_references' => {'skip' => 'fragment'},
     'Polymorphism1' => {'skip' => 'fragment'},
     'Program_termination' => {'skip' => 'fragment'},
-
     'Scope_modifiers0' => {'skip' => 'fragment'},
     'Singly-linked_list_Element_definition' => {'skip' => 'fragment'},
     'Sort_a_list_of_object_identifiers1' => {'skip' => 'fragment'},
@@ -424,10 +438,11 @@ multi load-resources ('perl6') { (
     'Read_a_configuration_file' => {'file' => 'file.cfg','cmd' => ["cat file.cfg\n", "%l<exe> Read_a_configuration_file%l<ext>"]},
     'Read_a_file_character_by_character_UTF80' => {'file' => 'whatever','cmd' => "cat whatever | %l<exe> Read_a_file_character_by_character_UTF80%l<ext>"},
     'Read_a_file_character_by_character_UTF81' => {'file' => 'whatever','cmd' => "%l<exe> Read_a_file_character_by_character_UTF81%l<ext>"},
+    'File_size0' => {'cmd' => ["cal 2018 > input.txt\n", "%l<exe> File_size0%l<ext>"]},
     'Read_a_specific_line_from_a_file' => {'cmd' => ["cal 2018 > cal.txt\n", "%l<exe> Read_a_specific_line_from_a_file%l<ext> cal.txt"]},
     'Rename_a_file' => {'cmd' => ["touch input.txt\n", "mkdir docs\n", "%l<exe> Rename_a_file%l<ext>\n", "ls ."]},
     'Selective_File_Copy' => {'file' => 'sfc.dat'},
-    'Self-hosting_compiler' => {'cmd' => "echo 'say 'hello World!' | %l<exe> Self-hosting_compiler%l<ext>"},
+    'Self-hosting_compiler' => {'cmd' => "echo \"say 'hello World!'\" | %l<exe> Self-hosting_compiler%l<ext>"},
     'Separate_the_house_number_from_the_street_name' => {'file' => 'addresses.txt',
         'cmd' => "cat addresses.txt | %l<exe> Separate_the_house_number_from_the_street_name%l<ext>"
     },
@@ -508,8 +523,11 @@ multi load-resources ('perl6') { (
     'Balanced_brackets3' => {'cmd' => "echo \"22\n\" | %l<exe> Balanced_brackets3%l<ext>"},
     'Decision_tables' => {'skip' => 'user interaction'},
     'Dynamic_variable_names' => {'cmd' => "echo \"this-var\" | %l<exe> Dynamic_variable_names%l<ext>"},
+    'Longest_Common_Substring' => {"%l<exe> Longest_Common_Substring%l<ext> thisisatest testing123testing"},
+    'Modulinos' => {"%l<exe> Modulinos%l<ext> test"},
+    'Multiplicative_order' => {"%l<exe> Multiplicative_order%l<ext> test"},
     'Execute_HQ9_1' => {'skip' => 'user interaction'},
-    'File_size_distribution' => {'cmd' => "%l<exe> File_size_distribution%l<ext> '~'"},
+    'File_size_distribution' => {'cmd' => "%l<exe> File_size_distribution%l<ext> '..'"},
     'Hello_world_Graphical' => {'skip' => 'user interaction, gui'},
     'Hello_world_Web_server' => {'skip' => 'user interaction, gui'},
     'Horizontal_sundial_calculations' => {'cmd' => "echo \"-4.95\n-150.5\n-150\n\" | %l<exe> Horizontal_sundial_calculations%l<ext>"},
@@ -531,6 +549,7 @@ multi load-resources ('perl6') { (
     'Keyboard_input_Obtain_a_Y_or_N_response' => {'skip' => 'user interaction, custom shell'},
     'Keyboard_macros' => {'skip' => 'user interaction, custom shell'},
     'Longest_string_challenge' => {'cmd' => "echo \"a\nbb\nccc\nddd\nee\nf\nggg\n\" | %l<exe> Longest_string_challenge%l<ext>\n"},
+    'Magic_8-Ball' => {'cmd' => "echo \"?\n?\n?\n?\n?\n\n\" | %l<exe> Magic_8-Ball%l<ext>\n"},
     'Magic_squares_of_doubly_even_order' => {'cmd' => "%l<exe> Magic_squares_of_doubly_even_order%l<ext> 12"},
     'Magic_squares_of_singly_even_order' => {'cmd' => "%l<exe> Magic_squares_of_singly_even_order%l<ext> 10"},
     'Magic_squares_of_odd_order' => {'cmd' => "%l<exe> Magic_squares_of_odd_order%l<ext> 11"},
@@ -595,6 +614,7 @@ multi load-resources ('perl6') { (
     'Dragon_curve' => { 'cmd' => ["%l<exe> Dragon_curve%l<ext> > Dragon-curve-perl6.svg\n","$view Dragon-curve-perl6.svg"]},
     'Koch_curve0' => { 'cmd' => ["%l<exe> Koch_curve0%l<ext> > Koch_curve0-perl6.svg\n","$view Koch_curve0-perl6.svg"]},
     'Koch_curve1' => { 'cmd' => ["%l<exe> Koch_curve1%l<ext> > Koch_curve1-perl6.svg\n","$view Koch_curve1-perl6.svg"]},
+    'Hilbert_curve' => { 'cmd' => ["%l<exe> Hilbert_curve%l<ext> > Hilbert_curve-perl6.svg\n","$view Hilbert_curve-perl6.svg"]},
     'Bitmap_B_zier_curves_Cubic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Cubic%l<ext> > Bezier-cubic-perl6.ppm\n","$view Bezier-cubic-perl6.ppm"]},
     'Bitmap_B_zier_curves_Quadratic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Quadratic%l<ext> > Bezier-quadratic-perl6.ppm\n","$view Bezier-quadratic-perl6.ppm"]},
     'Bitmap_Write_a_PPM_file' => { 'cmd' => ["%l<exe> Bitmap_Write_a_PPM_file%l<ext> > Bitmap-write-ppm-perl6.ppm\n","$view Bitmap-write-ppm-perl6.ppm"]},
@@ -616,6 +636,7 @@ multi load-resources ('perl6') { (
     'Archimedean_spiral' => {'cmd' => ["%l<exe> Archimedean_spiral%l<ext>\n","$view Archimedean-spiral-perl6.png"]},
     'Julia_set' => {'cmd' => ["%l<exe> Julia_set%l<ext>\n","$view Julia-set-perl6.png"]},
     'Chaos_game' => {'cmd' => ["%l<exe> Chaos_game%l<ext>\n","$view Chaos-game-perl6.png"]},
+    'Greyscale_bars_Display'  => {'cmd' => ["%l<exe> Greyscale_bars_Display%l<ext>\n","$view Greybars.pgm"]},
     'Color_wheel' => {'cmd' => ["%l<exe> Color_wheel%l<ext>\n","$view Color-wheel-perl6.png"]},
     'Barnsley_fern' => {'cmd' => ["%l<exe> Barnsley_fern%l<ext>\n","$view Barnsley-fern-perl6.png"]},
     'Voronoi_diagram' => {

@@ -27,9 +27,9 @@ RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
 
  --skip Skip (int) number of tasks. Only meaningful if run from a file or web.
 
---force (-f) will force running of tasks that would normally be skipped due to a skip
-  parameter in the %resource hash. Does nothing unless the %resource hash has
-  been loaded.
+--force (-f) will force running of tasks that would normally be skipped due to a
+  skip parameter in the %resource hash. Does nothing unless the %resource hash
+  has been loaded.
 
 --local (-l) will try to use only local copies of already downloaded tasks.
 
@@ -41,7 +41,14 @@ RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
 
 --pause (-p) Pause after every task.
 
---broken (-b) Pause after every task marked as broken in the resource hash
+--broken (-b) Pause after every task that is broken, either is marked as broken
+  in the resource hash, or which fails and sets $!. (Not all failures are a
+  problem. Several tasks fail by design to show failures and errors.)
+
+[<run>] optional positional task name or file name (containing list of tasks)
+        If not supplied, will download list of implemented tasks from site and
+        use that as its list of tasks. The downloaded list is saved as:
+        <language name>.tasks; E.G. perl6.tasks for perl6.
 
 By default, if neither --local nor --remote are set, will update task list if
 more than 24 hours old and will download tasks if they are not locally cached or
@@ -78,8 +85,6 @@ is valid.
     perl6 RC-run.p6 -lf Anagrams
 
  is not.
-
-
 
 
 AUTHOR
