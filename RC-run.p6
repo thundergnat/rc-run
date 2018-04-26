@@ -166,7 +166,7 @@ sub run-it ($dir, $code) {
         CATCH {
             when /'exit code: 137'/ { }
             default {
-                return unless $broken;
+                .resume unless $broken;
                 uh-oh($_);
                 if pause.lc eq 'r' {
                    unlink "$code.txt";
@@ -257,11 +257,6 @@ multi load-resources ('perl6') { (
     'Window_creation_X11' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
     'Ordered_Partitions' => {'skip' => 'broken'},
-    'FTP' => {'skip' => 'broken'}, # fixed in Rakudo 2018.04
-    'GUI_component_interaction' => {'skip' => 'broken module'},
-    'GUI_enabling_disabling_of_controls' => {'skip' => 'broken module'},
-    'Image_noise' => {'skip' => 'broken module'},
-    'Retrieve_and_search_chat_history' => {'skip' => 'broken, fixed in Rakudo 2018.04'},
 
     'Accumulator_factory1' => {'skip' => 'fragment'},
     'Binary_search0' => {'skip' => 'fragment'},
@@ -292,7 +287,6 @@ multi load-resources ('perl6') { (
     'Get_system_command_output0' => {'skip' => 'fragment'},
     'Greatest_common_divisor3' => {'skip' => 'fragment'},
     'Greatest_common_divisor4' => {'skip' => 'fragment'},
-    'Here_document2' => {'skip' => 'fragment'},
     'Include_a_file0' => {'skip' => 'fragment'},
     'Include_a_file1' => {'skip' => 'fragment'},
     'Include_a_file2' => {'skip' => 'fragment'},
@@ -438,6 +432,7 @@ multi load-resources ('perl6') { (
     'Read_a_configuration_file' => {'file' => 'file.cfg','cmd' => ["cat file.cfg\n", "%l<exe> Read_a_configuration_file%l<ext>"]},
     'Read_a_file_character_by_character_UTF80' => {'file' => 'whatever','cmd' => "cat whatever | %l<exe> Read_a_file_character_by_character_UTF80%l<ext>"},
     'Read_a_file_character_by_character_UTF81' => {'file' => 'whatever','cmd' => "%l<exe> Read_a_file_character_by_character_UTF81%l<ext>"},
+    'Retrieve_and_search_chat_history' => {'cmd' => "%l<exe> Retrieve_and_search_chat_history%l<ext> github"},
     'File_size0' => {'cmd' => ["cal 2018 > input.txt\n", "%l<exe> File_size0%l<ext>"]},
     'Read_a_specific_line_from_a_file' => {'cmd' => ["cal 2018 > cal.txt\n", "%l<exe> Read_a_specific_line_from_a_file%l<ext> cal.txt"]},
     'Rename_a_file' => {'cmd' => ["touch input.txt\n", "mkdir docs\n", "%l<exe> Rename_a_file%l<ext>\n", "ls ."]},
@@ -523,9 +518,9 @@ multi load-resources ('perl6') { (
     'Balanced_brackets3' => {'cmd' => "echo \"22\n\" | %l<exe> Balanced_brackets3%l<ext>"},
     'Decision_tables' => {'skip' => 'user interaction'},
     'Dynamic_variable_names' => {'cmd' => "echo \"this-var\" | %l<exe> Dynamic_variable_names%l<ext>"},
-    'Longest_Common_Substring' => {"%l<exe> Longest_Common_Substring%l<ext> thisisatest testing123testing"},
-    'Modulinos' => {"%l<exe> Modulinos%l<ext> test"},
-    'Multiplicative_order' => {"%l<exe> Multiplicative_order%l<ext> test"},
+    'Longest_Common_Substring' => {'cmd' => "%l<exe> Longest_Common_Substring%l<ext> thisisatest testing123testing"},
+    'Modulinos' => {'cmd' => "%l<exe> Modulinos%l<ext> test"},
+    'Multiplicative_order' => {'cmd' => "%l<exe> Multiplicative_order%l<ext> test"},
     'Execute_HQ9_1' => {'skip' => 'user interaction'},
     'File_size_distribution' => {'cmd' => "%l<exe> File_size_distribution%l<ext> '..'"},
     'Hello_world_Graphical' => {'skip' => 'user interaction, gui'},
@@ -636,7 +631,7 @@ multi load-resources ('perl6') { (
     'Archimedean_spiral' => {'cmd' => ["%l<exe> Archimedean_spiral%l<ext>\n","$view Archimedean-spiral-perl6.png"]},
     'Julia_set' => {'cmd' => ["%l<exe> Julia_set%l<ext>\n","$view Julia-set-perl6.png"]},
     'Chaos_game' => {'cmd' => ["%l<exe> Chaos_game%l<ext>\n","$view Chaos-game-perl6.png"]},
-    'Greyscale_bars_Display'  => {'cmd' => ["%l<exe> Greyscale_bars_Display%l<ext>\n","$view Greybars.pgm"]},
+    'Greyscale_bars_Display'  => {'cmd' => ["%l<exe> Greyscale_bars_Display%l<ext>\n","$view Greyscale-bars-perl6.pgm"]},
     'Color_wheel' => {'cmd' => ["%l<exe> Color_wheel%l<ext>\n","$view Color-wheel-perl6.png"]},
     'Barnsley_fern' => {'cmd' => ["%l<exe> Barnsley_fern%l<ext>\n","$view Barnsley-fern-perl6.png"]},
     'Voronoi_diagram' => {
