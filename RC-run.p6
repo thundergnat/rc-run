@@ -28,6 +28,7 @@ my %c = ( # text colors
     delim => "\e[0;93m", # yellow
     cmd   => "\e[1;96m", # cyan
     warn  => "\e[0;91m", # red
+    dep   => "\e[40;36m",
     clr   => "\e[0m",    # clear formatting
 );
 
@@ -39,7 +40,6 @@ my $get-tasks = True;
 my @tasks;
 
 run('clear');
-
 
 if $run {
     if $run.IO.e and $run.IO.f {# is it a file?
@@ -203,7 +203,32 @@ multi check-dependencies ($fn, 'perl6') {
         for @use -> $module {
             next if $module eq any('v6','nqp') or $module.contains('MONKEY') or $module.starts-with('lib');
             my $installed = $*REPO.resolve(CompUnit::DependencySpecification.new(:short-name($module)));
-            shell("zef install $module") unless $installed;
+            print %c<dep>;
+            if $installed {
+                say 'ok:            ', $module
+            } else {
+                say 'not installed: ', $module;
+                shell("zef install $module") unless $installed;
+            }
+            print %c<clr>;
+        }
+    }
+}
+
+multi check-dependencies ($fn, 'perl') {
+    my @use = $fn.IO.slurp.comb(/<?after $$ \h* 'use '> \w+['::'\w+]* <?before \N+? ';'>/);
+    if +@use {
+        for @use -> $module {
+            next if $module eq $module.lc;
+            my $installed = shell( "%l<exe> -e 'eval \"use {$module}\"; exit 1 if \$@'" );
+            print %c<dep>;
+            if $installed {
+                say 'ok:            ', $module
+            } else {
+                say 'not installed: ', $module;
+                try shell("sudo cpan $module");
+            }
+            print %c<clr>;
         }
     }
 }
@@ -229,7 +254,7 @@ multi load-lang ('perl') { (
     ext      => '.pl',
     dir      => 'perl',
     header   => 'Perl',
-    tag => rx/<?after '<lang ' 'perl' '>' > .*? <?before '</' 'lang>'>/,
+    tag => rx/:i <?after '<lang ' 'perl' '>' > .*? <?before '</' 'lang>'>/,
 ) }
 
 multi load-lang ('python') { (
@@ -238,7 +263,7 @@ multi load-lang ('python') { (
     ext      => '.py',
     dir      => 'python',
     header   => 'Python',
-    tag => rx/<?after '<lang ' 'python' '>' > .*? <?before '</' 'lang>'>/,
+    tag => rx/:i <?after '<lang ' 'python' '>' > .*? <?before '</' 'lang>'>/,
 ) }
 
 multi load-lang ($unknown) { die "Sorry, don't know how to handle $unknown language." };
@@ -251,7 +276,6 @@ multi load-resources ('perl6') { (
     'Formal_power_series' => {'skip' => 'broken'},
     'Multiline_shebang' => {'skip' => 'broken'},
     'Names_to_numbers' => {'skip' => 'broken'},
-    'Set_of_real_numbers' => {'skip' => 'broken'},
     'Singly-linked_list_Element_insertion' => {'skip' => 'broken'},
     'Sorting_algorithms_Strand_sort' => {'skip' => 'broken'},
     'Window_creation_X11' => {'skip' => 'broken'},
@@ -287,6 +311,7 @@ multi load-resources ('perl6') { (
     'Get_system_command_output0' => {'skip' => 'fragment'},
     'Greatest_common_divisor3' => {'skip' => 'fragment'},
     'Greatest_common_divisor4' => {'skip' => 'fragment'},
+    'Here_document2' => {'skip' => 'fragment'},
     'Include_a_file0' => {'skip' => 'fragment'},
     'Include_a_file1' => {'skip' => 'fragment'},
     'Include_a_file2' => {'skip' => 'fragment'},
@@ -491,6 +516,10 @@ multi load-resources ('perl6') { (
     'Echo_server0' => {'skip' => 'runs forever'},
     'Echo_server1' => {'skip' => 'runs forever'},
     'Chat_server' => {'skip' => 'runs forever'},
+    'Distributed_programming0' => {'skip' => 'runs forever'},
+    'Distributed_programming1' => {'skip' => 'needs a server instance'},
+    'Draw_a_rotating_cube' => {'cmd' => "ulimit -t 10\n%l<exe> Draw_a_rotating_cube%l<ext>\n"},
+    'Image_noise' => {'cmd' => "ulimit -t 10\n%l<exe> Image_noise%l<ext>\n"},
     'Elementary_cellular_automaton_Infinite_length' => {'cmd' => "ulimit -t 2\n%l<exe> Elementary_cellular_automaton_Infinite_length%l<ext>\n"},
     'Find_limit_of_recursion' => {'cmd' => "ulimit -t 6\n%l<exe> Find_limit_of_recursion%l<ext>\n"},
     'Forest_fire' => {'cmd' => ["ulimit -t 20\n%l<exe> Forest_fire%l<ext>\n","%l<exe> -e'print \"\e[0m\ \e[H\e[2J\"'"]},
