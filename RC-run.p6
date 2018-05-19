@@ -51,7 +51,7 @@ if $run {
 }
 
 if $get-tasks { # load tasks from web if cache is not found, older than one day or forced
-    if !"%l<dir>.tasks".IO.e or ("%l<dir>.tasks".IO.modified - now) > 86400 or $remote {
+    if !"%l<dir>.tasks".IO.e or (now - "%l<dir>.tasks".IO.modified) > 86400 or $remote {
         note 'Retrieving task list from site.';
         @tasks = mediawiki-query( # get tasks from web
         $url, 'pages',
@@ -75,7 +75,7 @@ for @tasks -> $title {
     $redo = False;
     next if $++ < $skip;
     next unless $title ~~ /\S/; # filter blank lines (from files)
-    say $skip + ++$, ")  $title";
+    say my $tasknum = $skip + ++$, ")  $title";
 
     my $name = $title.subst(/<-[-0..9A..Za..z]>/, '_', :g);
     my $taskdir = "./rc/%l<dir>/$name";
@@ -83,7 +83,7 @@ for @tasks -> $title {
     my $modified = "$taskdir/$name.txt".IO.e ?? "$taskdir/$name.txt".IO.modified !! 0;
 
     my $entry;
-    if $remote or !"$taskdir/$name.txt".IO.e or (($modified - now) > 86400 * 7) {
+    if $remote or !"$taskdir/$name.txt".IO.e or ((now - $modified) > 86400 * 7) {
         my $page = $client.get("{ $url }/index.php?title={ uri-escape $title }&action=raw").content;
 
         uh-oh("Whoops, can't find page: $url/$title :check spelling.") and next if $page.elems == 0;
@@ -130,7 +130,7 @@ for @tasks -> $title {
             next;
         }
         say "\nTesting $name$n";
-        run-it($taskdir, "$name$n");
+        run-it($taskdir, "$name$n", $tasknum);
     }
     say  %c<delim>, '=' x 79, %c<clr>;
     redo if $redo;
@@ -151,7 +151,7 @@ sub mediawiki-query ($site, $type, *%query) {
     }
 }
 
-sub run-it ($dir, $code) {
+sub run-it ($dir, $code, $tasknum) {
     my $current = $*CWD;
     chdir $dir;
     if %resource{$code}<file> -> $fn {
@@ -176,7 +176,7 @@ sub run-it ($dir, $code) {
         }
     }
     chdir $current;
-    say "\nDone $code";
+    say "\nDone task #$tasknum: $code";
 }
 
 sub pause {
@@ -198,17 +198,18 @@ sub clear { "\r" ~ ' ' x 100 ~ "\r" }
 sub uh-oh ($err) { put %c<warn>, "{'#' x 79}\n\n $err \n\n{'#' x 79}", %c<clr> }
 
 multi check-dependencies ($fn, 'perl6') {
-    my @use = $fn.IO.slurp.comb(/<?after $$ \h* 'use '> \N+? <?before \h* ';'>/);
+    my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
     if +@use {
         for @use -> $module {
-            next if $module eq any('v6','nqp') or $module.contains('MONKEY') or $module.starts-with('lib');
+            next if $module eq any('v6','nqp', 'NativeCall') or $module.contains('MONKEY')
+              or $module.contains('experimental') or $module.starts-with('lib');
             my $installed = $*REPO.resolve(CompUnit::DependencySpecification.new(:short-name($module)));
             print %c<dep>;
             if $installed {
                 say 'ok:            ', $module
             } else {
                 say 'not installed: ', $module;
-                shell("zef install $module") unless $installed;
+                shell("zef install $module");
             }
             print %c<clr>;
         }
@@ -278,7 +279,6 @@ multi load-resources ('perl6') { (
     'Names_to_numbers' => {'skip' => 'broken'},
     'Singly-linked_list_Element_insertion' => {'skip' => 'broken'},
     'Sorting_algorithms_Strand_sort' => {'skip' => 'broken'},
-    'Window_creation_X11' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
     'Ordered_Partitions' => {'skip' => 'broken'},
 
@@ -369,6 +369,8 @@ multi load-resources ('perl6') { (
     'Variadic_function2' => {'skip' => 'fragment'},
     'Write_entire_file0' => {'skip' => 'fragment'},
     'Write_entire_file1' => {'skip' => 'fragment'},
+
+    'Shell_one-liner' => {'skip' => 'shell code'},
 
     'Mouse_position' => {'skip' => 'jvm only'},
     'HTTPS0' => {'skip' => 'large'},
@@ -482,8 +484,7 @@ multi load-resources ('perl6') { (
     'Stream_Merge' => {'skip' => 'needs input files'},
     'Ordered_words' => {'file' => 'unixdict.txt','cmd' => "%l<exe> Ordered_words%l<ext> < unixdict.txt"},
     'User_defined_pipe_and_redirection_operators' => {'file' => 'List_of_computer_scientists.lst'},
-    'Letter_frequency' => {'file' => 'List_of_computer_scientists.lst',
-         'cmd' => "cat List_of_computer_scientists.lst | %l<exe> Letter_frequency%l<ext>"
+    'Letter_frequency' => {'file' => 'lemiz.txt', 'cmd' => "cat lemiz.txt | %l<exe> Letter_frequency%l<ext>"
      },
     'Hello_world_Line_printer0' => {'skip' => 'needs line printer attached'},
     'Hello_world_Line_printer1' => {'skip' => 'needs line printer attached'},
@@ -516,6 +517,8 @@ multi load-resources ('perl6') { (
     'Echo_server0' => {'skip' => 'runs forever'},
     'Echo_server1' => {'skip' => 'runs forever'},
     'Chat_server' => {'skip' => 'runs forever'},
+    'Simple_database0' => {'skip' => 'runs forever'},
+    'Simple_database1' => {'skip' => 'needs server instance'},
     'Distributed_programming0' => {'skip' => 'runs forever'},
     'Distributed_programming1' => {'skip' => 'needs a server instance'},
     'Draw_a_rotating_cube' => {'cmd' => "ulimit -t 10\n%l<exe> Draw_a_rotating_cube%l<ext>\n"},
@@ -552,8 +555,8 @@ multi load-resources ('perl6') { (
     'Multiplicative_order' => {'cmd' => "%l<exe> Multiplicative_order%l<ext> test"},
     'Execute_HQ9_1' => {'skip' => 'user interaction'},
     'File_size_distribution' => {'cmd' => "%l<exe> File_size_distribution%l<ext> '..'"},
-    'Hello_world_Graphical' => {'skip' => 'user interaction, gui'},
-    'Hello_world_Web_server' => {'skip' => 'user interaction, gui'},
+    'Hello_world_Web_server0' => {'skip' => 'runs forever'},
+    'Hello_world_Web_server1' => {'skip' => 'runs forever'},
     'Horizontal_sundial_calculations' => {'cmd' => "echo \"-4.95\n-150.5\n-150\n\" | %l<exe> Horizontal_sundial_calculations%l<ext>"},
     'Input_Output_for_Lines_of_Text0' => {
         'cmd' => "echo \"3\nhello\nhello world\nPack my Box with 5 dozen liquor jugs\" | %l<exe> Input_Output_for_Lines_of_Text0%l<ext>"
@@ -585,7 +588,6 @@ multi load-resources ('perl6') { (
     'Price_fraction0' => {'cmd' => "echo \".86\" | %l<exe> Price_fraction0%l<ext>\n"},
     'Price_fraction1' => {'cmd' => "echo \".74\" | %l<exe> Price_fraction1%l<ext>\n"},
     'Price_fraction2' => {'cmd' => "echo \".35\" | %l<exe> Price_fraction2%l<ext>\n"},
-    'Simple_windowed_application' => {'skip' => 'user interaction, gui'},
     'Sleep' => {'cmd' => "echo \"3.86\" | %l<exe> Sleep%l<ext>\n"},
     'Sparkline_in_unicode' => {
         'cmd' => ["echo \"9 18 27 36 45 54 63 72 63 54 45 36 27 18 9\" | %l<exe> Sparkline_in_unicode%l<ext>\n",
@@ -605,9 +607,7 @@ multi load-resources ('perl6') { (
                   "%l<exe> Truth_table%l<ext> 'foo & bar | baz'\n",
                   "%l<exe> Truth_table%l<ext> 'Jim & (Spock ^ Bones) | Scotty'\n"]
     },
-    'User_input_Graphical' => {'skip' => 'user interaction, gui'},
     'User_input_Text' => { 'cmd' => "echo \"Rosettacode\n10\" %l<exe> User_input_Text%l<ext> "},
-    'Window_creation' => {'skip' => 'user interaction, gui'},
 
 # games
     '15_Puzzle_Game' => {'skip' => 'user interaction, game'},
