@@ -89,12 +89,10 @@ for @tasks -> $title {
         uh-oh("Whoops, can't find page: $url/$title :check spelling.") and next if $page.elems == 0;
         say "Getting code from: http://rosettacode.org/wiki/{ $title.subst(' ', '_', :g) }#%l<language>";
 
-        my $header = %l<header>; # can't interpolate hash into regex
-        $entry = $page.comb(/'=={{header|' $header '}}==' .+? [<?before \n'=='<-[={]>*'{{header'> || $] /).Str //
+        $entry = $page.comb(/'=={{header|' $(%l<header>) '}}==' .+? [<?before \n'=='<-[={]>*'{{header'> || $] /).Str //
           uh-oh("No code found\nMay be bad markup");
 
-        my $lang = %l<language>; # can't interpolate hash into regex
-        if $entry ~~ /^^ 'See [[' (.+?) '/' $lang / { # no code on main page, check sub page
+        if $entry ~~ /^^ 'See [[' (.+?) '/' $(%l<language>) / { # no code on main page, check sub page
             $entry = $client.get("{ $url }/index.php?title={ uri-escape $/[0].Str ~ '/' ~ %l<language> }&action=raw").content;
         }
         mkdir $taskdir unless $taskdir.IO.d;
@@ -278,9 +276,7 @@ multi load-resources ('perl6') { (
     'Multiline_shebang' => {'skip' => 'broken'},
     'Names_to_numbers' => {'skip' => 'broken'},
     'Singly-linked_list_Element_insertion' => {'skip' => 'broken'},
-    'Sorting_algorithms_Strand_sort' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
-    'Ordered_Partitions' => {'skip' => 'broken'},
 
     'Accumulator_factory1' => {'skip' => 'fragment'},
     'Binary_search0' => {'skip' => 'fragment'},
@@ -505,6 +501,7 @@ multi load-resources ('perl6') { (
     'Naming_conventions' => {'skip' => 'ok to skip; no code'},
     'Operator_precedence' => {'skip' => 'ok to skip; no code'},
     'Random_number_generator__included_' => {'skip' => 'ok to skip; no code'},
+    'Readline_interface' => {'skip' => 'ok to skip; no code'},
     'Shell_one_liner' => {'skip' => 'ok to skip; no code'},
     'Special_characters' => {'skip' => 'ok to skip; no code'},
     'Table_creation' => {'skip' => 'ok to skip; no code'},
