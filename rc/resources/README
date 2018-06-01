@@ -22,7 +22,7 @@ favicon.ico                     Base64_encode_data
 
 file.cfg                        Read_a_configuration_file
 
-lemiz.txt (135-0.txt)           Word_count
+lemiz.txt (135-0.txt)           Word_count, Letter_frequency
 
 List_of_computer_scientists.lst User_defined_pipe_and_redirection_operators
 
