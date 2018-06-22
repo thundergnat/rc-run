@@ -20,6 +20,8 @@ unit sub MAIN(
 
 die 'You can select local or remote, but not both...' if $local && $remote;
 
+## INITIALIZATION
+
 my $client   = HTTP::UserAgent.new;
 my $url      = 'http://rosettacode.org/mw';
 
@@ -40,6 +42,8 @@ my $get-tasks = True;
 my @tasks;
 
 run('clear');
+
+## FIGURE OUT WHICH TASKS TO RUN
 
 if $run {
     if $run.IO.e and $run.IO.f {# is it a file?
@@ -70,6 +74,8 @@ if $get-tasks { # load tasks from web if cache is not found, older than one day 
 
 note "Skipping first $skip tasks..." if $skip;
 my $redo;
+
+## MAIN LOOP
 
 for @tasks -> $title {
     $redo = False;
@@ -135,6 +141,8 @@ for @tasks -> $title {
     pause if $pause;
 
 }
+
+## SUBROUTINES
 
 sub mediawiki-query ($site, $type, *%query) {
     my $url = "$site/api.php?" ~ uri-query-string(
@@ -273,7 +281,6 @@ multi load-resources ('perl6') { (
     'Amb1' => {'skip' => 'broken'},
     'Amb2' => {'skip' => 'broken'},
     'Formal_power_series' => {'skip' => 'broken'},
-    'Multiline_shebang' => {'skip' => 'broken'},
     'Names_to_numbers' => {'skip' => 'broken'},
     'Singly-linked_list_Element_insertion' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
@@ -636,6 +643,7 @@ multi load-resources ('perl6') { (
     'Koch_curve0' => { 'cmd' => ["%l<exe> Koch_curve0%l<ext> > Koch_curve0-perl6.svg\n","$view Koch_curve0-perl6.svg"]},
     'Koch_curve1' => { 'cmd' => ["%l<exe> Koch_curve1%l<ext> > Koch_curve1-perl6.svg\n","$view Koch_curve1-perl6.svg"]},
     'Hilbert_curve' => { 'cmd' => ["%l<exe> Hilbert_curve%l<ext> > Hilbert_curve-perl6.svg\n","$view Hilbert_curve-perl6.svg"]},
+    'Penrose_tiling' => { 'cmd' => ["%l<exe> Penrose_tiling%l<ext> > Penrose_tiling-perl6.svg\n","$view Penrose_tiling-perl6.svg"]},
     'Bitmap_B_zier_curves_Cubic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Cubic%l<ext> > Bezier-cubic-perl6.ppm\n","$view Bezier-cubic-perl6.ppm"]},
     'Bitmap_B_zier_curves_Quadratic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Quadratic%l<ext> > Bezier-quadratic-perl6.ppm\n","$view Bezier-quadratic-perl6.ppm"]},
     'Bitmap_Write_a_PPM_file' => { 'cmd' => ["%l<exe> Bitmap_Write_a_PPM_file%l<ext> > Bitmap-write-ppm-perl6.ppm\n","$view Bitmap-write-ppm-perl6.ppm"]},
