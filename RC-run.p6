@@ -411,6 +411,7 @@ multi load-resources ('perl6') { (
     'Primorial_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Primorial_numbers%l<ext>"},
     'Pythagorean_quadruples' => {'cmd' => "ulimit -t 10\n%l<exe> Pythagorean_quadruples%l<ext>"},
     'Self-describing_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Self-describing_numbers%l<ext>"},
+    'Square-free_integers' => {'cmd' => "ulimit -t 10\n%l<exe> Square-free_integers%l<ext>\n"},
     'Subset_sum_problem' => {'cmd' => "ulimit -t 8\n%l<exe> Subset_sum_problem%l<ext>"},
     'Sudoku1' => {'cmd' => "ulimit -t 15\n%l<exe> Sudoku1%l<ext>"},
     'Topswops' => {'cmd' => "ulimit -t 10\n%l<exe> Topswops%l<ext>"},
