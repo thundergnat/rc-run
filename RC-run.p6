@@ -95,7 +95,7 @@ for @tasks -> $title {
         uh-oh("Whoops, can't find page: $url/$title :check spelling.") and next if $page.elems == 0;
         say "Getting code from: http://rosettacode.org/wiki/{ $title.subst(' ', '_', :g) }#%l<language>";
 
-        $entry = $page.comb(/'=={{header|' $(%l<header>) '}}==' .+? [<?before \n'=='<-[={]>*'{{header'> || $] /).Str //
+        $entry = $page.comb(rx:i/'=={{header|' $(%l<header>) '}}==' .+? [<?before \n'=='<-[={]>*'{{header'> || $] /).Str //
           uh-oh("No code found\nMay be bad markup");
 
         if $entry ~~ /^^ 'See [[' (.+?) '/' $(%l<language>) / { # no code on main page, check sub page
@@ -223,7 +223,7 @@ multi check-dependencies ($fn, 'perl6') {
 }
 
 multi check-dependencies ($fn, 'perl') {
-    my @use = $fn.IO.slurp.comb(/<?after $$ \h* 'use '> \w+['::'\w+]* <?before \N+? ';'>/);
+    my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
     if +@use {
         for @use -> $module {
             next if $module eq $module.lc;
