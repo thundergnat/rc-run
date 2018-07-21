@@ -207,12 +207,17 @@ multi check-dependencies ($fn, 'perl6') {
     my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
     if +@use {
         for @use -> $module {
-            next if $module eq any('v6','nqp', 'NativeCall') or $module.contains('MONKEY')
-              or $module.contains('experimental') or $module.starts-with('lib');
+            if $module eq any('v6','nqp', 'NativeCall') or $module.contains('MONKEY')
+              or $module.contains('experimental') or $module.starts-with('lib') {
+                  print %c<dep>;
+                  say 'ok, no installation necessary: ', $module;
+                  print %c<clr>;
+                  next;
+            }
             my $installed = $*REPO.resolve(CompUnit::DependencySpecification.new(:short-name($module)));
             print %c<dep>;
             if $installed {
-                say 'ok:            ', $module
+                say 'ok, installed: ', $module
             } else {
                 say 'not installed: ', $module;
                 shell("zef install $module");
@@ -643,7 +648,9 @@ multi load-resources ('perl6') { (
     'Dragon_curve' => { 'cmd' => ["%l<exe> Dragon_curve%l<ext> > Dragon-curve-perl6.svg\n","$view Dragon-curve-perl6.svg"]},
     'Koch_curve0' => { 'cmd' => ["%l<exe> Koch_curve0%l<ext> > Koch_curve0-perl6.svg\n","$view Koch_curve0-perl6.svg"]},
     'Koch_curve1' => { 'cmd' => ["%l<exe> Koch_curve1%l<ext> > Koch_curve1-perl6.svg\n","$view Koch_curve1-perl6.svg"]},
-    'Hilbert_curve' => { 'cmd' => ["%l<exe> Hilbert_curve%l<ext> > Hilbert_curve-perl6.svg\n","$view Hilbert_curve-perl6.svg"]},
+    'Hilbert_curve0' => { 'cmd' => ["%l<exe> Hilbert_curve0%l<ext> > Hilbert-curve-perl6.svg\n","$view Hilbert-curve-perl6.svg"]},
+    'Hilbert_curve1' => { 'cmd' => ["%l<exe> Hilbert_curve1%l<ext> > Moore-curve-perl6.svg\n","$view Moore-curve-perl6.svg"]},
+    'Peano_curve' => { 'cmd' => ["%l<exe> Peano_curve%l<ext> > Peano-curve-perl6.svg\n","$view Peano-curve-perl6.svg"]},
     'Penrose_tiling' => { 'cmd' => ["%l<exe> Penrose_tiling%l<ext> > Penrose_tiling-perl6.svg\n","$view Penrose_tiling-perl6.svg"]},
     'Bitmap_B_zier_curves_Cubic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Cubic%l<ext> > Bezier-cubic-perl6.ppm\n","$view Bezier-cubic-perl6.ppm"]},
     'Bitmap_B_zier_curves_Quadratic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Quadratic%l<ext> > Bezier-quadratic-perl6.ppm\n","$view Bezier-quadratic-perl6.ppm"]},
