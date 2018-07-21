@@ -1,3 +1,17 @@
+INSTALLATION:
+
+It is recommended to git clone this repository into a local directory:
+
+    git clone https://github.com/thundergnat/rc-run.git
+
+Then run the RC-run.p6 script from within the cloned directory.
+
+Alternately, all you need is the RC-run.p6 script and the rc/resources directory
+and contents (in the same folder as the script) if you don't have git installed.
+
+
+ABOUT:
+
 Bells and whistles task implementation for
 http://rosettacode.org/wiki/Rosetta_Code/Run_examples
 
@@ -18,14 +32,18 @@ displaying.
 There is a configurable hash <%l> to set up to run for other languages. It
 should be pretty self-evident what each parameter is for.
 
-There are now several command line switches.
+
+USAGE:
+
+There are several command line switches.
 
 RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
           [-q|--quiet] [-d|--deps] [-p|--pause] [-b|--broken] [<run>]
 
  --lang (Default perl6) Same as in <lang *> markup on site
 
- --skip Skip (int) number of tasks. Only meaningful if run from a file or web.
+ --skip Skip (Int) number of tasks. Only meaningful if run from a file or web.
+   Useful to restart a long run partially into a list of tasks.
 
 --force (-f) will force running of tasks that would normally be skipped due to a
   skip parameter in the %resource hash. Does nothing unless the %resource hash
@@ -66,12 +84,10 @@ to only use locally cached task files. Or,
 
    perl6 RC-run.p6 -r
 
-to force downloading of tasks from the site. Or
-feed it a task name to try only that task:
+to force downloading of tasks from the site. Or feed it a task name to try only
+that task: (Replace spaces with underscores, or enclose in quotes)
 
     perl6 RC-run.p6 Lucky_and_even_lucky_numbers
-
-(Replace spaces with underscores, or enclose in quotes)
 
 Or, pass in a file containing a list of tasks (one per line) and whatever other
 combination of parameters desired to try only that list of tasks.
@@ -87,7 +103,7 @@ is valid.
  is not.
 
 
-AUTHOR
+AUTHOR:
 
 Stephen Schulze (often seen lurking on perlmonks.org and #perl6 IRC as
 thundergnat)
