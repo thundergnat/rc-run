@@ -174,11 +174,15 @@ sub run-it ($dir, $code, $tasknum) {
             default {
                 .resume unless $broken;
                 uh-oh($_);
-                if pause.lc eq 'r' {
-                   unlink "$code.txt";
-                   $redo = True;
-               }
-           }
+                if %resource{$code}<fail-by-design> {
+                    say %c<delim>, 'Fails by design, (or at least, it\'s not unexpected).', %c<clr>;
+                } else {
+                    if pause.lc eq 'r' {
+                       unlink "$code.txt";
+                       $redo = True;
+                    }
+                }
+             }
         }
     }
     chdir $current;
@@ -289,6 +293,26 @@ multi load-resources ('perl6') { (
     'Names_to_numbers' => {'skip' => 'broken'},
     'Singly-linked_list_Element_insertion' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
+
+    'Create_a_file' => { :fail-by-design('or-at-least-expected') },
+    'File_size1' => { :fail-by-design('or-at-least-expected') },
+    'Globally_replace_text_in_several_files' => { :fail-by-design('or-at-least-expected') },
+    'Sockets' => { :fail-by-design('or-at-least-expected') },
+
+    'Array_concatenation' => { :fail-by-design },
+    'Array_length1' => { :fail-by-design },
+    'Assertions0' => { :fail-by-design },
+    'Assertions_in_design_by_contract' => { :fail-by-design },
+    'Create_an_object_Native_demonstration0' => { :fail-by-design },
+    'Create_an_object_Native_demonstration1' => { :fail-by-design },
+    'Define_a_primitive_data_type0' => { :fail-by-design },
+    'Detect_division_by_zero0' => { :fail-by-design },
+    'Exceptions_Catch_an_exception_thrown_in_a_nested_call' => { :fail-by-design },
+    'Hickerson_series_of_almost_integers' => { :fail-by-design },
+    'Jump_anywhere2' => { :fail-by-design },
+    'Jump_anywhere3' => { :fail-by-design },
+    'Null_object2' => { :fail-by-design },
+
 
     'Accumulator_factory1' => {'skip' => 'fragment'},
     'Binary_search0' => {'skip' => 'fragment'},
@@ -469,9 +493,9 @@ multi load-resources ('perl6') { (
     'Read_a_file_character_by_character_UTF80' => {'file' => 'whatever','cmd' => "cat whatever | %l<exe> Read_a_file_character_by_character_UTF80%l<ext>"},
     'Read_a_file_character_by_character_UTF81' => {'file' => 'whatever','cmd' => "%l<exe> Read_a_file_character_by_character_UTF81%l<ext>"},
     'Retrieve_and_search_chat_history' => {'cmd' => "%l<exe> Retrieve_and_search_chat_history%l<ext> github"},
-    'File_size0' => {'cmd' => ["cal 2018 > input.txt\n", "%l<exe> File_size0%l<ext>"]},
+    'File_size0' => {'cmd' => ["cal 2018 > input.txt\n", "%l<exe> File_size0%l<ext>"], :fail-by-design('or-at-least-expected') },
     'Read_a_specific_line_from_a_file' => {'cmd' => ["cal 2018 > cal.txt\n", "%l<exe> Read_a_specific_line_from_a_file%l<ext> cal.txt"]},
-    'Rename_a_file' => {'cmd' => ["touch input.txt\n", "mkdir docs\n", "%l<exe> Rename_a_file%l<ext>\n", "ls ."]},
+    'Rename_a_file' => {'cmd' => ["touch input.txt\n", "mkdir docs\n", "%l<exe> Rename_a_file%l<ext>\n", "ls ."], :fail-by-design('or-at-least-expected')},
     'Selective_File_Copy' => {'file' => 'sfc.dat'},
     'Self-hosting_compiler' => {'cmd' => "echo \"say 'hello World!'\" | %l<exe> Self-hosting_compiler%l<ext>"},
     'Separate_the_house_number_from_the_street_name' => {'file' => 'addresses.txt',
@@ -579,7 +603,8 @@ multi load-resources ('perl6') { (
     },
     'Reverse_words_in_a_string' => { 'file' => 'reverse.txt','cmd' => "%l<exe> Reverse_words_in_a_string%l<ext> reverse.txt"},
     'Rosetta_Code_Find_bare_lang_tags' => {'file' => 'rcpage','cmd' => "%l<exe> Rosetta_Code_Find_bare_lang_tags%l<ext> rcpage"},
-    'Rosetta_Code_Fix_code_tags' => {'file' => 'rcpage','cmd' => "%l<exe> Rosetta_Code_Fix_code_tags%l<ext> rcpage"},
+    'Rosetta_Code_Fix_code_tags0' => {'file' => 'rcpage','cmd' => "%l<exe> Rosetta_Code_Fix_code_tags0%l<ext> rcpage"},
+    'Rosetta_Code_Fix_code_tags1' => {'file' => 'rcpage','cmd' => "%l<exe> Rosetta_Code_Fix_code_tags1%l<ext> rcpage"},
     'Integer_comparison0' => {'cmd' => "echo \"9\n17\" | %l<exe> Integer_comparison0%l<ext>"},
     'Integer_comparison2' => {'cmd' => "echo \"9\n17\" | %l<exe> Integer_comparison2%l<ext>"},
     'Inverted_index' => {'file' => 'unixdict.txt','cmd' => "echo \"rosetta\ncode\nblargg\n\" | %l<exe> Inverted_index%l<ext> unixdict.txt\n"},
@@ -652,6 +677,7 @@ multi load-resources ('perl6') { (
     'Hilbert_curve1' => { 'cmd' => ["%l<exe> Hilbert_curve1%l<ext> > Moore-curve-perl6.svg\n","$view Moore-curve-perl6.svg"]},
     'Peano_curve' => { 'cmd' => ["%l<exe> Peano_curve%l<ext> > Peano-curve-perl6.svg\n","$view Peano-curve-perl6.svg"]},
     'Penrose_tiling' => { 'cmd' => ["%l<exe> Penrose_tiling%l<ext> > Penrose_tiling-perl6.svg\n","$view Penrose_tiling-perl6.svg"]},
+    'Sunflower_fractal' => { 'cmd' => ["%l<exe> Sunflower_fractal%l<ext> > Sunflower-fractal-perl6.svg\n","$view Sunflower-fractal-perl6.svg"]},
     'Bitmap_B_zier_curves_Cubic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Cubic%l<ext> > Bezier-cubic-perl6.ppm\n","$view Bezier-cubic-perl6.ppm"]},
     'Bitmap_B_zier_curves_Quadratic' => { 'cmd' => ["%l<exe> Bitmap_B_zier_curves_Quadratic%l<ext> > Bezier-quadratic-perl6.ppm\n","$view Bezier-quadratic-perl6.ppm"]},
     'Bitmap_Write_a_PPM_file' => { 'cmd' => ["%l<exe> Bitmap_Write_a_PPM_file%l<ext> > Bitmap-write-ppm-perl6.ppm\n","$view Bitmap-write-ppm-perl6.ppm"]},
