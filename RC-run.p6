@@ -563,6 +563,7 @@ multi load-resources ('perl6') { (
     'Fractran1' => {'cmd' => "ulimit -t 10\n%l<exe> Fractran1%l<ext>\n"},
     'Integer_sequence' => {'cmd' => "ulimit -t 1\n%l<exe> Integer_sequence%l<ext>\n"},
     'Linux_CPU_utilization' => {'skip' => 'takes forever to time out', 'cmd' => "ulimit -t 1\n%l<exe> Linux_CPU_utilization%l<ext>\n"},
+    'Long_primes' => {'cmd' => "ulimit -t 45\n%l<exe> Long_primes%l<ext>\n"},
     'Loops_Infinite0' => {'cmd' => "ulimit -t 1\n%l<exe> Loops_Infinite0%l<ext>\n"},
     'Loops_Infinite1' => {'cmd' => "ulimit -t 1\n%l<exe> Loops_Infinite1%l<ext>\n"},
     'Pi' => {'cmd' => "ulimit -t 5\n%l<exe> Pi%l<ext>\n"},
