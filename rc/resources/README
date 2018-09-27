@@ -32,6 +32,8 @@ mlijobs.txt                     Text processing/Max licenses in use
 
 notes.txt                       Take_notes_on_the_command_line
 
+pentagon.ppm                    Hough_transform
+
 readings.txt                    Text_processing/1, Text_processing/2
 
 rc-image.txt                    Zhang-Suen_thinning_algorithm
