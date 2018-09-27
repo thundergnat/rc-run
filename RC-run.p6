@@ -570,6 +570,7 @@ multi load-resources ('perl6') { (
     'Pythagorean_triples1' => {'cmd' => "ulimit -t 1\n%l<exe> Pythagorean_triples1%l<ext>\n"},
     'Pythagorean_triples2' => {'cmd' => "ulimit -t 8\n%l<exe> Pythagorean_triples2%l<ext>\n"},
     'Pythagorean_triples3' => {'cmd' => "ulimit -t 8\n%l<exe> Pythagorean_triples3%l<ext>\n"},
+    'Vibrating_rectangles' => {'cmd' => ["ulimit -t 2\n%l<exe> Vibrating_rectangles%l<ext>\n","%l<exe> -e'print \"\e[0H\e[0J\e[?25h\"'"]},
     'Wireworld' => {'cmd' => "%l<exe> Wireworld%l<ext> --stop-on-repeat"},
     'Memory_layout_of_a_data_structure0' => {'skip' => 'speculation'},
     'Memory_layout_of_a_data_structure1' => {'skip' => 'speculation'},
@@ -721,4 +722,5 @@ multi load-resources ('perl6') { (
     'Munching_squares1' => {'cmd' => ["%l<exe> Munching_squares1%l<ext>\n","$view munching1.ppm"]},
     'Pinstripe_Display' => {'cmd' => ["%l<exe> Pinstripe_Display%l<ext>\n","$view pinstripes.pgm"]},
     'Plasma_effect' => {'cmd' => ["%l<exe> Plasma_effect%l<ext>\n","$view Plasma-perl6.png"]},
+	'Hough_transform' => {'file' => 'pentagon.ppm', 'cmd' => ["%l<exe> Hough_transform%l<ext>\n","$view hough-transform.png"]},
 ) }
