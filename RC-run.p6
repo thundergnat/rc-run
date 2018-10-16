@@ -645,6 +645,7 @@ multi load-resources ('perl6') { (
                   "%l<exe> Truth_table%l<ext> 'Jim & (Spock ^ Bones) | Scotty'\n"]
     },
     'User_input_Text' => { 'cmd' => "echo \"Rosettacode\n10\" %l<exe> User_input_Text%l<ext> "},
+    'Fixed_length_records' => {'file' => 'flr-infile.dat', 'cmd' => "%l<exe> Fixed_length_records%l<ext> < flr-infile.dat\n"},
 
 # games
     '15_Puzzle_Game' => {'skip' => 'user interaction, game'},
@@ -723,4 +724,10 @@ multi load-resources ('perl6') { (
     'Pinstripe_Display' => {'cmd' => ["%l<exe> Pinstripe_Display%l<ext>\n","$view pinstripes.pgm"]},
     'Plasma_effect' => {'cmd' => ["%l<exe> Plasma_effect%l<ext>\n","$view Plasma-perl6.png"]},
 	'Hough_transform' => {'file' => 'pentagon.ppm', 'cmd' => ["%l<exe> Hough_transform%l<ext>\n","$view hough-transform.png"]},
+    'Polyspiral' => { 'file' => 'polyspiral-perl6.svg',
+        'cmd' => [
+                  "$view polyspiral-perl6.svg",
+                  "%l<exe> Polyspiral%l<ext>\n",
+                 ]
+    },
 ) }

@@ -22,6 +22,8 @@ favicon.ico                     Base64_encode_data
 
 file.cfg                        Read_a_configuration_file
 
+flt-infile.dat                  Fixed_length_records
+
 lemiz.txt (135-0.txt)           Word_count, Letter_frequency
 
 List_of_computer_scientists.lst User_defined_pipe_and_redirection_operators
@@ -33,6 +35,8 @@ mlijobs.txt                     Text processing/Max licenses in use
 notes.txt                       Take_notes_on_the_command_line
 
 pentagon.ppm                    Hough_transform
+
+polyspiral-perl6.svg            Polyspiral
 
 readings.txt                    Text_processing/1, Text_processing/2
 
