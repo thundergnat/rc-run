@@ -650,6 +650,7 @@ multi load-resources ('perl6') { (
 # games
     '15_Puzzle_Game' => {'skip' => 'user interaction, game'},
     '2048' => {'skip' => 'user interaction, game'},
+    '21_Game' => {'skip' => 'user interaction, game'},
     '24_game' => {'skip' => 'user interaction, game'},
     '24_game_Solve' => {'skip' => 'user interaction, game'},
     'Bulls_and_cows' => {'skip' => 'user interaction, game'},
@@ -724,10 +725,11 @@ multi load-resources ('perl6') { (
     'Pinstripe_Display' => {'cmd' => ["%l<exe> Pinstripe_Display%l<ext>\n","$view pinstripes.pgm"]},
     'Plasma_effect' => {'cmd' => ["%l<exe> Plasma_effect%l<ext>\n","$view Plasma-perl6.png"]},
 	'Hough_transform' => {'file' => 'pentagon.ppm', 'cmd' => ["%l<exe> Hough_transform%l<ext>\n","$view hough-transform.png"]},
-    'Polyspiral' => { 'file' => 'polyspiral-perl6.svg',
+    'Polyspiral0' => { 'file' => 'polyspiral-perl6.svg',
         'cmd' => [
                   "$view polyspiral-perl6.svg",
                   "%l<exe> Polyspiral%l<ext>\n",
                  ]
     },
+    'Polyspiral1' => {'cmd' => "ulimit -t 25\n%l<exe> Polyspiral1%l<ext>\n"},
 ) }
