@@ -7,6 +7,7 @@ Bitmap/Read_a_PPM_file
 Bitmap/Read_an_image_through_a_pipe
 Bitmap/Write_a_PPM_file
 Chaos_game
+Color_quantization
 Color_wheel
 Death_Star
 Dragon_curve

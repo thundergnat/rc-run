@@ -441,7 +441,6 @@ multi load-resources ('perl6') { (
     'Pythagorean_quadruples' => {'cmd' => "ulimit -t 10\n%l<exe> Pythagorean_quadruples%l<ext>"},
     'Self-describing_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Self-describing_numbers%l<ext>"},
     'Square-free_integers' => {'cmd' => "ulimit -t 10\n%l<exe> Square-free_integers%l<ext>\n"},
-    'Subset_sum_problem' => {'cmd' => "ulimit -t 8\n%l<exe> Subset_sum_problem%l<ext>"},
     'Sudoku1' => {'cmd' => "ulimit -t 15\n%l<exe> Sudoku1%l<ext>"},
     'Topswops' => {'cmd' => "ulimit -t 10\n%l<exe> Topswops%l<ext>"},
     'Total_circles_area' => {'cmd' => "ulimit -t 10\n%l<exe> Total_circles_area%l<ext>"},
@@ -556,6 +555,7 @@ multi load-resources ('perl6') { (
     'Distributed_programming0' => {'skip' => 'runs forever'},
     'Distributed_programming1' => {'skip' => 'needs a server instance'},
     'Draw_a_rotating_cube' => {'cmd' => "ulimit -t 10\n%l<exe> Draw_a_rotating_cube%l<ext>\n"},
+    'Animate_a_pendulum' => {'cmd' => "ulimit -t 5\n%l<exe> Animate_a_pendulum%l<ext>\n"},
     'Image_noise' => {'cmd' => "ulimit -t 10\n%l<exe> Image_noise%l<ext>\n"},
     'Elementary_cellular_automaton_Infinite_length' => {'cmd' => "ulimit -t 2\n%l<exe> Elementary_cellular_automaton_Infinite_length%l<ext>\n"},
     'Find_limit_of_recursion' => {'cmd' => "ulimit -t 6\n%l<exe> Find_limit_of_recursion%l<ext>\n"},
@@ -570,7 +570,8 @@ multi load-resources ('perl6') { (
     'Pythagorean_triples1' => {'cmd' => "ulimit -t 1\n%l<exe> Pythagorean_triples1%l<ext>\n"},
     'Pythagorean_triples2' => {'cmd' => "ulimit -t 8\n%l<exe> Pythagorean_triples2%l<ext>\n"},
     'Pythagorean_triples3' => {'cmd' => "ulimit -t 8\n%l<exe> Pythagorean_triples3%l<ext>\n"},
-    'Vibrating_rectangles' => {'cmd' => ["ulimit -t 2\n%l<exe> Vibrating_rectangles%l<ext>\n","%l<exe> -e'print \"\e[0H\e[0J\e[?25h\"'"]},
+    'Vibrating_rectangles0' => {'cmd' => ["ulimit -t 2\n%l<exe> Vibrating_rectangles0%l<ext>\n","%l<exe> -e'print \"\e[0H\e[0J\e[?25h\"'"]},
+    'Vibrating_rectangles1' => {'cmd' => ["ulimit -t 5\n%l<exe> Vibrating_rectangles1%l<ext>\n"]},
     'Wireworld' => {'cmd' => "%l<exe> Wireworld%l<ext> --stop-on-repeat"},
     'Memory_layout_of_a_data_structure0' => {'skip' => 'speculation'},
     'Memory_layout_of_a_data_structure1' => {'skip' => 'speculation'},
@@ -652,7 +653,7 @@ multi load-resources ('perl6') { (
     '2048' => {'skip' => 'user interaction, game'},
     '21_Game' => {'skip' => 'user interaction, game'},
     '24_game' => {'skip' => 'user interaction, game'},
-    '24_game_Solve' => {'skip' => 'user interaction, game'},
+
     'Bulls_and_cows' => {'skip' => 'user interaction, game'},
     'Bulls_and_cows_Player' => {'skip' => 'user interaction, game'},
     'Flipping_bits_game' => {'skip' => 'user interaction, game'},
@@ -673,6 +674,8 @@ multi load-resources ('perl6') { (
     'Snake' => {'skip' => 'user interaction, game'},
     'Snake_And_Ladder' => {'skip' => 'user interaction, game'},
     'Tic-tac-toe' => {'skip' => 'user interaction, game'},
+    '24_game_Solve0' => {cmd => "echo 1399 | %l<exe> 24_game_Solve0%l<ext>"},
+    '24_game_Solve1' => {cmd => "%l<exe> 24_game_Solve1%l<ext> 1399"},
 
 # image producing tasks
     'Dragon_curve' => { 'cmd' => ["%l<exe> Dragon_curve%l<ext> > Dragon-curve-perl6.svg\n","$view Dragon-curve-perl6.svg"]},
@@ -730,8 +733,9 @@ multi load-resources ('perl6') { (
     'Polyspiral0' => { 'file' => 'polyspiral-perl6.svg',
         'cmd' => [
                   "$view polyspiral-perl6.svg",
-                  "%l<exe> Polyspiral%l<ext>\n",
+                  "%l<exe> Polyspiral0%l<ext>\n",
                  ]
     },
     'Polyspiral1' => {'cmd' => "ulimit -t 25\n%l<exe> Polyspiral1%l<ext>\n"},
+    'Color_quantization' => {'file' => 'Quantum_frog.png', 'cmd' => ["%l<exe> Color_quantization%l<ext>\n", "$view Quantum_frog.png", "$view Quantum-frog-16-perl6.png"]},
 ) }
