@@ -612,6 +612,7 @@ multi load-resources ('perl6') { (
     'Integer_comparison2' => {'cmd' => "echo \"9\n17\" | %l<exe> Integer_comparison2%l<ext>"},
     'Inverted_index' => {'file' => 'unixdict.txt','cmd' => "echo \"rosetta\ncode\nblargg\n\" | %l<exe> Inverted_index%l<ext> unixdict.txt\n"},
     'Keyboard_input_Obtain_a_Y_or_N_response' => {'skip' => 'user interaction, custom shell'},
+    'Keyboard_input_Keypress_check' => {'skip' => 'user interaction'},
     'Keyboard_macros' => {'skip' => 'user interaction, custom shell'},
     'Longest_string_challenge' => {'cmd' => "echo \"a\nbb\nccc\nddd\nee\nf\nggg\n\" | %l<exe> Longest_string_challenge%l<ext>\n"},
     'Magic_8-Ball' => {'cmd' => "echo \"?\n?\n?\n?\n?\n\n\" | %l<exe> Magic_8-Ball%l<ext>\n"},
