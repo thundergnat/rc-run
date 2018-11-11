@@ -403,6 +403,8 @@ multi load-resources ('perl6') { (
     'Write_entire_file1' => {'skip' => 'fragment'},
 
     'Shell_one-liner' => {'skip' => 'shell code'},
+    'Copy_stdin_to_stdout0' => {'skip' => 'shell code'},
+    'Copy_stdin_to_stdout1' => {'skip' => 'user interaction'},
 
     'Mouse_position' => {'skip' => 'jvm only'},
     'HTTPS0' => {'skip' => 'large'},
