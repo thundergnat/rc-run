@@ -635,6 +635,7 @@ multi load-resources ('perl6') { (
                   "echo \"1.5, 0.5 3.5, 2.5 5.5, 4.5 7.5, 6.5\" | %l<exe> Sparkline_in_unicode%l<ext>\n",
                   "echo \"3 2 1 0 -1 -2 -3 -4 -3 -2 -1 0 1 2 3\" | %l<exe> Sparkline_in_unicode%l<ext>\n"]
     },
+    'Terminal_control_Restricted_width_positional_input_No_wrapping' => {'skip' => 'user interaction'},
     'Temperature_conversion0' => {'cmd' => "echo \"21\" | %l<exe> Temperature_conversion0%l<ext>\n"},
     'Temperature_conversion1' => {
         'cmd' => ["echo \"0\" | %l<exe> Temperature_conversion1%l<ext>\n",
