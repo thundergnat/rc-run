@@ -291,7 +291,6 @@ multi load-resources ('perl6') { (
     'Amb2' => {'skip' => 'broken'},
     'Formal_power_series' => {'skip' => 'broken'},
     'Names_to_numbers' => {'skip' => 'broken'},
-    'Singly-linked_list_Element_insertion' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
 
     'Create_a_file' => { :fail-by-design('or-at-least-expected') },
@@ -381,7 +380,13 @@ multi load-resources ('perl6') { (
     'Polymorphism1' => {'skip' => 'fragment'},
     'Program_termination' => {'skip' => 'fragment'},
     'Scope_modifiers0' => {'skip' => 'fragment'},
-    'Singly-linked_list_Element_definition' => {'skip' => 'fragment'},
+    'Singly-linked_list_Element_definition0' => {'skip' => 'fragment'},
+    'Singly-linked_list_Element_insertion' => {'skip' => 'fragment'},
+    'Singly-linked_list_Element_removal0' => {'skip' => 'fragment'},
+    'Singly-linked_list_Element_removal1' => {'skip' => 'fragment'},
+    'Singly-linked_list_Traversal2' => {'skip' => 'fragment'},
+    'Singly-linked_list_Traversal3' => {'skip' => 'fragment'},
+
     'Sort_a_list_of_object_identifiers1' => {'skip' => 'fragment'},
     'Sort_a_list_of_object_identifiers2' => {'skip' => 'fragment'},
     'Sort_an_integer_array0' => {'skip' => 'fragment'},
@@ -405,6 +410,7 @@ multi load-resources ('perl6') { (
     'Shell_one-liner' => {'skip' => 'shell code'},
     'Copy_stdin_to_stdout0' => {'skip' => 'shell code'},
     'Copy_stdin_to_stdout1' => {'skip' => 'user interaction'},
+    'Finite_state_machine' => {'skip' => 'user interaction'},
 
     'Mouse_position' => {'skip' => 'jvm only'},
     'HTTPS0' => {'skip' => 'large'},
@@ -523,6 +529,9 @@ multi load-resources ('perl6') { (
     'Hello_world_Line_printer0' => {'skip' => 'needs line printer attached'},
     'Hello_world_Line_printer1' => {'skip' => 'needs line printer attached'},
     'Narcissist' => {'skip' => 'needs to run from command line'},
+    'HTTPS_Client-authenticated' => {'skip' => 'needs certificate set up'},
+    'Send_email' => {'skip' => 'needs email server'},
+
     'Anagrams0' => {'file' => 'unixdict.txt'},
     'Anagrams1' => {'file' => 'unixdict.txt'},
     'Anagrams_Deranged_anagrams' => {'file' => 'unixdict.txt'},
@@ -557,7 +566,7 @@ multi load-resources ('perl6') { (
     'Distributed_programming0' => {'skip' => 'runs forever'},
     'Distributed_programming1' => {'skip' => 'needs a server instance'},
     'Draw_a_rotating_cube' => {'cmd' => "ulimit -t 10\n%l<exe> Draw_a_rotating_cube%l<ext>\n"},
-    'Animate_a_pendulum' => {'cmd' => "ulimit -t 5\n%l<exe> Animate_a_pendulum%l<ext>\n"},
+    'Animate_a_pendulum' => {'cmd' => "ulimit -t 1\n%l<exe> Animate_a_pendulum%l<ext>\n"},
     'Image_noise' => {'cmd' => "ulimit -t 10\n%l<exe> Image_noise%l<ext>\n"},
     'Elementary_cellular_automaton_Infinite_length' => {'cmd' => "ulimit -t 2\n%l<exe> Elementary_cellular_automaton_Infinite_length%l<ext>\n"},
     'Find_limit_of_recursion' => {'cmd' => "ulimit -t 6\n%l<exe> Find_limit_of_recursion%l<ext>\n"},
@@ -636,6 +645,7 @@ multi load-resources ('perl6') { (
                   "echo \"3 2 1 0 -1 -2 -3 -4 -3 -2 -1 0 1 2 3\" | %l<exe> Sparkline_in_unicode%l<ext>\n"]
     },
     'Terminal_control_Restricted_width_positional_input_No_wrapping' => {'skip' => 'user interaction'},
+    'Terminal_control_Restricted_width_positional_input_With_wrapping' => {'skip' => 'user interaction'},
     'Temperature_conversion0' => {'cmd' => "echo \"21\" | %l<exe> Temperature_conversion0%l<ext>\n"},
     'Temperature_conversion1' => {
         'cmd' => ["echo \"0\" | %l<exe> Temperature_conversion1%l<ext>\n",
@@ -697,7 +707,7 @@ multi load-resources ('perl6') { (
     'Plot_coordinate_pairs' => { 'cmd' => ["%l<exe> Plot_coordinate_pairs%l<ext> > Plot-coordinate-pairs-perl6.svg\n","$view Plot-coordinate-pairs-perl6.svg"]},
     'Pythagoras_tree' => { 'cmd' => ["%l<exe> Pythagoras_tree%l<ext> > Pythagoras-tree-perl6.svg\n","$view Pythagoras-tree-perl6.svg"]},
     'Pentagram' => { 'cmd' => ["%l<exe> Pentagram%l<ext> > Pentagram-perl6.svg\n","$view Pentagram-perl6.svg"]},
-    'Sierpinski_triangle_Graphical' => { 'cmd' => ["%l<exe> Sierpinski_triangle_Graphical%l<ext> > Sierpinski_triangle_Graphical-perl6.svg\n","$view Sierpinski_triangle_Graphical-perl6.svg"]},
+    'Sierpinski_triangle_Graphical' => { 'cmd' => ["%l<exe> Sierpinski_triangle_Graphical%l<ext>","$view sierpinski_triangle.svg"]},
     'Yin_and_yang0' => { 'cmd' => ["%l<exe> Yin_and_yang0%l<ext> > Yin_and_yang-perl6.svg\n","$view Yin_and_yang-perl6.svg"]},
     'Sierpinski_pentagon' => { 'cmd' => ["%l<exe> Sierpinski_pentagon%l<ext> > Sierpinski_pentagon-perl6.svg\n","$view Sierpinski_pentagon-perl6.svg"]},
     'Superellipse' => { 'cmd' => ["%l<exe> Superellipse%l<ext> > Superellipse-perl6.svg\n","$view Superellipse-perl6.svg"]},
@@ -742,4 +752,5 @@ multi load-resources ('perl6') { (
     },
     'Polyspiral1' => {'cmd' => "ulimit -t 25\n%l<exe> Polyspiral1%l<ext>\n"},
     'Color_quantization' => {'file' => 'Quantum_frog.png', 'cmd' => ["%l<exe> Color_quantization%l<ext>\n", "$view Quantum_frog.png", "$view Quantum-frog-16-perl6.png"]},
+    'Curve_that_touches_three_points' => {'cmd' => ["%l<exe> Curve_that_touches_three_points%l<ext>\n","$view Curve-3-points-perl6.png"]},
 ) }
