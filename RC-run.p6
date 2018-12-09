@@ -161,7 +161,7 @@ sub run-it ($dir, $code, $tasknum) {
     my $current = $*CWD;
     chdir $dir;
     if %resource{$code}<file> -> $fn {
-        copy "$current/rc/resources/{$fn}", "./{$fn}"
+        copy "$current/rc/resources/{$_}", "./{$_}" for $fn[]
     }
     dump-code ("$code%l<ext>") unless $quiet;
     check-dependencies("$code%l<ext>", $lang) if $deps;
@@ -234,8 +234,10 @@ multi check-dependencies ($fn, 'perl6') {
 multi check-dependencies ($fn, 'perl') {
     my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
     if +@use {
+
         for @use -> $module {
             next if $module eq $module.lc;
+            next if $module.starts-with(any('constant','bignum'));
             my $installed = shell( "%l<exe> -e 'eval \"use {$module}\"; exit 1 if \$@'" );
             print %c<dep>;
             if $installed {
@@ -292,6 +294,7 @@ multi load-resources ('perl6') { (
     'Formal_power_series' => {'skip' => 'broken'},
     'Names_to_numbers' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
+    'Median_filter' => {'skip' => 'broken'},
 
     'Create_a_file' => { :fail-by-design('or-at-least-expected') },
     'File_size1' => { :fail-by-design('or-at-least-expected') },
@@ -373,7 +376,8 @@ multi load-resources ('perl6') { (
     'Metaprogramming2' => {'skip' => 'fragment'},
     'Multiple_distinct_objects' => {'skip' => 'fragment'},
     'Mutex' => {'skip' => 'fragment'},
-    'Optional_parameters' => {'skip' => 'fragment'},
+    'Optional_parameters0' => {'skip' => 'fragment'},
+    'Optional_parameters1' => {'skip' => 'fragment'},
     'Parallel_Brute_Force1' => {'skip' => 'fragment'},
     'Pick_random_element3' => {'skip' => 'fragment'},
     'Pointers_and_references' => {'skip' => 'fragment'},
@@ -411,6 +415,7 @@ multi load-resources ('perl6') { (
     'Copy_stdin_to_stdout0' => {'skip' => 'shell code'},
     'Copy_stdin_to_stdout1' => {'skip' => 'user interaction'},
     'Finite_state_machine' => {'skip' => 'user interaction'},
+    'Terminal_control_Positional_read' => {'skip' => 'user interaction'},
 
     'Mouse_position' => {'skip' => 'jvm only'},
     'HTTPS0' => {'skip' => 'large'},
@@ -474,6 +479,7 @@ multi load-resources ('perl6') { (
     'Odd_word_problem' => {'cmd' => ["echo 'we,are;not,in,kansas;any,more.' | %l<exe> Odd_word_problem%l<ext>\n",
                                      "echo 'what,is,the;meaning,of:life.' | %l<exe> Odd_word_problem%l<ext>\n"]
     },
+    'Matrix_chain_multiplication' => {'cmd' => ["echo '1, 5, 25, 30, 100, 70, 2, 1, 100, 250, 1, 1000, 2' | %l<exe> Matrix_chain_multiplication%l<ext>"]},
     'Remove_lines_from_a_file' => {'cmd' => ["cal > foo\n","cat foo\n","%l<exe> Remove_lines_from_a_file%l<ext> foo 1 2\n","cat foo"]},
     'Truncate_a_file' => {'cmd' => ["cal > foo\n","cat foo\n","%l<exe> Truncate_a_file%l<ext> foo 69\n","cat foo"]},
     'Executable_library1' => {'skip' => 'need to install library'},
@@ -566,7 +572,7 @@ multi load-resources ('perl6') { (
     'Distributed_programming0' => {'skip' => 'runs forever'},
     'Distributed_programming1' => {'skip' => 'needs a server instance'},
     'Draw_a_rotating_cube' => {'cmd' => "ulimit -t 10\n%l<exe> Draw_a_rotating_cube%l<ext>\n"},
-    'Animate_a_pendulum' => {'cmd' => "ulimit -t 1\n%l<exe> Animate_a_pendulum%l<ext>\n"},
+    'Animate_a_pendulum' => {'cmd' => "ulimit -t 2\n%l<exe> Animate_a_pendulum%l<ext>\n"},
     'Image_noise' => {'cmd' => "ulimit -t 10\n%l<exe> Image_noise%l<ext>\n"},
     'Elementary_cellular_automaton_Infinite_length' => {'cmd' => "ulimit -t 2\n%l<exe> Elementary_cellular_automaton_Infinite_length%l<ext>\n"},
     'Find_limit_of_recursion' => {'cmd' => "ulimit -t 6\n%l<exe> Find_limit_of_recursion%l<ext>\n"},
@@ -661,6 +667,7 @@ multi load-resources ('perl6') { (
     },
     'User_input_Text' => { 'cmd' => "echo \"Rosettacode\n10\" %l<exe> User_input_Text%l<ext> "},
     'Fixed_length_records' => {'file' => 'flr-infile.dat', 'cmd' => "%l<exe> Fixed_length_records%l<ext> < flr-infile.dat\n"},
+    'Percentage_difference_between_images' => {'file' => ['Lenna100.jpg','Lenna50.jpg'], 'cmd' => ["%l<exe> Percentage_difference_between_images%l<ext>"]},
 
 # games
     '15_Puzzle_Game' => {'skip' => 'user interaction, game'},
@@ -709,7 +716,7 @@ multi load-resources ('perl6') { (
     'Pentagram' => { 'cmd' => ["%l<exe> Pentagram%l<ext> > Pentagram-perl6.svg\n","$view Pentagram-perl6.svg"]},
     'Sierpinski_triangle_Graphical' => { 'cmd' => ["%l<exe> Sierpinski_triangle_Graphical%l<ext>","$view sierpinski_triangle.svg"]},
     'Yin_and_yang0' => { 'cmd' => ["%l<exe> Yin_and_yang0%l<ext> > Yin_and_yang-perl6.svg\n","$view Yin_and_yang-perl6.svg"]},
-    'Sierpinski_pentagon' => { 'cmd' => ["%l<exe> Sierpinski_pentagon%l<ext> > Sierpinski_pentagon-perl6.svg\n","$view Sierpinski_pentagon-perl6.svg"]},
+    'Sierpinski_pentagon' => { 'cmd' => ["%l<exe> Sierpinski_pentagon%l<ext>\n","$view sierpinski_pentagon.svg"]},
     'Superellipse' => { 'cmd' => ["%l<exe> Superellipse%l<ext> > Superellipse-perl6.svg\n","$view Superellipse-perl6.svg"]},
     'Mandelbrot_set' => { 'cmd' => ["%l<exe> Mandelbrot_set%l<ext> 255 > Mandelbrot-set-perl6.ppm\n","$view Mandelbrot-set-perl6.ppm"]},
     'Bitmap_Histogram' => {'file' => 'Lenna.ppm', 'cmd' => ["%l<exe> Bitmap_Histogram%l<ext>\n","$view Lenna-bw.pbm"]},
@@ -753,4 +760,4 @@ multi load-resources ('perl6') { (
     'Polyspiral1' => {'cmd' => "ulimit -t 25\n%l<exe> Polyspiral1%l<ext>\n"},
     'Color_quantization' => {'file' => 'Quantum_frog.png', 'cmd' => ["%l<exe> Color_quantization%l<ext>\n", "$view Quantum_frog.png", "$view Quantum-frog-16-perl6.png"]},
     'Curve_that_touches_three_points' => {'cmd' => ["%l<exe> Curve_that_touches_three_points%l<ext>\n","$view Curve-3-points-perl6.png"]},
-) }
+)}
