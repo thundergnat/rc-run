@@ -611,6 +611,7 @@ multi load-resources ('perl6') { (
     'File_size_distribution' => {'cmd' => "%l<exe> File_size_distribution%l<ext> '..'"},
     'Hello_world_Web_server0' => {'skip' => 'runs forever'},
     'Hello_world_Web_server1' => {'skip' => 'runs forever'},
+    'Run_as_a_daemon_or_service' => {'skip' => 'runs forever'},
     'Horizontal_sundial_calculations' => {'cmd' => "echo \"-4.95\n-150.5\n-150\n\" | %l<exe> Horizontal_sundial_calculations%l<ext>"},
     'Input_Output_for_Lines_of_Text0' => {
         'cmd' => "echo \"3\nhello\nhello world\nPack my Box with 5 dozen liquor jugs\" | %l<exe> Input_Output_for_Lines_of_Text0%l<ext>"
@@ -667,7 +668,6 @@ multi load-resources ('perl6') { (
     },
     'User_input_Text' => { 'cmd' => "echo \"Rosettacode\n10\" %l<exe> User_input_Text%l<ext> "},
     'Fixed_length_records' => {'file' => 'flr-infile.dat', 'cmd' => "%l<exe> Fixed_length_records%l<ext> < flr-infile.dat\n"},
-    'Percentage_difference_between_images' => {'file' => ['Lenna100.jpg','Lenna50.jpg'], 'cmd' => ["%l<exe> Percentage_difference_between_images%l<ext>"]},
 
 # games
     '15_Puzzle_Game' => {'skip' => 'user interaction, game'},
@@ -760,4 +760,8 @@ multi load-resources ('perl6') { (
     'Polyspiral1' => {'cmd' => "ulimit -t 25\n%l<exe> Polyspiral1%l<ext>\n"},
     'Color_quantization' => {'file' => 'Quantum_frog.png', 'cmd' => ["%l<exe> Color_quantization%l<ext>\n", "$view Quantum_frog.png", "$view Quantum-frog-16-perl6.png"]},
     'Curve_that_touches_three_points' => {'cmd' => ["%l<exe> Curve_that_touches_three_points%l<ext>\n","$view Curve-3-points-perl6.png"]},
+
+    'Percentage_difference_between_images' => {'file' => ['Lenna100.jpg','Lenna50.jpg'], 'cmd' => ["%l<exe> Percentage_difference_between_images%l<ext>", "$view Lenna100.jpg", "$view Lenna50.jpg"]},
+    'Bilinear_interpolation' => {'file' => 'Lenna100.jpg', 'cmd' => ["%l<exe> Bilinear_interpolation%l<ext>", "$view Lenna100.jpg", "$view Lenna100-larger.jpg"]},
+    'Image_convolution' => {'file' => 'Lenna100.jpg', 'cmd' => ["%l<exe> Image_convolution%l<ext>", "$view Lenna100.jpg", "$view Lenna100-convoluted.jpg"]},
 )}

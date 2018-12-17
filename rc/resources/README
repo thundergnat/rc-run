@@ -30,6 +30,11 @@ List_of_computer_scientists.lst User_defined_pipe_and_redirection_operators
 
 Lenna.ppm                       Bitmap_Histogram
 
+Lenna100.jpg                    Percentage_difference_between_images, Bilinear_interpolation,
+                                Image_convolution 
+
+Lenna50.jpg                     Percentage_difference_between_images
+
 mlijobs.txt                     Text processing/Max licenses in use
 
 notes.txt                       Take_notes_on_the_command_line

@@ -1,5 +1,6 @@
 Archimedean_spiral
 Barnsley_fern
+Bilinear_interpolation
 Bitmap/Bézier curves/Cubic
 Bitmap/Bézier curves/Quadratic
 Bitmap/Histogram
@@ -16,6 +17,7 @@ Fractal_tree
 Grayscale_image
 Hilbert_curve
 Hough_transform
+Image_convolution
 Julia_set
 Koch_curve
 Kronecker_product_based_fractals
@@ -24,6 +26,7 @@ Munching_squares
 Peano_curve
 Penrose_tiling
 Pentagram
+Percentage_difference_between_images
 Pinstripe/Display
 Plasma_effect
 Plot_coordinate_pairs
