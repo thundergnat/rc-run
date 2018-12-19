@@ -417,7 +417,7 @@ multi load-resources ('perl6') { (
     'Finite_state_machine' => {'skip' => 'user interaction'},
     'Terminal_control_Positional_read' => {'skip' => 'user interaction'},
 
-    'Mouse_position' => {'skip' => 'jvm only'},
+    'Mouse_position0' => {'skip' => 'jvm only'},
     'HTTPS0' => {'skip' => 'large'},
     'HTTPS1' => {'skip' => 'large'},
     'Solve_a_Numbrix_puzzle' => {'cmd' => "for n in {1..35}; do echo \"\f\"; done\n%l<exe> Solve_a_Numbrix_puzzle%l<ext>"},
@@ -442,6 +442,7 @@ multi load-resources ('perl6') { (
     'Last_letter-first_letter' => {'cmd' => "ulimit -t 15\n%l<exe> Last_letter-first_letter%l<ext>"},
     'Left_factorials0' => {'cmd' => "ulimit -t 10\n%l<exe> Left_factorials0%l<ext>"},
     'Lucas-Lehmer_test' => {'cmd' => "ulimit -t 10\n%l<exe> Lucas-Lehmer_test%l<ext>"},
+    'Matrix_Digital_Rain' => {'cmd' => "ulimit -t 15\n%l<exe> Matrix_Digital_Rain%l<ext>"},
     'Metronome' => {'skip' => 'long'},
     'Multiple_regression' => {'cmd' => "ulimit -t 10\n%l<exe> Multiple_regression%l<ext>"},
     'Narcissistic_decimal_number0' => {'cmd' => "ulimit -t 10\n%l<exe> Narcissistic_decimal_number0%l<ext>"},
