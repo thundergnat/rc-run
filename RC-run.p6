@@ -30,7 +30,7 @@ my %c = ( # text colors
     delim => "\e[0;93m", # yellow
     cmd   => "\e[1;96m", # cyan
     warn  => "\e[0;91m", # red
-    dep   => "\e[40;36m",
+    dep   => "\e[38;2;248;24;148m", # pink
     clr   => "\e[0m",    # clear formatting
 );
 
@@ -186,7 +186,7 @@ sub run-it ($dir, $code, $tasknum) {
         }
     }
     chdir $current;
-    say "\nDone task #$tasknum: $code";
+    say "\nDone task #$tasknum: $code\e[?25h";
 }
 
 sub pause {
@@ -210,8 +210,9 @@ sub uh-oh ($err) { put %c<warn>, "{'#' x 79}\n\n $err \n\n{'#' x 79}", %c<clr> }
 multi check-dependencies ($fn, 'perl6') {
     my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
     if +@use {
+        say %c<dep>, 'Checking dependencies...', %c<clr>;
         for @use -> $module {
-            if $module eq any('v6','nqp', 'NativeCall') or $module.contains('MONKEY')
+            if $module eq any('v6', 'v6.c', 'v6.d', 'nqp', 'NativeCall', 'Test') or $module.contains('MONKEY')
               or $module.contains('experimental') or $module.starts-with('lib') {
                   print %c<dep>;
                   say 'ok, no installation necessary: ', $module;
@@ -219,6 +220,15 @@ multi check-dependencies ($fn, 'perl6') {
                   next;
             }
             my $installed = $*REPO.resolve(CompUnit::DependencySpecification.new(:short-name($module)));
+            my @mods = $module;
+            if './../../../perl6-modules.txt'.IO.e {
+                my $fh = open( './../../../perl6-modules.txt', :r ) or die $fh;
+                @mods.append: $fh.lines;
+                $fh.close;
+            }
+            my $fh = open( './../../../perl6-modules.txt', :w ) or die $fh;
+            $fh.spurt: @mods.Bag.keys.sort.join: "\n";
+            $fh.close;
             print %c<dep>;
             if $installed {
                 say 'ok, installed: ', $module
@@ -234,7 +244,6 @@ multi check-dependencies ($fn, 'perl6') {
 multi check-dependencies ($fn, 'perl') {
     my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
     if +@use {
-
         for @use -> $module {
             next if $module eq $module.lc;
             next if $module.starts-with(any('constant','bignum'));
