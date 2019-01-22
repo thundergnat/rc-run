@@ -70,7 +70,12 @@ RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
 
 By default, if neither --local nor --remote are set, will update task list if
 more than 24 hours old and will download tasks if they are not locally cached or
-are more than 7 days old (since the last time they were downloaded.)
+are more than 7 days old (since the last time they were downloaded.
+
+The perl6-modules.txt file contains all of the modules used to run every Perl 6
+task on Rosetta Code. To save time, it may be desirable to install them before
+trying to do a full smoker run, especially since several won't install without
+forcing. The modules file is updated automatically when run with a -deps option.
 
 Run at a command line:
 
@@ -100,7 +105,7 @@ is valid.
 
     perl6 RC-run.p6 -lf Anagrams
 
- is not.
+is not.
 
 
 AUTHOR:
