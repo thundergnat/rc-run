@@ -39,7 +39,6 @@ SVG::Plot
 Sort::Naturally
 Terminal::ANSIColor
 Terminal::Caca
-Terminal::CacaDateTime::Format
 TrigPi
 URI
 URI::Escape
@@ -47,4 +46,3 @@ X11::libxdo
 XML
 XML::Writer
 XML::XPath
-v6.d
