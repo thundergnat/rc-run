@@ -6,16 +6,19 @@ use MONKEY-SEE-NO-EVAL;
 my %*SUB-MAIN-OPTS = :named-anywhere;
 
 unit sub MAIN(
-    Str $run = '',        # Task or file name
-    Str :$lang = 'perl6', # Language, default perl6 - should be same as in <lang *> markup
-    Int :$skip = 0,       # Skip # to continue partially into a list
-    Bool :f(:$force),     # Override any task skip parameter in %resource hash
-    Bool :l(:$local),     # Only use code from local cache
-    Bool :r(:$remote),    # Only use code from remote server (refresh local cache)
-    Bool :q(:$quiet),     # Less verbose, don't display source code
-    Bool :d(:$deps),      # Load dependencies
-    Bool :p(:$pause),     # pause after each task
-    Bool :b(:$broken),    # pause after each task which is broken or fails in some way
+    Str $run = '',        #= Task or file name
+    Str :$lang = 'perl6', #= Language, default perl6 - should be same as in <lang *> markup
+    Int :$skip = 0,       #= Skip # to continue partially into a list
+    Bool :f(:$force),     #= Override any task skip parameter in %resource hash
+    Bool :l(:$local),     #= Only use code from local cache
+    Bool :r(:$remote),    #= Only use code from remote server (refresh local cache)
+    Bool :q(:$quiet),     #= Less verbose, don't display source code
+    Bool :d(:$deps),      #= Load dependencies
+    Bool :p(:$pause),     #= pause after each task
+    Bool :b(:$broken),    #= pause after each task which is broken or fails in some way
+    Int  :$sleep = 0,     #= sleep for $sleep after each task
+    Bool :t(:$timer),     #= save timing data for each task
+
 );
 
 die 'You can select local or remote, but not both...' if $local && $remote;
@@ -70,6 +73,12 @@ if $get-tasks { # load tasks from web if cache is not found, older than one day 
         note 'Using cached task list.';
         @tasks = "%l<dir>.tasks".IO.slurp.lines; # load tasks from file
     }
+}
+
+my $tfile;
+if $timer {
+    $tfile = open :w, "{$lang}-time.txt";
+    $tfile.close;
 }
 
 note "Skipping first $skip tasks..." if $skip;
@@ -138,6 +147,7 @@ for @tasks -> $title {
     }
     say  %c<delim>, '=' x 79, %c<clr>;
     redo if $redo;
+    sleep $sleep if $sleep;
     pause if $pause;
 
 }
@@ -166,9 +176,16 @@ sub run-it ($dir, $code, $tasknum) {
     dump-code ("$code%l<ext>") unless $quiet;
     check-dependencies("$code%l<ext>", $lang) if $deps;
     my @cmd = %resource{$code}<cmd> ?? |%resource{$code}<cmd> !! "%l<exe> $code%l<ext>\n";
+    if $timer {
+        $tfile = open :a, "{$current}/{$lang}-time.txt";
+    }
+    my $time = 'NA: not run or killed before completion';
     for @cmd -> $cmd {
         say "\nCommand line: {%c<cmd>}$cmd",%c<clr>;
+        if $timer { $tfile.say: "Command line: $cmd".chomp }
+        my $start = now;
         try shell $cmd;
+        $time = (now - $start).round(.001);
         CATCH {
             when /'exit code: 137'/ { }
             default {
@@ -184,9 +201,11 @@ sub run-it ($dir, $code, $tasknum) {
                 }
              }
         }
+    if $timer { $tfile.say("#$tasknum - Wallclock seconds: $time\n") }
     }
     chdir $current;
-    say "\nDone task #$tasknum: $code\e[?25h";
+    say "\nDone task #$tasknum: $code - wallclock seconds: $time\e[?25h";
+    $tfile.close if $timer;
 }
 
 sub pause {
@@ -419,6 +438,7 @@ multi load-resources ('perl6') { (
     'Variadic_function2' => {'skip' => 'fragment'},
     'Write_entire_file0' => {'skip' => 'fragment'},
     'Write_entire_file1' => {'skip' => 'fragment'},
+    'Code_segment_unload' => {'skip' => 'no code'},
 
     'Shell_one-liner' => {'skip' => 'shell code'},
     'Copy_stdin_to_stdout0' => {'skip' => 'shell code'},
@@ -436,7 +456,9 @@ multi load-resources ('perl6') { (
     'Solve_the_no_connection_puzzle' => {'cmd' => "for n in {1..35}; do echo \"\f\"; done\n%l<exe> Solve_the_no_connection_puzzle%l<ext>"},
 
     '9_billion_names_of_God_the_integer' => {'cmd' => "ulimit -t 10\n%l<exe> 9_billion_names_of_God_the_integer%l<ext>"},
+    'Addition_chains' => {'cmd' => "ulimit -t 10\n%l<exe> Addition_chains%l<ext>"},
     'Arithmetic_Rational0' => {'cmd' => "ulimit -t 10\n%l<exe> Arithmetic_Rational0%l<ext>"},
+    'Cuban_primes0' => {'cmd' => "ulimit -t 2\n%l<exe> Cuban_primes0%l<ext>"},
     'Dining_philosophers' => {'cmd' => "ulimit -t 1\n%l<exe> Dining_philosophers%l<ext>"},
     'Find_largest_left_truncatable_prime_in_a_given_base' => {'cmd' => "ulimit -t 15\n%l<exe> Find_largest_left_truncatable_prime_in_a_given_base%l<ext>"},
     'Four_is_the_number_of_letters_in_the____' => {'cmd' => "ulimit -t 13\n%l<exe> Four_is_the_number_of_letters_in_the____%l<ext>"},
@@ -446,8 +468,8 @@ multi load-resources ('perl6') { (
     'Iterated_digits_squaring2' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring2%l<ext>"},
     'Kaprekar_numbers1' => {'cmd' => "ulimit -t 2\n%l<exe> Kaprekar_numbers1%l<ext>"},
     'Kaprekar_numbers2' => {'cmd' => "ulimit -t 2\n%l<exe> Kaprekar_numbers2%l<ext>"},
-    'Knapsack_problem_0-1' => {'cmd' => "ulimit -t 10\n%l<exe> Knapsack_problem_0-1%l<ext>"},
-    'Knapsack_problem_Bounded' => {'cmd' => "ulimit -t 10\n%l<exe> Knapsack_problem_Bounded%l<ext>"},
+    'Knapsack_problem_0-10' => {'cmd' => "ulimit -t 10\n%l<exe> Knapsack_problem_0-10%l<ext>"},
+    'Knapsack_problem_Bounded0' => {'cmd' => "ulimit -t 10\n%l<exe> Knapsack_problem_Bounded0%l<ext>"},
     'Last_letter-first_letter' => {'cmd' => "ulimit -t 15\n%l<exe> Last_letter-first_letter%l<ext>"},
     'Left_factorials0' => {'cmd' => "ulimit -t 10\n%l<exe> Left_factorials0%l<ext>"},
     'Lucas-Lehmer_test' => {'cmd' => "ulimit -t 10\n%l<exe> Lucas-Lehmer_test%l<ext>"},
