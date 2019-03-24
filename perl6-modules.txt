@@ -27,6 +27,7 @@ Lingua::EN::Numbers::Cardinal
 MagickWand
 MagickWand::Enums
 Math::Primesieve
+MultiVector
 NativeCall::Types
 Net::DNS
 Net::FTP
@@ -37,6 +38,7 @@ SOAP::Client
 SVG
 SVG::Plot
 Sort::Naturally
+Term::termios
 Terminal::ANSIColor
 Terminal::Caca
 TrigPi
