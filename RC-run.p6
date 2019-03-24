@@ -322,7 +322,6 @@ multi load-resources ('perl6') { (
     'Formal_power_series' => {'skip' => 'broken'},
     'Names_to_numbers' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
-    'Median_filter' => {'skip' => 'broken'},
 
     'Create_a_file' => { :fail-by-design('or-at-least-expected') },
     'File_size1' => { :fail-by-design('or-at-least-expected') },
@@ -439,11 +438,14 @@ multi load-resources ('perl6') { (
     'Write_entire_file0' => {'skip' => 'fragment'},
     'Write_entire_file1' => {'skip' => 'fragment'},
     'Code_segment_unload' => {'skip' => 'no code'},
+    'Safe_mode' => {'skip' => 'no code'},
+    'Untrusted_environment' => {'skip' => 'no code'},
 
     'Shell_one-liner' => {'skip' => 'shell code'},
     'Copy_stdin_to_stdout0' => {'skip' => 'shell code'},
     'Copy_stdin_to_stdout1' => {'skip' => 'user interaction'},
     'Finite_state_machine' => {'skip' => 'user interaction'},
+    'Keyboard_input_Flush_the_keyboard_buffer' => {'skip' => 'user interaction'},
     'Terminal_control_Positional_read' => {'skip' => 'user interaction'},
 
     'Mouse_position0' => {'skip' => 'jvm only'},
@@ -458,6 +460,7 @@ multi load-resources ('perl6') { (
     '9_billion_names_of_God_the_integer' => {'cmd' => "ulimit -t 10\n%l<exe> 9_billion_names_of_God_the_integer%l<ext>"},
     'Addition_chains' => {'cmd' => "ulimit -t 10\n%l<exe> Addition_chains%l<ext>"},
     'Arithmetic_Rational0' => {'cmd' => "ulimit -t 10\n%l<exe> Arithmetic_Rational0%l<ext>"},
+    'Chowla_numbers' => {'cmd' => "ulimit -t 20\n%l<exe> Chowla_numbers%l<ext>"},
     'Cuban_primes0' => {'cmd' => "ulimit -t 2\n%l<exe> Cuban_primes0%l<ext>"},
     'Dining_philosophers' => {'cmd' => "ulimit -t 1\n%l<exe> Dining_philosophers%l<ext>"},
     'Find_largest_left_truncatable_prime_in_a_given_base' => {'cmd' => "ulimit -t 15\n%l<exe> Find_largest_left_truncatable_prime_in_a_given_base%l<ext>"},
