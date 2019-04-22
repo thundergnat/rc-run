@@ -3,6 +3,7 @@ Cairo
 Clifford
 DBIish
 DateTime::Format
+Digest::HMAC
 Digest::MD5
 Digest::RIPEMD
 Digest::SHA
@@ -32,6 +33,7 @@ NativeCall::Types
 Net::DNS
 Net::FTP
 PerlStore::FileStore
+Prime::Factor
 Rat::Precise
 SDL2::Raw
 SOAP::Client

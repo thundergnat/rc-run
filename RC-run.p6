@@ -504,6 +504,7 @@ multi load-resources ('perl6') { (
     'Emirp_primes' => {'cmd' => ["%l<exe> Emirp_primes%l<ext> 1 20 \n","%l<exe> Emirp_primes%l<ext> 7700 8000 values\n"]},
     'File_modification_time' => {'cmd' => "%l<exe> File_modification_time%l<ext> File_modification_time%l<ext>"},
     'Function_frequency' => {'cmd' => "%l<exe> Function_frequency%l<ext> Function_frequency%l<ext>"},
+    'Checksumcolor' =>  {'cmd' => ["md5sum *.* | %l<exe> Checksumcolor%l<ext>"]},
     'Lucky_and_even_lucky_numbers' => {
         'cmd' => ["%l<exe> Lucky_and_even_lucky_numbers%l<ext> 20 , lucky\n",
                   "%l<exe> Lucky_and_even_lucky_numbers%l<ext> 1 20\n",
@@ -721,6 +722,7 @@ multi load-resources ('perl6') { (
     'Mad_Libs' => {'skip' => 'user interaction, game'},
     'Mastermind' => {'skip' => 'user interaction, game'},
     'Minesweeper_game' => {'skip' => 'user interaction, game'},
+    'Nim_Game' => {'skip' => 'user interaction, game'},
     'Number_reversal_game' => {'skip' => 'user interaction, game'},
     'Penney_s_game' => {'skip' => 'user interaction, game'},
     'Pig_the_dice_game' => {'skip' => 'user interaction, game'},
