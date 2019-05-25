@@ -32,7 +32,8 @@ my %c = ( # text colors
     code  => "\e[0;92m", # green
     delim => "\e[0;93m", # yellow
     cmd   => "\e[1;96m", # cyan
-    warn  => "\e[0;91m", # red
+    bad   => "\e[0;91m", # red
+    warn  => "\e[38;2;255;155;0m", # orange
     dep   => "\e[38;2;248;24;148m", # pink
     clr   => "\e[0m",    # clear formatting
 );
@@ -101,11 +102,11 @@ for @tasks -> $title {
     if $remote or !"$taskdir/$name.txt".IO.e or ((now - $modified) > 86400 * 7) {
         my $page = $client.get("{ $url }/index.php?title={ uri-escape $title }&action=raw").content;
 
-        uh-oh("Whoops, can't find page: $url/$title :check spelling.") and next if $page.elems == 0;
+        uh-oh("Whoops, can't find page: $url/$title :check spelling.", 'warn') and next if $page.elems == 0;
         say "Getting code from: http://rosettacode.org/wiki/{ $title.subst(' ', '_', :g) }#%l<language>";
 
         $entry = $page.comb(rx:i/'=={{header|' $(%l<header>) '}}==' .+? [<?before \n'=='<-[={]>*'{{header'> || $] /).Str //
-          uh-oh("No code found\nMay be bad markup");
+          uh-oh("No code found\nMay be bad markup", 'warn');
 
         if $entry ~~ /^^ 'See [[' (.+?) '/' $(%l<language>) / { # no code on main page, check sub page
             $entry = $client.get("{ $url }/index.php?title={ uri-escape $/[0].Str ~ '/' ~ %l<language> }&action=raw").content;
@@ -117,7 +118,7 @@ for @tasks -> $title {
             $entry = "$taskdir/$name.txt".IO.slurp;
             say "Loading code from: $taskdir/$name.txt";
         } else {
-            uh-oh("Task code $taskdir/$name.txt not found, check spelling or run remote.");
+            uh-oh("Task code $taskdir/$name.txt not found, check spelling or run remote.", 'warn');
             next;
         }
     }
@@ -125,7 +126,7 @@ for @tasks -> $title {
     my @blocks = $entry.comb: %l<tag>;
 
     unless @blocks {
-        uh-oh("No code found\nMay be bad markup") unless %resource{"$name"}<skip> ~~ /'ok to skip'/;
+        uh-oh("No code found\nMay be bad markup", 'warn') unless %resource{"$name"}<skip> ~~ /'ok to skip'/;
         say "Skipping $name: ", %resource{"$name"}<skip>, "\n" if %resource{"$name"}<skip>
     }
 
@@ -135,7 +136,7 @@ for @tasks -> $title {
         if %resource{"$name$n"}<skip> && !$force {
             dump-code ("$taskdir/$name$n%l<ext>");
             if %resource{"$name$n"}<skip> ~~ /'broken'/ {
-                uh-oh(%resource{"$name$n"}<skip>);
+                uh-oh(%resource{"$name$n"}<skip>, 'bad');
                 pause if $broken;
             } else {
                 say "Skipping $name$n: ", %resource{"$name$n"}<skip>, "\n";
@@ -190,7 +191,7 @@ sub run-it ($dir, $code, $tasknum) {
             when /'exit code: 137'/ { }
             default {
                 .resume unless $broken;
-                uh-oh($_);
+                uh-oh($_, 'bad');
                 if %resource{$code}<fail-by-design> {
                     say %c<delim>, 'Fails by design, (or at least, it\'s not unexpected).', %c<clr>;
                 } else {
@@ -224,7 +225,7 @@ sub uri-query-string (*%fields) { %fields.map({ "{.key}={uri-escape .value}" }).
 
 sub clear { "\r" ~ ' ' x 100 ~ "\r" }
 
-sub uh-oh ($err) { put %c<warn>, "{'#' x 79}\n\n $err \n\n{'#' x 79}", %c<clr> }
+sub uh-oh ($err, $class='warn') { put %c{$class}, "{'#' x 79}\n\n $err \n\n{'#' x 79}", %c<clr> }
 
 multi check-dependencies ($fn, 'perl6') {
     my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
@@ -322,10 +323,12 @@ multi load-resources ('perl6') { (
     'Formal_power_series' => {'skip' => 'broken'},
     'Names_to_numbers' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
+    'Median_filter' => {'skip' => 'broken (needs version on github <https://github.com/azawawi/perl6-magickwand> not CPAN)'},
 
     'Create_a_file' => { :fail-by-design('or-at-least-expected') },
     'File_size1' => { :fail-by-design('or-at-least-expected') },
     'Globally_replace_text_in_several_files' => { :fail-by-design('or-at-least-expected') },
+    'Interactive_Help' => { :fail-by-design('or-at-least-expected') },
     'Sockets' => { :fail-by-design('or-at-least-expected') },
 
     'Array_concatenation' => { :fail-by-design },
@@ -466,6 +469,9 @@ multi load-resources ('perl6') { (
     'Find_largest_left_truncatable_prime_in_a_given_base' => {'cmd' => "ulimit -t 15\n%l<exe> Find_largest_left_truncatable_prime_in_a_given_base%l<ext>"},
     'Four_is_the_number_of_letters_in_the____' => {'cmd' => "ulimit -t 13\n%l<exe> Four_is_the_number_of_letters_in_the____%l<ext>"},
     '4-rings_or_4-squares_puzzle' =>{'cmd' => "ulimit -t 5\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
+
+    'First_perfect_square_in_base_N_with_N_unique_digits' =>{'cmd' => "ulimit -t 12\n%l<exe> First_perfect_square_in_base_N_with_N_unique_digits%l<ext>"},
+
     'Iterated_digits_squaring0' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring0%l<ext>"},
     'Iterated_digits_squaring1' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring1%l<ext>"},
     'Iterated_digits_squaring2' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring2%l<ext>"},
