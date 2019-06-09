@@ -24,7 +24,7 @@ Inline::Perl5
 JSON::Fast
 JSON::Tiny
 LWP::Simple
-Lingua::EN::Numbers::Cardinal
+Lingua::EN::Numbers
 MagickWand
 MagickWand::Enums
 Math::Primesieve
