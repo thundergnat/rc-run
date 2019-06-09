@@ -139,7 +139,7 @@ for @tasks -> $title {
                 uh-oh(%resource{"$name$n"}<skip>, 'bad');
                 pause if $broken;
             } else {
-                say "Skipping $name$n: ", %resource{"$name$n"}<skip>, "\n";
+                say "{%c<warn>}Skipping $name$n: ", %resource{"$name$n"}<skip>, "{%c<clr>}\n";
             }
             next;
         }
@@ -193,7 +193,7 @@ sub run-it ($dir, $code, $tasknum) {
                 .resume unless $broken;
                 uh-oh($_, 'bad');
                 if %resource{$code}<fail-by-design> {
-                    say %c<delim>, 'Fails by design, (or at least, it\'s not unexpected).', %c<clr>;
+                    say %c<warn>, 'Fails by design, (or at least, it\'s not unexpected).', %c<clr>;
                 } else {
                     if pause.lc eq 'r' {
                        unlink "$code.txt";
@@ -631,6 +631,8 @@ multi load-resources ('perl6') { (
     'Pythagorean_triples3' => {'cmd' => "ulimit -t 8\n%l<exe> Pythagorean_triples3%l<ext>\n"},
     'Vibrating_rectangles0' => {'cmd' => ["ulimit -t 2\n%l<exe> Vibrating_rectangles0%l<ext>\n","%l<exe> -e'print \"\e[0H\e[0J\e[?25h\"'"]},
     'Vibrating_rectangles1' => {'cmd' => ["ulimit -t 5\n%l<exe> Vibrating_rectangles1%l<ext>\n"]},
+    'Raster_bars' => {'cmd' => ["ulimit -t 2\n%l<exe> Raster_bars%l<ext>\n"]},
+
     'Wireworld' => {'cmd' => "%l<exe> Wireworld%l<ext> --stop-on-repeat"},
     'Memory_layout_of_a_data_structure0' => {'skip' => 'speculation'},
     'Memory_layout_of_a_data_structure1' => {'skip' => 'speculation'},
