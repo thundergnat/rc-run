@@ -1,6 +1,7 @@
 Base64::Native
 Cairo
 Clifford
+Cro::LDAP::Client
 DBIish
 DateTime::Format
 Digest::HMAC
@@ -23,8 +24,10 @@ Image::PNG::Portable
 Inline::Perl5
 JSON::Fast
 JSON::Tiny
+LMDB
 LWP::Simple
 Lingua::EN::Numbers
+Lingua::EN::Numbers::Cardinal
 MagickWand
 MagickWand::Enums
 Math::Primesieve
@@ -50,3 +53,4 @@ X11::libxdo
 XML
 XML::Writer
 XML::XPath
+ntheory:from<Perl5> <:all>

@@ -233,7 +233,7 @@ multi check-dependencies ($fn, 'perl6') {
         say %c<dep>, 'Checking dependencies...', %c<clr>;
         for @use -> $module {
             if $module eq any('v6', 'v6.c', 'v6.d', 'nqp', 'NativeCall', 'Test') or $module.contains('MONKEY')
-              or $module.contains('experimental') or $module.starts-with('lib') {
+              or $module.contains('experimental') or $module.starts-with('lib') or $module.contains('from<Perl5>') {
                   print %c<dep>;
                   say 'ok, no installation necessary: ', $module;
                   print %c<clr>;
@@ -347,6 +347,7 @@ multi load-resources ('perl6') { (
 
 
     'Accumulator_factory1' => {'skip' => 'fragment'},
+    'Active_Directory_Connect' => {'skip' => 'fragment'},
     'Binary_search0' => {'skip' => 'fragment'},
     'Call_a_function0' => {'skip' => 'fragment'},
     'Call_a_function1' => {'skip' => 'fragment'},
@@ -471,6 +472,8 @@ multi load-resources ('perl6') { (
     '4-rings_or_4-squares_puzzle' =>{'cmd' => "ulimit -t 5\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
 
     'First_perfect_square_in_base_N_with_N_unique_digits' =>{'cmd' => "ulimit -t 12\n%l<exe> First_perfect_square_in_base_N_with_N_unique_digits%l<ext>"},
+    'Smarandache_prime-digital_sequence' =>{'cmd' => "ulimit -t 10\n%l<exe> Smarandache_prime-digital_sequence%l<ext>"},
+
 
     'Iterated_digits_squaring0' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring0%l<ext>"},
     'Iterated_digits_squaring1' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring1%l<ext>"},
@@ -615,10 +618,12 @@ multi load-resources ('perl6') { (
     'Distributed_programming1' => {'skip' => 'needs a server instance'},
     'Draw_a_rotating_cube' => {'cmd' => "ulimit -t 10\n%l<exe> Draw_a_rotating_cube%l<ext>\n"},
     'Animate_a_pendulum' => {'cmd' => "ulimit -t 2\n%l<exe> Animate_a_pendulum%l<ext>\n"},
+    'Animation' => {'cmd' => "ulimit -t 1\n%l<exe> Animation%l<ext>\n"},
     'Image_noise' => {'cmd' => "ulimit -t 10\n%l<exe> Image_noise%l<ext>\n"},
     'Elementary_cellular_automaton_Infinite_length' => {'cmd' => "ulimit -t 2\n%l<exe> Elementary_cellular_automaton_Infinite_length%l<ext>\n"},
     'Find_limit_of_recursion' => {'cmd' => "ulimit -t 6\n%l<exe> Find_limit_of_recursion%l<ext>\n"},
-    'Forest_fire' => {'cmd' => ["ulimit -t 20\n%l<exe> Forest_fire%l<ext>\n","%l<exe> -e'print \"\e[0m\ \e[H\e[2J\"'"]},
+    'Forest_fire0' => {'cmd' => ["ulimit -t 10\n%l<exe> Forest_fire0%l<ext>\n","%l<exe> -e'print \"\e[0m\ \e[H\e[2J\"'"]},
+    'Forest_fire1' => {'cmd' => ["ulimit -t 20\n%l<exe> Forest_fire1%l<ext>\n"]},
     'Fractran1' => {'cmd' => "ulimit -t 10\n%l<exe> Fractran1%l<ext>\n"},
     'Integer_sequence' => {'cmd' => "ulimit -t 1\n%l<exe> Integer_sequence%l<ext>\n"},
     'Linux_CPU_utilization' => {'skip' => 'takes forever to time out', 'cmd' => "ulimit -t 1\n%l<exe> Linux_CPU_utilization%l<ext>\n"},
@@ -631,7 +636,7 @@ multi load-resources ('perl6') { (
     'Pythagorean_triples3' => {'cmd' => "ulimit -t 8\n%l<exe> Pythagorean_triples3%l<ext>\n"},
     'Vibrating_rectangles0' => {'cmd' => ["ulimit -t 2\n%l<exe> Vibrating_rectangles0%l<ext>\n","%l<exe> -e'print \"\e[0H\e[0J\e[?25h\"'"]},
     'Vibrating_rectangles1' => {'cmd' => ["ulimit -t 5\n%l<exe> Vibrating_rectangles1%l<ext>\n"]},
-    'Raster_bars' => {'cmd' => ["ulimit -t 2\n%l<exe> Raster_bars%l<ext>\n"]},
+    'Raster_bars' => {'cmd' => ["ulimit -t 5\n%l<exe> Raster_bars%l<ext>\n"]},
 
     'Wireworld' => {'cmd' => "%l<exe> Wireworld%l<ext> --stop-on-repeat"},
     'Memory_layout_of_a_data_structure0' => {'skip' => 'speculation'},
