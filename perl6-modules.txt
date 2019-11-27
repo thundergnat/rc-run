@@ -26,6 +26,8 @@ JSON::Fast
 JSON::Tiny
 LMDB
 LWP::Simple
+LibXML
+LibXML::Schema
 Lingua::EN::Numbers
 MagickWand
 MagickWand::Enums
@@ -52,3 +54,4 @@ X11::libxdo
 XML
 XML::Writer
 XML::XPath
+YAML

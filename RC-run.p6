@@ -321,7 +321,7 @@ multi load-resources ('perl6') { (
     'Amb1' => {'skip' => 'broken'},
     'Amb2' => {'skip' => 'broken'},
     'Formal_power_series' => {'skip' => 'broken'},
-    'Names_to_numbers' => {'skip' => 'broken'},
+    #'Names_to_numbers' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
     'Median_filter' => {'skip' => 'broken (needs version on github <https://github.com/azawawi/perl6-magickwand> not CPAN)'},
 
@@ -499,8 +499,7 @@ multi load-resources ('perl6') { (
     'Self-describing_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Self-describing_numbers%l<ext>"},
     'Square-free_integers' => {'cmd' => "ulimit -t 10\n%l<exe> Square-free_integers%l<ext>\n"},
     'Sudoku1' => {'cmd' => "ulimit -t 15\n%l<exe> Sudoku1%l<ext>"},
-    'Super-d_numbers0' => {'cmd' => "ulimit -t 15\n%l<exe> Super-d_numbers0%l<ext>"},
-    'Super-d_numbers1' => {'cmd' => "ulimit -t 15\n%l<exe> Super-d_numbers1%l<ext>"},
+    'Super-d_numbers' => {'cmd' => "ulimit -t 40\n%l<exe> Super-d_numbers%l<ext>"},
     'Topswops' => {'cmd' => "ulimit -t 10\n%l<exe> Topswops%l<ext>"},
     'Total_circles_area' => {'cmd' => "ulimit -t 10\n%l<exe> Total_circles_area%l<ext>"},
     'Zumkeller_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Zumkeller_numbers%l<ext>"},
@@ -574,7 +573,7 @@ multi load-resources ('perl6') { (
         'cmd' => ["%l<exe> Update_a_configuration_file%l<ext> --/needspeeling --seedsremoved --numberofbananas=1024 --numberofstrawberries=62000 test.cfg\n",
                   "cat test.cfg\n"]
     },
-    'Word_count' => {'file' => 'lemiz.txt', 'cmd' => "%l<exe> Word_count%l<ext> lemiz.txt 10"},
+    'Word_frequency' => {'file' => 'lemiz.txt', 'cmd' => "%l<exe> Word_frequency%l<ext> lemiz.txt 10"},
     'Zhang-Suen_thinning_algorithm' => {'file' => 'rc-image.txt','cmd' => "%l<exe> Zhang-Suen_thinning_algorithm%l<ext> rc-image.txt"},
     'I_before_E_except_after_C0' => {'file' => 'unixdict.txt', 'cmd' => "%l<exe> I_before_E_except_after_C0%l<ext>"},
     'Stream_Merge' => {'skip' => 'needs input files'},
