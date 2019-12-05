@@ -107,6 +107,48 @@ is valid.
 
 is not.
 
+When you pass in a task name to run it does a "fuzzy search" when an exact
+matching task name isn't found. It scales somewhat to the length of the entered
+title. Very short titles may fuzzy match multiple tasks. If the supplied title
+is contained wholly within a task title, that result is returned preferentially.
+
+   perl6 RC-run.p6 code
+
+will return a list of possible fuzzy search matches: 
+
+    ###########################################################################
+
+     Whoops, can't find page: http://rosettacode.org/mw/code :check spelling.
+
+     Did you perhaps mean:
+
+    	Base64 decode data
+    	Base64 encode data
+    	Character codes
+    	Code segment unload
+    	Fork
+    	Gray code
+    	Morse code
+    	RSA code
+    	Roman numerals/Decode
+    	Roman numerals/Encode
+    	Rosetta Code/Count examples
+    	Rosetta Code/Find bare lang tags
+    	Rosetta Code/Find unimplemented tasks
+    	Rosetta Code/Fix code tags
+    	Rosetta Code/List authors of task descriptions
+    	Rosetta Code/Rank languages by number of users
+    	Rosetta Code/Rank languages by popularity
+    	Rosetta Code/Run examples
+    	Rosetta Code/Tasks without examples
+    	Sparkline in unicode
+    	Strip control codes and extended characters from a string
+    	Terminal control/Unicode output
+    	UTF-8 encode and decode
+    	Unicode strings
+    	Unicode variable names
+
+    ###########################################################################
 
 AUTHOR:
 
