@@ -1,6 +1,7 @@
 use HTTP::UserAgent;
 use URI::Escape;
 use JSON::Fast;
+use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 my %*SUB-MAIN-OPTS = :named-anywhere;
@@ -102,7 +103,8 @@ for @tasks -> $title {
     if $remote or !"$taskdir/$name.txt".IO.e or ((now - $modified) > 86400 * 7) {
         my $page = $client.get("{ $url }/index.php?title={ uri-escape $title }&action=raw").content;
 
-        uh-oh("Whoops, can't find page: $url/$title :check spelling.", 'warn') and next if $page.elems == 0;
+        uh-oh("Whoops, can't find page: $url/$title :check spelling.\n\n{fuzzy-search($title)}", 'warn')
+            and next if $page.elems == 0;
         say "Getting code from: http://rosettacode.org/wiki/{ $title.subst(' ', '_', :g) }#%l<language>";
 
         $entry = $page.comb(rx:i/'=={{header|' $(%l<header>) '}}==' .+? [<?before \n'=='<-[={]>*'{{header'> || $] /).Str //
@@ -150,7 +152,6 @@ for @tasks -> $title {
     redo if $redo;
     sleep $sleep if $sleep;
     pause if $pause;
-
 }
 
 ## SUBROUTINES
@@ -226,6 +227,17 @@ sub uri-query-string (*%fields) { %fields.map({ "{.key}={uri-escape .value}" }).
 sub clear { "\r" ~ ' ' x 100 ~ "\r" }
 
 sub uh-oh ($err, $class='warn') { put %c{$class}, "{'#' x 79}\n\n $err \n\n{'#' x 79}", %c<clr> }
+
+sub fuzzy-search ($title) {
+    my @tasknames;
+    if "%l<dir>.tasks".IO.e {
+        @tasknames = "%l<dir>.tasks".IO.slurp.lines;
+    }
+    return '' unless @tasknames.elems;
+    " Did you perhaps mean:\n\n\t" ~
+    @tasknames.grep( {.lc.contains($title.lc) or dld($_, $title) < (5 min $title.chars)} ).join("\n\t");
+}
+
 
 multi check-dependencies ($fn, 'perl6') {
     my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
@@ -320,8 +332,6 @@ multi load-resources ($unknown) { () };
 multi load-resources ('perl6') { (
     'Amb1' => {'skip' => 'broken'},
     'Amb2' => {'skip' => 'broken'},
-    'Formal_power_series' => {'skip' => 'broken'},
-    #'Names_to_numbers' => {'skip' => 'broken'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
     'Median_filter' => {'skip' => 'broken (needs version on github <https://github.com/azawawi/perl6-magickwand> not CPAN)'},
 
@@ -344,7 +354,6 @@ multi load-resources ('perl6') { (
     'Jump_anywhere2' => { :fail-by-design },
     'Jump_anywhere3' => { :fail-by-design },
     'Null_object2' => { :fail-by-design },
-
 
     'Accumulator_factory1' => {'skip' => 'fragment'},
     'Active_Directory_Connect' => {'skip' => 'fragment'},
@@ -611,7 +620,7 @@ multi load-resources ('perl6') { (
     'Variable_size_Set' => {'skip' => 'ok to skip; no code'},
     'Atomic_updates' => {'cmd' => "ulimit -t 10\n%l<exe> Atomic_updates%l<ext>\n"},
     'Birthday_problem' => {'cmd' => "ulimit -t 5\n%l<exe> Birthday_problem%l<ext>\n"},
-    'Fraction_reduction' => {'cmd' => "ulimit -t 20\n%l<exe> Fraction_reduction%l<ext>\n"},
+    'Fraction_reduction' => {'cmd' => "ulimit -t 40\n%l<exe> Fraction_reduction%l<ext>\n"},
     'Count_in_factors0' => {'cmd' => "ulimit -t 1\n%l<exe> Count_in_factors0%l<ext>\n"},
     'Count_in_octal' => {'cmd' => "ulimit -t 1\n%l<exe> Count_in_octal%l<ext>\n"},
     'Draw_a_clock' => {'cmd' => "ulimit -t 1\n%l<exe> Draw_a_clock%l<ext>\n"},
@@ -820,4 +829,5 @@ multi load-resources ('perl6') { (
     'Percentage_difference_between_images' => {'file' => ['Lenna100.jpg','Lenna50.jpg'], 'cmd' => ["%l<exe> Percentage_difference_between_images%l<ext>", "$view Lenna100.jpg", "$view Lenna50.jpg"]},
     'Bilinear_interpolation' => {'file' => 'Lenna100.jpg', 'cmd' => ["%l<exe> Bilinear_interpolation%l<ext>", "$view Lenna100.jpg", "$view Lenna100-larger.jpg"]},
     'Image_convolution' => {'file' => 'Lenna100.jpg', 'cmd' => ["%l<exe> Image_convolution%l<ext>", "$view Lenna100.jpg", "$view Lenna100-convoluted.jpg"]},
+    'Sutherland-Hodgman_polygon_clipping' => { 'cmd' => ["%l<exe> Sutherland-Hodgman_polygon_clipping%l<ext>", "$view Sutherland-Hodgman-polygon-clipping-perl6.svg"]},
 )}
