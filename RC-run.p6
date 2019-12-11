@@ -513,6 +513,7 @@ multi load-resources ('perl6') { (
     'Total_circles_area' => {'cmd' => "ulimit -t 10\n%l<exe> Total_circles_area%l<ext>"},
     'Zumkeller_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Zumkeller_numbers%l<ext>"},
     'Pierpont_primes' => {'cmd' => "ulimit -t 10\n%l<exe> Pierpont_primes%l<ext>"},
+    'OpenGL' => {'cmd' => "ulimit -t 2\n%l<exe> OpenGL%l<ext>"},
 
     'Rosetta_Code_Count_examples' => {'skip' => 'long & tested often'},
     'Rosetta_Code_List_authors_of_task_descriptions' => {'skip' => 'long & tested often'},
@@ -623,6 +624,7 @@ multi load-resources ('perl6') { (
     'Fraction_reduction' => {'cmd' => "ulimit -t 40\n%l<exe> Fraction_reduction%l<ext>\n"},
     'Count_in_factors0' => {'cmd' => "ulimit -t 1\n%l<exe> Count_in_factors0%l<ext>\n"},
     'Count_in_octal' => {'cmd' => "ulimit -t 1\n%l<exe> Count_in_octal%l<ext>\n"},
+    'Color_of_a_screen_pixel1' => {'cmd' => "%l<exe> Color_of_a_screen_pixel1%l<ext> 4 4 h\n"},
     'Draw_a_clock' => {'cmd' => "ulimit -t 1\n%l<exe> Draw_a_clock%l<ext>\n"},
     'Echo_server0' => {'skip' => 'runs forever'},
     'Echo_server1' => {'skip' => 'runs forever'},
@@ -830,4 +832,5 @@ multi load-resources ('perl6') { (
     'Bilinear_interpolation' => {'file' => 'Lenna100.jpg', 'cmd' => ["%l<exe> Bilinear_interpolation%l<ext>", "$view Lenna100.jpg", "$view Lenna100-larger.jpg"]},
     'Image_convolution' => {'file' => 'Lenna100.jpg', 'cmd' => ["%l<exe> Image_convolution%l<ext>", "$view Lenna100.jpg", "$view Lenna100-convoluted.jpg"]},
     'Sutherland-Hodgman_polygon_clipping' => { 'cmd' => ["%l<exe> Sutherland-Hodgman_polygon_clipping%l<ext>", "$view Sutherland-Hodgman-polygon-clipping-perl6.svg"]},
+    'Bitmap_Flood_fill' => {'file' => 'Unfilled-Circle.ppm', 'cmd' => ["%l<exe> Bitmap_Flood_fill%l<ext>", "$view Unfilled-Circle.ppm", "$view Bitmap-flood-perl6.ppm"]},
 )}
