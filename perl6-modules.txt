@@ -1,6 +1,7 @@
 Base64::Native
 Cairo
 Clifford
+cro
 Cro::LDAP::Client
 DBIish
 DateTime::Format
