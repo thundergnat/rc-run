@@ -483,7 +483,7 @@ multi load-resources ('perl6') { (
     'First_perfect_square_in_base_N_with_N_unique_digits' =>{'cmd' => "ulimit -t 12\n%l<exe> First_perfect_square_in_base_N_with_N_unique_digits%l<ext>"},
     'Smarandache_prime-digital_sequence' =>{'cmd' => "ulimit -t 10\n%l<exe> Smarandache_prime-digital_sequence%l<ext>"},
 
-
+    'Increasing_gaps_between_consecutive_Niven_numbers' =>{'cmd' => "%l<exe> Increasing_gaps_between_consecutive_Niven_numbers%l<ext> 100000"}, 
     'Iterated_digits_squaring0' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring0%l<ext>"},
     'Iterated_digits_squaring1' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring1%l<ext>"},
     'Iterated_digits_squaring2' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring2%l<ext>"},
@@ -491,6 +491,8 @@ multi load-resources ('perl6') { (
     'Kaprekar_numbers2' => {'cmd' => "ulimit -t 2\n%l<exe> Kaprekar_numbers2%l<ext>"},
     'Knapsack_problem_0-10' => {'cmd' => "ulimit -t 10\n%l<exe> Knapsack_problem_0-10%l<ext>"},
     'Knapsack_problem_Bounded0' => {'cmd' => "ulimit -t 10\n%l<exe> Knapsack_problem_Bounded0%l<ext>"},
+
+    'Latin_Squares_in_reduced_form' => {'cmd' => "ulimit -t 10\n%l<exe> Latin_Squares_in_reduced_form%l<ext>"},
     'Last_letter-first_letter' => {'cmd' => "ulimit -t 15\n%l<exe> Last_letter-first_letter%l<ext>"},
     'Left_factorials0' => {'cmd' => "ulimit -t 10\n%l<exe> Left_factorials0%l<ext>"},
     'Lucas-Lehmer_test' => {'cmd' => "ulimit -t 10\n%l<exe> Lucas-Lehmer_test%l<ext>"},
