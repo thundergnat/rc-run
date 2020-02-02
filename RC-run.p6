@@ -458,9 +458,11 @@ multi load-resources ('perl6') { (
     'Copy_stdin_to_stdout0' => {'skip' => 'shell code'},
     'Copy_stdin_to_stdout1' => {'skip' => 'user interaction'},
     'Finite_state_machine' => {'skip' => 'user interaction'},
+    'Joystick_position' => {'skip' => 'user interaction'},
     'Keyboard_input_Flush_the_keyboard_buffer' => {'skip' => 'user interaction'},
     'Terminal_control_Positional_read' => {'skip' => 'user interaction'},
 
+    'Active Directory/Search for a user'  => {'skip' => 'module not in ecosystem yet'},
     'Mouse_position0' => {'skip' => 'jvm only'},
     'HTTPS0' => {'skip' => 'large'},
     'HTTPS1' => {'skip' => 'large'},
@@ -475,15 +477,18 @@ multi load-resources ('perl6') { (
     'Arithmetic_Rational0' => {'cmd' => "ulimit -t 10\n%l<exe> Arithmetic_Rational0%l<ext>"},
     'Chowla_numbers' => {'cmd' => "ulimit -t 20\n%l<exe> Chowla_numbers%l<ext>"},
     'Cuban_primes0' => {'cmd' => "ulimit -t 2\n%l<exe> Cuban_primes0%l<ext>"},
+    'Cyclotomic_Polynomial' => {'cmd' => "ulimit -t 15\n%l<exe> Cyclotomic_Polynomial%l<ext>"},
     'Dining_philosophers' => {'cmd' => "ulimit -t 1\n%l<exe> Dining_philosophers%l<ext>"},
     'Find_largest_left_truncatable_prime_in_a_given_base' => {'cmd' => "ulimit -t 15\n%l<exe> Find_largest_left_truncatable_prime_in_a_given_base%l<ext>"},
     'Four_is_the_number_of_letters_in_the____' => {'cmd' => "ulimit -t 13\n%l<exe> Four_is_the_number_of_letters_in_the____%l<ext>"},
     '4-rings_or_4-squares_puzzle' =>{'cmd' => "ulimit -t 5\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
 
+    'Humble_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Humble_numbers%l<ext>"},
+
     'First_perfect_square_in_base_N_with_N_unique_digits' =>{'cmd' => "ulimit -t 12\n%l<exe> First_perfect_square_in_base_N_with_N_unique_digits%l<ext>"},
     'Smarandache_prime-digital_sequence' =>{'cmd' => "ulimit -t 10\n%l<exe> Smarandache_prime-digital_sequence%l<ext>"},
 
-    'Increasing_gaps_between_consecutive_Niven_numbers' =>{'cmd' => "%l<exe> Increasing_gaps_between_consecutive_Niven_numbers%l<ext> 100000"}, 
+    'Increasing_gaps_between_consecutive_Niven_numbers' =>{'cmd' => "%l<exe> Increasing_gaps_between_consecutive_Niven_numbers%l<ext> 100000"},
     'Iterated_digits_squaring0' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring0%l<ext>"},
     'Iterated_digits_squaring1' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring1%l<ext>"},
     'Iterated_digits_squaring2' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring2%l<ext>"},

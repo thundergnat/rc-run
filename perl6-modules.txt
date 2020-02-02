@@ -1,7 +1,8 @@
+Audio::PortAudio
+Audio::Sndfile
 Base64::Native
 Cairo
 Clifford
-cro
 Cro::LDAP::Client
 DBIish
 DateTime::Format
@@ -18,6 +19,7 @@ GTK::Simple
 GTK::Simple::App
 GTK::Simple::DrawingArea
 Gumbo
+HTML::Escape
 HTTP::Client
 HTTP::UserAgent
 IETF::RFC_Grammar::URI
@@ -38,6 +40,7 @@ NativeCall::Types
 Net::DNS
 Net::FTP
 PerlStore::FileStore
+Pod::To::HTML
 Prime::Factor
 Rat::Precise
 SDL2::Raw
@@ -53,6 +56,8 @@ URI
 URI::Escape
 X11::libxdo
 XML
+XML::Text
 XML::Writer
 XML::XPath
 YAML
+cro
