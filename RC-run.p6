@@ -453,12 +453,12 @@ multi load-resources ('perl6') { (
     'Code_segment_unload' => {'skip' => 'no code'},
     'Safe_mode' => {'skip' => 'no code'},
     'Untrusted_environment' => {'skip' => 'no code'},
+    'Recursive_descent_parser_generator‎' => {'skip' => 'no code'},
 
     'Shell_one-liner' => {'skip' => 'shell code'},
     'Copy_stdin_to_stdout0' => {'skip' => 'shell code'},
     'Copy_stdin_to_stdout1' => {'skip' => 'user interaction'},
     'Finite_state_machine' => {'skip' => 'user interaction'},
-    'Joystick_position' => {'skip' => 'user interaction'},
     'Keyboard_input_Flush_the_keyboard_buffer' => {'skip' => 'user interaction'},
     'Terminal_control_Positional_read' => {'skip' => 'user interaction'},
 
@@ -484,6 +484,7 @@ multi load-resources ('perl6') { (
     '4-rings_or_4-squares_puzzle' =>{'cmd' => "ulimit -t 5\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
 
     'Humble_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Humble_numbers%l<ext>"},
+    'Fibonacci_matrix-exponentiation' => {'cmd' => "ulimit -t 10\n%l<exe> Fibonacci_matrix-exponentiation%l<ext>"},
 
     'First_perfect_square_in_base_N_with_N_unique_digits' =>{'cmd' => "ulimit -t 12\n%l<exe> First_perfect_square_in_base_N_with_N_unique_digits%l<ext>"},
     'Smarandache_prime-digital_sequence' =>{'cmd' => "ulimit -t 10\n%l<exe> Smarandache_prime-digital_sequence%l<ext>"},
@@ -510,7 +511,8 @@ multi load-resources ('perl6') { (
     'Percolation_Mean_cluster_density' => {'cmd' => "ulimit -t 10\n%l<exe> Percolation_Mean_cluster_density%l<ext>"},
     'Prime_conspiracy' => {'cmd' => "ulimit -t 10\n%l<exe> Prime_conspiracy%l<ext>"},
     'Primes_-_allocate_descendants_to_their_ancestors' => {'cmd' => "ulimit -t 10\n%l<exe> Primes_-_allocate_descendants_to_their_ancestors%l<ext>"},
-    'Primorial_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Primorial_numbers%l<ext>"},
+    'Primorial_numbers0' => {'cmd' => "ulimit -t 10\n%l<exe> Primorial_numbers0%l<ext>"},
+    'Primorial_numbers1' => {'cmd' => "ulimit -t 10\n%l<exe> Primorial_numbers1%l<ext>"},
     'Pythagorean_quadruples' => {'cmd' => "ulimit -t 10\n%l<exe> Pythagorean_quadruples%l<ext>"},
     'Self-describing_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Self-describing_numbers%l<ext>"},
     'Square-free_integers' => {'cmd' => "ulimit -t 10\n%l<exe> Square-free_integers%l<ext>\n"},
@@ -611,6 +613,8 @@ multi load-resources ('perl6') { (
     'Semordnilap' => {'file' => 'unixdict.txt'},
     'Teacup_rim_text' => {'file' => 'unixdict.txt'},
     'Textonyms' => {'file' => 'unixdict.txt'},
+    'Word_search' => {'file' => 'unixdict.txt'},
+
     'Handle_a_signal' => {'skip' => 'needs user intervention'},
     'Copy_a_string2' => {'skip' => 'nyi'},
     'Flow-control_structures' => {'skip' => 'nyi'},
@@ -706,6 +710,7 @@ multi load-resources ('perl6') { (
     'Integer_comparison0' => {'cmd' => "echo \"9\n17\" | %l<exe> Integer_comparison0%l<ext>"},
     'Integer_comparison2' => {'cmd' => "echo \"9\n17\" | %l<exe> Integer_comparison2%l<ext>"},
     'Inverted_index' => {'file' => 'unixdict.txt','cmd' => "echo \"rosetta\ncode\nblargg\n\" | %l<exe> Inverted_index%l<ext> unixdict.txt\n"},
+    'Joystick_position' => {'skip' => 'user interaction'},
     'Keyboard_input_Obtain_a_Y_or_N_response' => {'skip' => 'user interaction, custom shell'},
     'Keyboard_input_Keypress_check' => {'skip' => 'user interaction'},
     'Keyboard_macros' => {'skip' => 'user interaction, custom shell'},
@@ -772,6 +777,7 @@ multi load-resources ('perl6') { (
     'Rock-paper-scissors0' => {'skip' => 'user interaction, game'},
     'Snake' => {'skip' => 'user interaction, game'},
     'Snake_And_Ladder' => {'skip' => 'user interaction, game'},
+    'Spoof_game' => {'skip' => 'user interaction, game'},
     'Tic-tac-toe' => {'skip' => 'user interaction, game'},
     '24_game_Solve0' => {cmd => "echo 1399 | %l<exe> 24_game_Solve0%l<ext>"},
     '24_game_Solve1' => {cmd => "%l<exe> 24_game_Solve1%l<ext> 1399"},
@@ -826,6 +832,9 @@ multi load-resources ('perl6') { (
     },
     'Munching_squares0' => {'cmd' => ["%l<exe> Munching_squares0%l<ext>\n","$view munching0.ppm"]},
     'Munching_squares1' => {'cmd' => ["%l<exe> Munching_squares1%l<ext>\n","$view munching1.ppm"]},
+
+    'Colour_pinstripe_Printer' => {'cmd' => ["%l<exe> Colour_pinstripe_Printer%l<ext>\n","$view Color-pinstripe-printer-perl6.png"]},
+    'Pinstripe_Printer' => {'cmd' => ["%l<exe> Pinstripe_Printer%l<ext>\n","$view Pinstripe-printer-perl6.png"]},
     'Pinstripe_Display' => {'cmd' => ["%l<exe> Pinstripe_Display%l<ext>\n","$view pinstripes.pgm"]},
     'Plasma_effect' => {'cmd' => ["%l<exe> Plasma_effect%l<ext>\n","$view Plasma-perl6.png"]},
 	'Hough_transform' => {'file' => 'pentagon.ppm', 'cmd' => ["%l<exe> Hough_transform%l<ext>\n","$view hough-transform.png"]},

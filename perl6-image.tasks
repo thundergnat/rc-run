@@ -10,6 +10,7 @@ Bitmap/Write_a_PPM_file
 Chaos_game
 Color_quantization
 Color_wheel
+Colour_pinstripe/Printer
 Death_Star
 Dragon_curve
 Draw_a_sphere
@@ -28,6 +29,7 @@ Penrose_tiling
 Pentagram
 Percentage_difference_between_images
 Pinstripe/Display
+Pinstripe/Printer
 Plasma_effect
 Plot_coordinate_pairs
 Polyspiral
