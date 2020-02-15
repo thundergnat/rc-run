@@ -4,6 +4,12 @@ use JSON::Fast;
 use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
+#####################################
+say "Version = 2020-02-15T18:34:52";
+#####################################
+
+sleep 1;
+
 my %*SUB-MAIN-OPTS = :named-anywhere;
 
 unit sub MAIN(
@@ -19,7 +25,6 @@ unit sub MAIN(
     Bool :b(:$broken),    #= pause after each task which is broken or fails in some way
     Int  :$sleep = 0,     #= sleep for $sleep after each task
     Bool :t(:$timer),     #= save timing data for each task
-
 );
 
 die 'You can select local or remote, but not both...' if $local && $remote;
@@ -829,6 +834,12 @@ multi load-resources ('perl6') { (
                   "$view kronecker-carpet-perl6.png",
                   "$view kronecker-six-perl6.png",
                  ]
+    },
+    'Yellowstone_sequence' => {
+        'cmd' => ["%l<exe> Yellowstone_sequence%l<ext>\n",
+                  "$view Yellowstone-sequence-line-perl6.svg",
+                  "$view Yellowstone-sequence-bars-perl6.svg"
+                  ]
     },
     'Munching_squares0' => {'cmd' => ["%l<exe> Munching_squares0%l<ext>\n","$view munching0.ppm"]},
     'Munching_squares1' => {'cmd' => ["%l<exe> Munching_squares1%l<ext>\n","$view munching1.ppm"]},
