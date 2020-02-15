@@ -1,3 +1,5 @@
+Updated: 2020-02-15T18:34:52
+
 INSTALLATION:
 
 It is recommended to git clone this repository into a local directory:
@@ -132,7 +134,7 @@ will return a list of possible fuzzy search matches:
     	RSA code
     	Roman numerals/Decode
     	Roman numerals/Encode
-    	Rosetta Code/Count examples
+    	Rosetta Code/CouYellowstone_sequencent examples
     	Rosetta Code/Find bare lang tags
     	Rosetta Code/Find unimplemented tasks
     	Rosetta Code/Fix code tags
