@@ -11,3 +11,6 @@ python.tasks
 perl.tasks
 perl6-time.txt
 update.sh
+go.tasks
+rc/go
+rc/go/*

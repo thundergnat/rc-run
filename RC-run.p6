@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-02-15T18:34:52";
+say "Version = 2020-02-16T01:00:33";
 #####################################
 
 sleep 1;
@@ -328,6 +328,15 @@ multi load-lang ('python') { (
     dir      => 'python',
     header   => 'Python',
     tag => rx/:i <?after '<lang ' 'python' '>' > .*? <?before '</' 'lang>'>/,
+) }
+
+multi load-lang ('go') { (
+    language => 'Go',
+    exe      => 'go run',
+    ext      => '.go',
+    dir      => 'go',
+    header   => 'Go',
+    tag => rx/:i <?after '<lang ' 'go' '>' > .*? <?before '</' 'lang>'>/,
 ) }
 
 multi load-lang ($unknown) { die "Sorry, don't know how to handle $unknown language." };
