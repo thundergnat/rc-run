@@ -14,3 +14,6 @@ update.sh
 go.tasks
 rc/go
 rc/go/*
+tcl.tasks
+rc/tcl
+rc/tcl/*

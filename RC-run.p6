@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-02-16T01:00:33";
+say "Version = 2020-02-16T02:00:32";
 #####################################
 
 sleep 1;
@@ -45,7 +45,7 @@ my %c = ( # text colors
 );
 
 my $view      = 'xdg-open';       # image viewer, this will open default under Linux
-my %l         = load-lang($lang); # load languge parameters
+my %l         = load-lang($lang); # load language parameters
 my %resource  = load-resources($lang);
 my $get-tasks = True;
 
@@ -337,6 +337,15 @@ multi load-lang ('go') { (
     dir      => 'go',
     header   => 'Go',
     tag => rx/:i <?after '<lang ' 'go' '>' > .*? <?before '</' 'lang>'>/,
+) }
+
+multi load-lang ('tcl') { (
+    language => 'Tcl',
+    exe      => 'tclsh',
+    ext      => '.tcl',
+    dir      => 'tcl',
+    header   => 'Tcl',
+    tag => rx/:i <?after '<lang ' 'tcl' '>' > .*? <?before '</' 'lang>'>/,
 ) }
 
 multi load-lang ($unknown) { die "Sorry, don't know how to handle $unknown language." };
