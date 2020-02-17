@@ -1,4 +1,4 @@
-Updated: 2020-02-16T02:00:31
+Updated: 2020-02-17T01:09:41
 
 INSTALLATION:
 
@@ -116,7 +116,7 @@ is contained wholly within a task title, that result is returned preferentially.
 
    perl6 RC-run.p6 code
 
-will return a list of possible fuzzy search matches: 
+will return a list of possible fuzzy search matches:
 
     ###########################################################################
 
@@ -134,7 +134,7 @@ will return a list of possible fuzzy search matches:
     	RSA code
     	Roman numerals/Decode
     	Roman numerals/Encode
-    	Rosetta Code/CouYellowstone_sequencent examples
+    	Rosetta Code/Count examples
     	Rosetta Code/Find bare lang tags
     	Rosetta Code/Find unimplemented tasks
     	Rosetta Code/Fix code tags
