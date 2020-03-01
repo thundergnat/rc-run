@@ -10,6 +10,8 @@ Digest::HMAC
 Digest::MD5
 Digest::RIPEMD
 Digest::SHA
+Digest::SHA1::Native
+Digest::SHA256::Native
 Digest::xxHash
 File::Find
 File::Temp
@@ -32,13 +34,16 @@ LWP::Simple
 LibXML
 LibXML::Schema
 Lingua::EN::Numbers
+Log::Syslog::Native
 MagickWand
 MagickWand::Enums
+Math::Matrix
 Math::Primesieve
 MultiVector
 NativeCall::Types
 Net::DNS
 Net::FTP
+OpenSSL::Digest
 PerlStore::FileStore
 Pod::To::HTML
 Prime::Factor

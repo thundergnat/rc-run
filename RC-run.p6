@@ -359,7 +359,7 @@ multi load-resources ('perl6') { (
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
 
 # Normal tasks
-    '4-rings_or_4-squares_puzzle' =>{'cmd' => "ulimit -t 5\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
+    '4-rings_or_4-squares_puzzle' => {'cmd' => "ulimit -t 5\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
     '9_billion_names_of_God_the_integer' => {'cmd' => "ulimit -t 10\n%l<exe> 9_billion_names_of_God_the_integer%l<ext>"},
     'A_B0' => {'cmd' => "echo '13 9' | %l<exe> A_B0%l<ext>"},
     'A_B1' => {'cmd' => "echo '13 9' | %l<exe> A_B1%l<ext>"},
@@ -846,7 +846,9 @@ multi load-resources ('perl6') { (
     },
     'Polyspiral1' => {'cmd' => "ulimit -t 25\n%l<exe> Polyspiral1%l<ext>\n"},
     'Pythagoras_tree' => {'cmd' => ["%l<exe> Pythagoras_tree%l<ext> > Pythagoras-tree-perl6.svg\n","$view Pythagoras-tree-perl6.svg"]},
+    'Sierpinski_arrowhead_curve' => {'cmd' => ["%l<exe> Sierpinski_arrowhead_curve%l<ext>\n","$view sierpinski-arrowhead-curve-perl6.svg"]},
     'Sierpinski_pentagon' => {'cmd' => ["%l<exe> Sierpinski_pentagon%l<ext>\n","$view sierpinski_pentagon.svg"]},
+    'Sierpinski_square_curve' => {'cmd' => ["%l<exe> Sierpinski_square_curve%l<ext>\n","$view sierpinski-square-curve-perl6.svg"]},
     'Sierpinski_triangle_Graphical' => {'cmd' => ["%l<exe> Sierpinski_triangle_Graphical%l<ext>","$view sierpinski_triangle.svg"]},
     'Sunflower_fractal' => {'cmd' => ["%l<exe> Sunflower_fractal%l<ext> > Sunflower-fractal-perl6.svg\n","$view Sunflower-fractal-perl6.svg"]},
     'Superellipse' => {'cmd' => ["%l<exe> Superellipse%l<ext> > Superellipse-perl6.svg\n","$view Superellipse-perl6.svg"]},
