@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-02-17T01:09:41";
+say "Version = 2020-03-13T01:12:52";
 #####################################
 
 sleep 1;
@@ -827,7 +827,8 @@ multi load-resources ('perl6') { (
                   "$view kronecker-six-perl6.png",
                   ]
     },
-    'Mandelbrot_set' => {'cmd' => ["%l<exe> Mandelbrot_set%l<ext> 255 > Mandelbrot-set-perl6.ppm\n","$view Mandelbrot-set-perl6.ppm"]},
+    'Mandelbrot_set0' => {'cmd' => ["%l<exe> Mandelbrot_set0%l<ext> 255 > Mandelbrot-set-perl6.ppm\n","$view Mandelbrot-set-perl6.ppm"]},
+    'Mandelbrot_set1' => {'cmd' => ["%l<exe> Mandelbrot_set1%l<ext>","$view Mandelbrot-set-perl6.png"]},
     'Munching_squares0' => {'cmd' => ["%l<exe> Munching_squares0%l<ext>\n","$view munching0.ppm"]},
     'Munching_squares1' => {'cmd' => ["%l<exe> Munching_squares1%l<ext>\n","$view munching1.ppm"]},
     'Peano_curve' => {'cmd' => ["%l<exe> Peano_curve%l<ext> > Peano-curve-perl6.svg\n","$view Peano-curve-perl6.svg"]},
@@ -847,6 +848,7 @@ multi load-resources ('perl6') { (
     'Polyspiral1' => {'cmd' => "ulimit -t 25\n%l<exe> Polyspiral1%l<ext>\n"},
     'Pythagoras_tree' => {'cmd' => ["%l<exe> Pythagoras_tree%l<ext> > Pythagoras-tree-perl6.svg\n","$view Pythagoras-tree-perl6.svg"]},
     'Sierpinski_arrowhead_curve' => {'cmd' => ["%l<exe> Sierpinski_arrowhead_curve%l<ext>\n","$view sierpinski-arrowhead-curve-perl6.svg"]},
+    'Sierpinski_curve' => {'cmd' => ["%l<exe> Sierpinski_curve%l<ext>\n","$view sierpinski-curve-perl6.svg"]},
     'Sierpinski_pentagon' => {'cmd' => ["%l<exe> Sierpinski_pentagon%l<ext>\n","$view sierpinski_pentagon.svg"]},
     'Sierpinski_square_curve' => {'cmd' => ["%l<exe> Sierpinski_square_curve%l<ext>\n","$view sierpinski-square-curve-perl6.svg"]},
     'Sierpinski_triangle_Graphical' => {'cmd' => ["%l<exe> Sierpinski_triangle_Graphical%l<ext>","$view sierpinski_triangle.svg"]},
