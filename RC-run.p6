@@ -14,7 +14,7 @@ my %*SUB-MAIN-OPTS = :named-anywhere;
 
 unit sub MAIN(
     Str $run = '',        #= Task or file name
-    Str :$lang = 'raku', #= Language, default perl6 - should be same as in <lang *> markup
+    Str :$lang = 'raku',  #= Language, default raku - used to load configuration settings
     Int :$skip = 0,       #= Skip # to continue partially into a list
     Bool :f(:$force),     #= Override any task skip parameter in %resource hash
     Bool :l(:$local),     #= Only use code from local cache
