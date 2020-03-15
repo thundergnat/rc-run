@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-03-13T01:12:52";
+say "Version = 2020-03-15T12:15:31";
 #####################################
 
 sleep 1;
@@ -14,7 +14,7 @@ my %*SUB-MAIN-OPTS = :named-anywhere;
 
 unit sub MAIN(
     Str $run = '',        #= Task or file name
-    Str :$lang = 'perl6', #= Language, default perl6 - should be same as in <lang *> markup
+    Str :$lang = 'raku', #= Language, default perl6 - should be same as in <lang *> markup
     Int :$skip = 0,       #= Skip # to continue partially into a list
     Bool :f(:$force),     #= Override any task skip parameter in %resource hash
     Bool :l(:$local),     #= Only use code from local cache
@@ -300,14 +300,16 @@ multi check-dependencies  ($fn, $unknown) {
     note "Sorry, don't know how to handle dependencies for $unknown language."
 };
 
-multi load-lang ('perl6') { ( # Language specific variables. Adjust to suit.
-    language => 'Perl_6', # language category name
-    exe      => 'perl6',  # executable name to run perl6 in a shell
-    ext      => '.p6',    # file extension for perl6 code
-    dir      => 'perl6',  # directory to save tasks to
-    header   => 'Perl 6', # header text
+multi load-lang ('raku') { ( # Language specific variables. Adjust to suit.
+    language => 'Raku',  # language category name
+    exe      => 'raku',  # executable name to run perl6 in a shell
+    ext      => '.raku', # file extension for perl6 code (optional, but nice to have)
+    dir      => 'raku',  # directory to save tasks to
+    header   => 'Raku',  # header text (=={{header|Raku}}==)
     # tags marking blocks of code - spaced out to placate wiki formatter
-    # and to avoid getting tripped up when trying to run _this_ task
+    # and to avoid getting tripped up when trying to run _this_ task.
+    # note that this tag only selects the syntax highlighting, continue to
+    # use 'perl6' until 'raku' as added on the site.
     tag => rx/<?after '<lang ' 'perl6' '>' > .*? <?before '</' 'lang>'>/,
 ) }
 
@@ -351,7 +353,7 @@ multi load-lang ($unknown) { die "Sorry, don't know how to handle $unknown langu
 
 multi load-resources ($unknown) { () };
 
-multi load-resources ('perl6') { (
+multi load-resources ('raku') { (
 # Broken tasks
     'Amb1' => {'skip' => 'broken'},
     'Amb2' => {'skip' => 'broken'},

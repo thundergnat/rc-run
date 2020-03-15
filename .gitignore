@@ -9,9 +9,11 @@ rc/python/*
 perl6.tasks
 python.tasks
 perl.tasks
+raku.tasks
 perl6-time.txt
 update.sh
 go.tasks
+rc/raku
 rc/go
 rc/go/*
 tcl.tasks
