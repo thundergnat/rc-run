@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-03-15T12:15:31";
+say "Version = 2020-07-20T00:31:18";
 #####################################
 
 sleep 1;
@@ -53,6 +53,8 @@ my @tasks;
 
 run('clear');
 
+my $rc-run-dir = $*PROGRAM.IO.absolute.IO.dirname;
+
 ## FIGURE OUT WHICH TASKS TO RUN
 
 if $run {
@@ -65,7 +67,7 @@ if $run {
 }
 
 if $get-tasks { # load tasks from web if cache is not found, older than one day or forced
-    if !"%l<dir>.tasks".IO.e or (now - "%l<dir>.tasks".IO.modified) > 86400 or $remote {
+    if !"$rc-run-dir/%l<dir>.tasks".IO.e or (now - "$rc-run-dir/%l<dir>.tasks".IO.modified) > 86400 or $remote {
         note 'Retrieving task list from site.';
         @tasks = mediawiki-query( # get tasks from web
         $url, 'pages',
@@ -75,10 +77,10 @@ if $get-tasks { # load tasks from web if cache is not found, older than one day 
         :rawcontinue(),
         :prop<title>
         )»<title>.grep( * !~~ /^'Category:'/ ).sort;
-        "%l<dir>.tasks".IO.spurt: @tasks.sort.join("\n");
+        "$rc-run-dir/%l<dir>.tasks".IO.spurt: @tasks.sort.join("\n");
     } else {
         note 'Using cached task list.';
-        @tasks = "%l<dir>.tasks".IO.slurp.lines; # load tasks from file
+        @tasks = "$rc-run-dir/%l<dir>.tasks".IO.slurp.lines; # load tasks from file
     }
 }
 
@@ -100,7 +102,7 @@ for @tasks -> $title {
     say my $tasknum = $skip + ++$, ")  $title";
 
     my $name = $title.subst(/<-[-0..9A..Za..z]>/, '_', :g);
-    my $taskdir = "./rc/%l<dir>/$name";
+    my $taskdir = "$rc-run-dir/rc/%l<dir>/$name";
 
     my $modified = "$taskdir/$name.txt".IO.e ?? "$taskdir/$name.txt".IO.modified !! 0;
 
@@ -175,7 +177,7 @@ sub mediawiki-query ($site, $type, *%query) {
 }
 
 sub run-it ($dir, $code, $tasknum) {
-    my $current = $*CWD;
+    my $current = $*PROGRAM.IO.absolute.IO.dirname;
     chdir $dir;
     if %resource{$code}<file> -> $fn {
         copy "$current/rc/resources/{$_}", "./{$_}" for $fn[]
@@ -191,6 +193,7 @@ sub run-it ($dir, $code, $tasknum) {
         say "\nCommand line: {%c<cmd>}$cmd",%c<clr>;
         if $timer { $tfile.say: "Command line: $cmd".chomp }
         my $start = now;
+        #signal(SIGINT).tap: { exit if prompt("Exit?") }
         try shell $cmd;
         $time = (now - $start).round(.001);
         CATCH {
@@ -208,7 +211,7 @@ sub run-it ($dir, $code, $tasknum) {
                 }
              }
         }
-    if $timer { $tfile.say("#$tasknum - Wallclock seconds: $time\n") }
+        if $timer { $tfile.say("#$tasknum - Wallclock seconds: $time\n") }
     }
     chdir $current;
     say "\nDone task #$tasknum: $code - wallclock seconds: $time\e[?25h";
@@ -243,7 +246,7 @@ sub fuzzy-search ($title) {
     @tasknames.grep( {.lc.contains($title.lc) or dld($_, $title) < (5 min $title.chars)} ).join("\n\t");
 }                # Damerau Levenshtein distance  ^^^
 
-multi check-dependencies ($fn, 'perl6') {
+multi check-dependencies ($fn, 'raku') {
     my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
     if +@use {
         say %c<dep>, 'Checking dependencies...', %c<clr>;
@@ -270,7 +273,7 @@ multi check-dependencies ($fn, 'perl6') {
                 say 'ok, installed: ', $module
             } else {
                 say 'not installed: ', $module;
-                shell("zef install $module");
+                shell("zef install \"$module\"");
             }
             print %c<clr>;
         }
@@ -309,7 +312,7 @@ multi load-lang ('raku') { ( # Language specific variables. Adjust to suit.
     # tags marking blocks of code - spaced out to placate wiki formatter
     # and to avoid getting tripped up when trying to run _this_ task.
     # note that this tag only selects the syntax highlighting, continue to
-    # use 'perl6' until 'raku' as added on the site.
+    # use 'perl6' until 'raku' is added on the site.
     tag => rx/<?after '<lang ' 'perl6' '>' > .*? <?before '</' 'lang>'>/,
 ) }
 
@@ -396,6 +399,7 @@ multi load-resources ('raku') { (
     'Birthday_problem' => {'cmd' => "ulimit -t 5\n%l<exe> Birthday_problem%l<ext>\n"},
     'CSV_data_manipulation0' => {'file' => 'whatever.csv'},
     'CSV_data_manipulation1' => {'skip' => 'fragment'},
+    'Canonicalize_CIDR0' => {'cmd' => "echo \"87.70.141.1/22\" | %l<exe> Canonicalize_CIDR0%l<ext>"},
     'Call_a_function0' => {'skip' => 'fragment'},
     'Call_a_function1' => {'skip' => 'fragment'},
     'Call_a_function2' => {'skip' => 'fragment'},
@@ -410,10 +414,12 @@ multi load-resources ('raku') { (
     'Check_output_device_is_a_terminal' => {'skip' => 'ok to skip; no code'},
     'Checksumcolor' => {'cmd' => ["md5sum *.* | %l<exe> Checksumcolor%l<ext>"]},
     'Chowla_numbers' => {'cmd' => "ulimit -t 20\n%l<exe> Chowla_numbers%l<ext>"},
+    'Circular_primes' => {'cmd' => "ulimit -t 20\n%l<exe> Circular_primes%l<ext>"},
     'Code_segment_unload' => {'skip' => 'no code'},
     'Color_of_a_screen_pixel1' => {'cmd' => "%l<exe> Color_of_a_screen_pixel1%l<ext> 4 4 h\n"},
     'Command-line_arguments' => {'skip' => 'ok to skip; no code'},
     'Compare_a_list_of_strings' => {'skip' => 'fragment'},
+    'Compiler_code_generator' => {'file' => 'ast.txt','cmd' => "%l<exe> Compiler_code_generator%l<ext>"},
     'Compiler_lexical_analyzer' => {'file' => 'test-case-3.txt','cmd' => "%l<exe> Compiler_lexical_analyzer%l<ext> test-case-3.txt"},
     'Compound_data_type0' => {'skip' => 'fragment'},
     'Compound_data_type1' => {'skip' => 'fragment'},
@@ -474,6 +480,7 @@ multi load-resources ('raku') { (
     'Four_is_the_number_of_letters_in_the____' => {'cmd' => "ulimit -t 13\n%l<exe> Four_is_the_number_of_letters_in_the____%l<ext>"},
     'Fraction_reduction' => {'cmd' => "ulimit -t 40\n%l<exe> Fraction_reduction%l<ext>\n"},
     'Fractran1' => {'cmd' => "ulimit -t 10\n%l<exe> Fractran1%l<ext>\n"},
+    'FTP' => {'skip' => 'hard to find an active FTP server anymore'},
     'Function_definition7' => {'skip' => 'fragment'},
     'Function_definition8' => {'skip' => 'fragment'},
     'Function_frequency' => {'cmd' => "%l<exe> Function_frequency%l<ext> Function_frequency%l<ext>"},
@@ -484,6 +491,7 @@ multi load-resources ('raku') { (
     'Greatest_common_divisor4' => {'skip' => 'fragment'},
     'HTTPS0' => {'skip' => 'large'},
     'HTTPS1' => {'skip' => 'large'},
+    'HTTPS_Authenticated' => {'skip' => 'needs a username and password'},
     'HTTPS_Client-authenticated' => {'skip' => 'needs certificate set up'},
     'Handle_a_signal' => {'skip' => 'needs user intervention'},
     'Hello_world_Line_printer0' => {'skip' => 'needs line printer attached'},
@@ -538,6 +546,7 @@ multi load-resources ('raku') { (
     'Joystick_position' => {'skip' => 'user interaction'},
     'Jump_anywhere2' => { :fail-by-design },
     'Jump_anywhere3' => { :fail-by-design },
+    'Jump_anywhere4' => { :fail-by-design },
     'Kaprekar_numbers1' => {'cmd' => "ulimit -t 2\n%l<exe> Kaprekar_numbers1%l<ext>"},
     'Kaprekar_numbers2' => {'cmd' => "ulimit -t 2\n%l<exe> Kaprekar_numbers2%l<ext>"},
     'Keyboard_input_Flush_the_keyboard_buffer' => {'skip' => 'user interaction'},
@@ -708,6 +717,7 @@ multi load-resources ('raku') { (
     'String_matching3' => {'skip' => 'fragment'},
     'Strip_comments_from_a_string' => {'file' => 'comments.txt','cmd' => ["cat comments.txt\n","%l<exe> Strip_comments_from_a_string%l<ext> < comments.txt"]},
     'Sudoku1' => {'cmd' => "ulimit -t 15\n%l<exe> Sudoku1%l<ext>"},
+    'Sum_data_type' => { :fail-by-design },
     'Sum_of_a_series0' => {'skip' => 'fragment'},
     'Super-d_numbers' => {'cmd' => "ulimit -t 40\n%l<exe> Super-d_numbers%l<ext>"},
     'Synchronous_concurrency' => {'cmd' => ["cal 2018 > cal.txt\n","%l<exe> Synchronous_concurrency%l<ext> cal.txt"]},
@@ -752,6 +762,7 @@ multi load-resources ('raku') { (
     'Variadic_function2' => {'skip' => 'fragment'},
     'Vibrating_rectangles0' => {'cmd' => ["ulimit -t 2\n%l<exe> Vibrating_rectangles0%l<ext>\n","%l<exe> -e'print \"\e[0H\e[0J\e[?25h\"'"]},
     'Vibrating_rectangles1' => {'cmd' => ["ulimit -t 5\n%l<exe> Vibrating_rectangles1%l<ext>\n"]},
+    'Vidir' => {'skip' => 'requires user interaction'},
     'Web_scraping' => {'skip' => 'site appears to be dead'},
     'Wireworld' => {'cmd' => "%l<exe> Wireworld%l<ext> --stop-on-repeat"},
     'Word_frequency' => {'file' => 'lemiz.txt', 'cmd' => "%l<exe> Word_frequency%l<ext> lemiz.txt 10"},
@@ -860,7 +871,7 @@ multi load-resources ('raku') { (
     'Voronoi_diagram' => {
         'cmd' => ["%l<exe> Voronoi_diagram%l<ext>\n",
                   "$view Voronoi-Minkowski-perl6.png",
-                      "$view Voronoi-Taxicab-perl6.png",
+                  "$view Voronoi-Taxicab-perl6.png",
                   "$view Voronoi-Euclidean-perl6.png",
                  ]
     },

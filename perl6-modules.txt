@@ -1,6 +1,7 @@
 Audio::PortAudio
 Audio::Sndfile
 Base64::Native
+Base::Any
 Cairo
 Clifford
 Cro::LDAP::Client
@@ -20,6 +21,8 @@ GD::Raw
 GTK::Simple
 GTK::Simple::App
 GTK::Simple::DrawingArea
+Geo::Hash
+Grammar::ABNF
 Gumbo
 HTML::Escape
 HTTP::Client
@@ -55,6 +58,8 @@ SVG::Plot
 Sort::Naturally
 Term::termios
 Terminal::ANSIColor
+Terminal::Boxer
+Terminal::Boxer:ver<0.2+>
 Terminal::Caca
 TrigPi
 URI
