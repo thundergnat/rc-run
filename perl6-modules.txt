@@ -61,6 +61,7 @@ Terminal::ANSIColor
 Terminal::Boxer
 Terminal::Boxer:ver<0.2+>
 Terminal::Caca
+Text::Center
 TrigPi
 URI
 URI::Escape

@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-07-20T00:31:18";
+say "Version = 2020-08-09T23:08:47";
 #####################################
 
 sleep 1;
@@ -543,6 +543,7 @@ multi load-resources ('raku') { (
     'Iterated_digits_squaring0' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring0%l<ext>"},
     'Iterated_digits_squaring1' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring1%l<ext>"},
     'Iterated_digits_squaring2' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring2%l<ext>"},
+    'Jaro-Winkler_Distance' => {'file' => 'unixdict.txt','cmd' => "%l<exe> Jaro-Winkler_Distance%l<ext>"},
     'Joystick_position' => {'skip' => 'user interaction'},
     'Jump_anywhere2' => { :fail-by-design },
     'Jump_anywhere3' => { :fail-by-design },
@@ -734,6 +735,8 @@ multi load-resources ('raku') { (
     'Terminal_control_Positional_read' => {'skip' => 'user interaction'},
     'Terminal_control_Restricted_width_positional_input_No_wrapping' => {'skip' => 'user interaction'},
     'Terminal_control_Restricted_width_positional_input_With_wrapping' => {'skip' => 'user interaction'},
+    'Text_Completion0'  => {'file' => 'words.txt'},
+    'Text_Completion1'  => {'file' => 'unixdict.txt'},
     'Text_processing_1' => {'file' => 'readings.txt', 'cmd' => "%l<exe> Text_processing_1%l<ext> < readings.txt"},
     'Text_processing_2' => {'file' => 'readings.txt', 'cmd' => "%l<exe> Text_processing_2%l<ext> < readings.txt"},
     'Text_processing_Max_licenses_in_use' => {'file' => 'mlijobs.txt',
@@ -763,10 +766,12 @@ multi load-resources ('raku') { (
     'Vibrating_rectangles0' => {'cmd' => ["ulimit -t 2\n%l<exe> Vibrating_rectangles0%l<ext>\n","%l<exe> -e'print \"\e[0H\e[0J\e[?25h\"'"]},
     'Vibrating_rectangles1' => {'cmd' => ["ulimit -t 5\n%l<exe> Vibrating_rectangles1%l<ext>\n"]},
     'Vidir' => {'skip' => 'requires user interaction'},
+    'Waveform_analysis_Doh_ray_me' => {'file' => 'notes.wav','cmd' => "%l<exe> Waveform_analysis_Doh_ray_me%l<ext>"},
     'Web_scraping' => {'skip' => 'site appears to be dead'},
     'Wireworld' => {'cmd' => "%l<exe> Wireworld%l<ext> --stop-on-repeat"},
     'Word_frequency' => {'file' => 'lemiz.txt', 'cmd' => "%l<exe> Word_frequency%l<ext> lemiz.txt 10"},
     'Word_search' => {'file' => 'unixdict.txt'},
+    'Word_wheel'  => {'file' => 'unixdict.txt'},
     'Write_entire_file0' => {'skip' => 'fragment'},
     'Write_entire_file1' => {'skip' => 'fragment'},
     'Yahoo__search_interface' => {'cmd' => "%l<exe> Yahoo__search_interface%l<ext> test"},
