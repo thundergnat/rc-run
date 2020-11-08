@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-11-08T18:06:22";
+say "Version = 2020-11-08T23:57:21";
 #####################################
 
 sleep 1;
@@ -366,7 +366,6 @@ multi load-resources ('raku') { (
 
 # Normal tasks
     '4-rings_or_4-squares_puzzle' => {'cmd' => "ulimit -t 5\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
-    '9_billion_names_of_God_the_integer' => {'cmd' => "ulimit -t 10\n%l<exe> 9_billion_names_of_God_the_integer%l<ext>"},
     'A_B0' => {'cmd' => "echo '13 9' | %l<exe> A_B0%l<ext>"},
     'A_B1' => {'cmd' => "echo '13 9' | %l<exe> A_B1%l<ext>"},
     'A_B2' => {'cmd' => "echo '13 9' | %l<exe> A_B2%l<ext>"},
@@ -829,6 +828,7 @@ multi load-resources ('raku') { (
     'Bitmap_Read_an_image_through_a_pipe' => {'file' => 'camelia.png', 'cmd' => ["%l<exe> Bitmap_Read_an_image_through_a_pipe%l<ext>\n","$view camelia.ppm"]},
     'Bitmap_Write_a_PPM_file' => {'cmd' => ["%l<exe> Bitmap_Write_a_PPM_file%l<ext> > Bitmap-write-ppm-perl6.ppm\n","$view Bitmap-write-ppm-perl6.ppm"]},
     'Chaos_game' => {'cmd' => ["%l<exe> Chaos_game%l<ext>\n","$view Chaos-game-perl6.png"]},
+    'Cistercian_numerals' => {'cmd' => ["%l<exe> Cistercian_numerals%l<ext>\n","$view Cistercian-raku.svg"]},
     'Color_quantization' => {'file' => 'Quantum_frog.png', 'cmd' => ["%l<exe> Color_quantization%l<ext>\n", "$view Quantum_frog.png", "$view Quantum-frog-16-perl6.png"]},
     'Color_wheel' => {'cmd' => ["%l<exe> Color_wheel%l<ext>\n","$view Color-wheel-perl6.png"]},
     'Colour_pinstripe_Printer' => {'cmd' => ["%l<exe> Colour_pinstripe_Printer%l<ext>\n","$view Color-pinstripe-printer-perl6.png"]},
