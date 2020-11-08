@@ -2,6 +2,7 @@ Audio::PortAudio
 Audio::Sndfile
 Base64::Native
 Base::Any
+BigRoot
 Cairo
 Clifford
 Cro::LDAP::Client
@@ -65,6 +66,7 @@ Text::Center
 TrigPi
 URI
 URI::Escape
+UUID
 X11::libxdo
 XML
 XML::Text

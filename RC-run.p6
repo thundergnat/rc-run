@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-08-09T23:08:47";
+say "Version = 2020-11-08T18:06:22";
 #####################################
 
 sleep 1;
@@ -184,6 +184,7 @@ sub run-it ($dir, $code, $tasknum) {
     }
     dump-code ("$code%l<ext>") unless $quiet;
     check-dependencies("$code%l<ext>", $lang) if $deps;
+
     my @cmd = %resource{$code}<cmd> ?? |%resource{$code}<cmd> !! "%l<exe> $code%l<ext>\n";
     if $timer {
         $tfile = open :a, "{$current}/{$lang}-time.txt";
@@ -313,7 +314,7 @@ multi load-lang ('raku') { ( # Language specific variables. Adjust to suit.
     # and to avoid getting tripped up when trying to run _this_ task.
     # note that this tag only selects the syntax highlighting, continue to
     # use 'perl6' until 'raku' is added on the site.
-    tag => rx/<?after '<lang ' 'perl6' '>' > .*? <?before '</' 'lang>'>/,
+    tag => rx/<?after '<lang ' ['perl6'|'raku'] '>' > .*? <?before '</' 'lang>'>/,
 ) }
 
 multi load-lang ('perl') { (
@@ -385,7 +386,7 @@ multi load-resources ('raku') { (
     'Arithmetic_Rational0' => {'cmd' => "ulimit -t 10\n%l<exe> Arithmetic_Rational0%l<ext>"},
     'Array_concatenation' => { :fail-by-design },
     'Array_length1' => { :fail-by-design },
-    'Aspect_Oriented_Programming' => {'skip' => 'ok to skip; no code'},
+    'Aspect_oriented_programming' => {'skip' => 'ok to skip; no code'},
     'Assertions0' => { :fail-by-design },
     'Assertions1' => {'skip' => 'macros NYI'},
     'Assertions_in_design_by_contract' => { :fail-by-design },
@@ -396,6 +397,7 @@ multi load-resources ('raku') { (
     'Balanced_brackets3' => {'cmd' => "echo \"22\n\" | %l<exe> Balanced_brackets3%l<ext>"},
     'Base64_encode_data' => { 'file' => 'favicon.ico' },
     'Binary_search0' => {'skip' => 'fragment'},
+    'Biorhythms' => {'cmd' => "%l<exe> Biorhythms%l<ext> 1809-01-12 1863-11-19"},
     'Birthday_problem' => {'cmd' => "ulimit -t 5\n%l<exe> Birthday_problem%l<ext>\n"},
     'CSV_data_manipulation0' => {'file' => 'whatever.csv'},
     'CSV_data_manipulation1' => {'skip' => 'fragment'},
@@ -438,7 +440,7 @@ multi load-resources ('raku') { (
     'Create_an_object_Native_demonstration0' => { :fail-by-design },
     'Create_an_object_Native_demonstration1' => { :fail-by-design },
     'Cuban_primes0' => {'cmd' => "ulimit -t 2\n%l<exe> Cuban_primes0%l<ext>"},
-    'Cyclotomic_Polynomial' => {'cmd' => "ulimit -t 15\n%l<exe> Cyclotomic_Polynomial%l<ext>"},
+    'Cyclotomic_polynomial' => {'cmd' => "ulimit -t 15\n%l<exe> Cyclotomic_polynomial%l<ext>"},
     'Decision_tables' => {'skip' => 'user interaction'},
     'Define_a_primitive_data_type0' => { :fail-by-design },
     'Delete_a_file' => {'cmd' => ["touch input.txt\n","mkdir docs\n","ls .\n","%l<exe> Delete_a_file%l<ext>\n","ls .\n"]},
@@ -472,7 +474,7 @@ multi load-resources ('raku') { (
     'Find_largest_left_truncatable_prime_in_a_given_base' => {'cmd' => "ulimit -t 15\n%l<exe> Find_largest_left_truncatable_prime_in_a_given_base%l<ext>"},
     'Find_limit_of_recursion' => {'cmd' => "ulimit -t 6\n%l<exe> Find_limit_of_recursion%l<ext>\n"},
     'Finite_state_machine' => {'skip' => 'user interaction'},
-    'First_perfect_square_in_base_N_with_N_unique_digits' =>{'cmd' => "ulimit -t 12\n%l<exe> First_perfect_square_in_base_N_with_N_unique_digits%l<ext>"},
+    'First_perfect_square_in_base_n_with_n_unique_digits' =>{'cmd' => "ulimit -t 12\n%l<exe> First_perfect_square_in_base_n_with_n_unique_digits%l<ext>"},
     'Fixed_length_records' => {'file' => 'flr-infile.dat', 'cmd' => "%l<exe> Fixed_length_records%l<ext> < flr-infile.dat\n"},
     'Flow-control_structures' => {'skip' => 'nyi'},
     'Forest_fire0' => {'cmd' => ["ulimit -t 10\n%l<exe> Forest_fire0%l<ext>\n","%l<exe> -e'print \"\e[0m\ \e[H\e[2J\"'"]},
@@ -511,14 +513,14 @@ multi load-resources ('raku') { (
     'Include_a_file2' => {'skip' => 'fragment'},
     'Include_a_file3' => {'skip' => 'fragment'},
     'Increasing_gaps_between_consecutive_Niven_numbers' =>{'cmd' => "%l<exe> Increasing_gaps_between_consecutive_Niven_numbers%l<ext> 100000"},
-    'Input_Output_for_Lines_of_Text0' => {
-        'cmd' => "echo \"3\nhello\nhello world\nPack my Box with 5 dozen liquor jugs\" | %l<exe> Input_Output_for_Lines_of_Text0%l<ext>"
+    'Input_Output_for_lines_of_text0' => {
+        'cmd' => "echo \"3\nhello\nhello world\nPack my Box with 5 dozen liquor jugs\" | %l<exe> Input_Output_for_lines_of_text0%l<ext>"
     },
-    'Input_Output_for_Lines_of_Text1' => {
-        'cmd' => "echo \"3\nhello\nhello world\nPack my Box with 5 dozen liquor jugs\" | %l<exe> Input_Output_for_Lines_of_Text1%l<ext>"
+    'Input_Output_for_lines_of_text1' => {
+        'cmd' => "echo \"3\nhello\nhello world\nPack my Box with 5 dozen liquor jugs\" | %l<exe> Input_Output_for_lines_of_text1%l<ext>"
     },
-    'Input_Output_for_Pairs_of_Numbers' => {
-        'cmd' => "echo \"5\n1 2\n10 20\n-3 5\n100 2\n5 5\" | %l<exe> Input_Output_for_Pairs_of_Numbers%l<ext>"
+    'Input_Output_for_pairs_of_numbers' => {
+        'cmd' => "echo \"5\n1 2\n10 20\n-3 5\n100 2\n5 5\" | %l<exe> Input_Output_for_pairs_of_numbers%l<ext>"
     },
     'Input_loop0' => {'skip' => 'fragment'},
     'Input_loop1' => {'skip' => 'fragment'},
@@ -529,7 +531,7 @@ multi load-resources ('raku') { (
     'Integer_comparison1' => {'skip' => 'fragment'},
     'Integer_comparison2' => {'cmd' => "echo \"9\n17\" | %l<exe> Integer_comparison2%l<ext>"},
     'Integer_sequence' => {'cmd' => "ulimit -t 1\n%l<exe> Integer_sequence%l<ext>\n"},
-    'Interactive_Help' => { :fail-by-design('or-at-least-expected') },
+    'Interactive_help' => { :fail-by-design('or-at-least-expected') },
     'Interactive_programming' => {'skip' => 'fragment'},
     'Inverted_index' => {'file' => 'unixdict.txt','cmd' => "echo \"rosetta\ncode\nblargg\n\" | %l<exe> Inverted_index%l<ext> unixdict.txt\n"},
     'Inverted_syntax0' => {'skip' => 'fragment'},
@@ -540,10 +542,11 @@ multi load-resources ('raku') { (
     'Inverted_syntax5' => {'skip' => 'fragment'},
     'Inverted_syntax6' => {'skip' => 'fragment'},
     'Inverted_syntax7' => {'skip' => 'fragment'},
+    'IPC_via_named_pipe' => {'skip' => 'user interaction'},
     'Iterated_digits_squaring0' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring0%l<ext>"},
     'Iterated_digits_squaring1' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring1%l<ext>"},
     'Iterated_digits_squaring2' => {'cmd' => "ulimit -t 5\n%l<exe> Iterated_digits_squaring2%l<ext>"},
-    'Jaro-Winkler_Distance' => {'file' => 'unixdict.txt','cmd' => "%l<exe> Jaro-Winkler_Distance%l<ext>"},
+    'Jaro-Winkler_distance' => {'file' => 'unixdict.txt','cmd' => "%l<exe> Jaro-Winkler_distance%l<ext>"},
     'Joystick_position' => {'skip' => 'user interaction'},
     'Jump_anywhere2' => { :fail-by-design },
     'Jump_anywhere3' => { :fail-by-design },
@@ -567,7 +570,7 @@ multi load-resources ('raku') { (
     'Literals_Floating_point' => {'skip' => 'fragment'},
     'Literals_String2' => {'skip' => 'fragment'},
     'Long_primes' => {'cmd' => "ulimit -t 45\n%l<exe> Long_primes%l<ext>\n"},
-    'Longest_Common_Substring' => {'cmd' => "%l<exe> Longest_Common_Substring%l<ext> thisisatest testing123testing"},
+    'Longest_common_substring' => {'cmd' => "%l<exe> Longest_common_substring%l<ext> thisisatest testing123testing"},
     'Longest_string_challenge' => {'cmd' => "echo \"a\nbb\nccc\nddd\nee\nf\nggg\n\" | %l<exe> Longest_string_challenge%l<ext>\n"},
     'Loop_over_multiple_arrays_simultaneously3' => {'skip' => 'stub'},
     'Loop_over_multiple_arrays_simultaneously4' => {'skip' => 'stub'},
@@ -584,12 +587,12 @@ multi load-resources ('raku') { (
                   "%l<exe> Lucky_and_even_lucky_numbers%l<ext> 6000 -6100\n",
                   "%l<exe> Lucky_and_even_lucky_numbers%l<ext> 6000 -6100 evenlucky\n"]
     },
-    'Magic_8-Ball' => {'cmd' => "echo \"?\n?\n?\n?\n?\n\n\" | %l<exe> Magic_8-Ball%l<ext>\n"},
+    'Magic_8-ball' => {'cmd' => "echo \"?\n?\n?\n?\n?\n\n\" | %l<exe> Magic_8-ball%l<ext>\n"},
     'Magic_squares_of_doubly_even_order' => {'cmd' => "%l<exe> Magic_squares_of_doubly_even_order%l<ext> 12"},
     'Magic_squares_of_odd_order' => {'cmd' => "%l<exe> Magic_squares_of_odd_order%l<ext> 11"},
     'Magic_squares_of_singly_even_order' => {'cmd' => "%l<exe> Magic_squares_of_singly_even_order%l<ext> 10"},
     'Markov_chain_text_generator' => {'file' => 'alice_oz.txt','cmd' => "%l<exe> Markov_chain_text_generator%l<ext> < alice_oz.txt --n=3 --words=200"},
-    'Matrix_Digital_Rain' => {'cmd' => "ulimit -t 15\n%l<exe> Matrix_Digital_Rain%l<ext>"},
+    'Matrix_digital_rain' => {'cmd' => "ulimit -t 15\n%l<exe> Matrix_digital_rain%l<ext>"},
     'Matrix_chain_multiplication' => {'cmd' => ["echo '1, 5, 25, 30, 100, 70, 2, 1, 100, 250, 1, 1000, 2' | %l<exe> Matrix_chain_multiplication%l<ext>"]},
     'Memory_layout_of_a_data_structure0' => {'skip' => 'speculation'},
     'Memory_layout_of_a_data_structure1' => {'skip' => 'speculation'},
@@ -621,7 +624,8 @@ multi load-resources ('raku') { (
     'Optional_parameters0' => {'skip' => 'fragment'},
     'Optional_parameters1' => {'skip' => 'fragment'},
     'Ordered_words' => {'file' => 'unixdict.txt','cmd' => "%l<exe> Ordered_words%l<ext> < unixdict.txt"},
-    'Parallel_Brute_Force1' => {'skip' => 'fragment'},
+    'Password_generator1' => {'cmd' => "%l<exe> Password_generator1%l<ext> --count=10"},
+    'Parallel_brute_force1' => {'skip' => 'fragment'},
     'Parametrized_SQL_statement' => {'skip' => 'needs a database'},
     'Percolation_Mean_cluster_density' => {'cmd' => "ulimit -t 10\n%l<exe> Percolation_Mean_cluster_density%l<ext>"},
     'Pi' => {'cmd' => "ulimit -t 5\n%l<exe> Pi%l<ext>\n"},
@@ -666,15 +670,16 @@ multi load-resources ('raku') { (
     'Run_as_a_daemon_or_service' => {'skip' => 'runs forever'},
     'Safe_mode' => {'skip' => 'no code'},
     'Scope_modifiers0' => {'skip' => 'fragment'},
-    'Selective_File_Copy' => {'file' => 'sfc.dat'},
+    'Selective_file_copy' => {'file' => 'sfc.dat'},
     'Self-describing_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Self-describing_numbers%l<ext>"},
     'Self-hosting_compiler' => {'cmd' => "echo \"say 'hello World!'\" | %l<exe> Self-hosting_compiler%l<ext>"},
-    'Self-referential_sequence' => {'cmd' => "ulimit -t 10\n%l<exe> Self-referential_sequence%l<ext>"},
+    'Summarize_and_say_sequence' => {'cmd' => "ulimit -t 10\n%l<exe> Summarize_and_say_sequence%l<ext>"},
     'Semordnilap' => {'file' => 'unixdict.txt'},
     'Send_email' => {'skip' => 'needs email server'},
     'Separate_the_house_number_from_the_street_name' => {'file' => 'addresses.txt',
         'cmd' => "cat addresses.txt | %l<exe> Separate_the_house_number_from_the_street_name%l<ext>"
     },
+    'SHA-256_Merkle_tree' => {'file' => 'title.png', 'cmd' => "%l<exe> SHA-256_Merkle_tree%l<ext> --block-size=1024 title.png"},
     'Shell_one-liner' => {'skip' => 'shell code'},
     'Shell_one_liner' => {'skip' => 'ok to skip; no code'},
     'Simple_database0' => {'skip' => 'runs forever'},
@@ -708,10 +713,11 @@ multi load-resources ('raku') { (
     'Special_variables2' => {'skip' => 'fragment'},
     'Spiral_matrix1' => {'skip' => 'fragment'},
     'Square-free_integers' => {'cmd' => "ulimit -t 10\n%l<exe> Square-free_integers%l<ext>\n"},
+    'Square_root_by_hand' => {'cmd' => "ulimit -t 15\n%l<exe> Square_root_by_hand%l<ext>"},
     'Stack' => {'skip' => 'fragment'},
     'Stair-climbing_puzzle' => {'skip' => 'fragment'},
     'Start_from_a_main_routine' => {'skip' => 'fragment'},
-    'Stream_Merge' => {'skip' => 'needs input files'},
+    'Stream_merge' => {'skip' => 'needs input files'},
     'String_matching0' => {'skip' => 'fragment'},
     'String_matching1' => {'skip' => 'fragment'},
     'String_matching2' => {'skip' => 'fragment'},
@@ -735,15 +741,16 @@ multi load-resources ('raku') { (
     'Terminal_control_Positional_read' => {'skip' => 'user interaction'},
     'Terminal_control_Restricted_width_positional_input_No_wrapping' => {'skip' => 'user interaction'},
     'Terminal_control_Restricted_width_positional_input_With_wrapping' => {'skip' => 'user interaction'},
-    'Text_Completion0'  => {'file' => 'words.txt'},
-    'Text_Completion1'  => {'file' => 'unixdict.txt'},
+    'Text_completion0'  => {'file' => 'words.txt'},
+    'Text_completion1'  => {'file' => 'unixdict.txt'},
     'Text_processing_1' => {'file' => 'readings.txt', 'cmd' => "%l<exe> Text_processing_1%l<ext> < readings.txt"},
     'Text_processing_2' => {'file' => 'readings.txt', 'cmd' => "%l<exe> Text_processing_2%l<ext> < readings.txt"},
     'Text_processing_Max_licenses_in_use' => {'file' => 'mlijobs.txt',
         'cmd' => "%l<exe> Text_processing_Max_licenses_in_use%l<ext> < mlijobs.txt"
     },
     'Textonyms' => {'file' => 'unixdict.txt'},
-    'Topswops' => {'cmd' => "ulimit -t 10\n%l<exe> Topswops%l<ext>"},
+    'Topswops0' => {'cmd' => "ulimit -t 10\n%l<exe> Topswops0%l<ext>"},
+    'Topswops1' => {'cmd' => "ulimit -t 10\n%l<exe> Topswops1%l<ext>"},
     'Total_circles_area' => {'cmd' => "ulimit -t 10\n%l<exe> Total_circles_area%l<ext>"},
     'Trabb_Pardo_Knuth_algorithm' => {'cmd' => "echo \"10 -1 1 2 3 4 4.3 4.305 4.303 4.302 4.301\" | %l<exe> Trabb_Pardo_Knuth_algorithm%l<ext>\n"},
     'Truncate_a_file0' => {'cmd' => ["cal > foo\n","cat foo\n","%l<exe> Truncate_a_file0%l<ext> foo 69\n","cat foo"]},
@@ -759,6 +766,7 @@ multi load-resources ('raku') { (
         'cmd' => ["%l<exe> Update_a_configuration_file%l<ext> --/needspeeling --seedsremoved --numberofbananas=1024 --numberofstrawberries=62000 test.cfg\n",
                   "cat test.cfg\n"]
     },
+    'Use_another_language_to_call_a_function' => {'cmd' => "%l<exe> Use_another_language_to_call_a_function%l<ext> -l=68"},
     'User_defined_pipe_and_redirection_operators' => {'file' => 'List_of_computer_scientists.lst'},
     'User_input_Text' => {'cmd' => "echo \"Rosettacode\n10\" %l<exe> User_input_Text%l<ext> "},
     'Variable_size_Set' => {'skip' => 'ok to skip; no code'},
@@ -779,9 +787,9 @@ multi load-resources ('raku') { (
     'Zumkeller_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Zumkeller_numbers%l<ext>"},
 
 # Game tasks
-    '15_Puzzle_Game' => {'skip' => 'user interaction, game'},
+    '15_puzzle_game' => {'skip' => 'user interaction, game'},
     '2048' => {'skip' => 'user interaction, game'},
-    '21_Game' => {'skip' => 'user interaction, game'},
+    '21_game' => {'skip' => 'user interaction, game'},
     '24_game' => {'skip' => 'user interaction, game'},
     '24_game_Solve0' => {cmd => "echo 1399 | %l<exe> 24_game_Solve0%l<ext>"},
     '24_game_Solve1' => {cmd => "%l<exe> 24_game_Solve1%l<ext> 1399"},
@@ -789,10 +797,11 @@ multi load-resources ('raku') { (
     'Bulls_and_cows_Player' => {'skip' => 'user interaction, game'},
     'Flipping_bits_game' => {'skip' => 'user interaction, game'},
     'Go_Fish' => {'skip' => 'user interaction, game'},
+    'Greed' => {'skip' => 'user interaction, game'},
     'Guess_the_number' => {'skip' => 'user interaction, game'},
     'Guess_the_number_With_feedback' => {'skip' => 'user interaction, game'},
     'Guess_the_number_With_feedback__player_' => {'skip' => 'user interaction, game'},
-    'Hunt_The_Wumpus' => {'skip' => 'user interaction, game'},
+    'Hunt_the_Wumpus' => {'skip' => 'user interaction, game'},
     'Mad_Libs' => {'skip' => 'user interaction, game'},
     'Mastermind' => {'skip' => 'user interaction, game'},
     'Minesweeper_game' => {'skip' => 'user interaction, game'},
@@ -804,7 +813,7 @@ multi load-resources ('raku') { (
     'Robots' => {'skip' => 'user interaction, game'},
     'Rock-paper-scissors0' => {'skip' => 'user interaction, game'},
     'Snake' => {'skip' => 'user interaction, game'},
-    'Snake_And_Ladder' => {'skip' => 'user interaction, game'},
+    'Snake_and_Ladder' => {'skip' => 'user interaction, game'},
     'Spoof_game' => {'skip' => 'user interaction, game'},
     'Tic-tac-toe' => {'skip' => 'user interaction, game'},
 

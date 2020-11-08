@@ -55,6 +55,8 @@ test-case-3.txt                 Compiler/lexical_analyzer
 
 test.cfg                        Update_a_configuration_file
 
+title.png						SHA-256_Merkle_tree
+
 unixdict.txt                    Anagrams, Anagrams/Deranged_anagrams,
                                 I_before_E_except_after_C0, Ordered_words, Textonyms
 
