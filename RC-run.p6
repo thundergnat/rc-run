@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-11-08T23:57:21";
+say "Version = 2020-12-05T00:53:42";
 #####################################
 
 sleep 1;
@@ -375,6 +375,7 @@ multi load-resources ('raku') { (
     'Active_Directory_Connect' => {'skip' => 'fragment'},
     'Addition_chains' => {'cmd' => "ulimit -t 10\n%l<exe> Addition_chains%l<ext>"},
     'Align_columns1' => {'file' => 'Align_columns1.txt', 'cmd' => "%l<exe> Align_columns1%l<ext> left Align_columns1.txt"},
+    'Alternade_words' => {'file' => 'unixdict.txt'},
     'Anagrams0' => {'file' => 'unixdict.txt'},
     'Anagrams1' => {'file' => 'unixdict.txt'},
     'Anagrams_Deranged_anagrams' => {'file' => 'unixdict.txt'},
@@ -573,6 +574,7 @@ multi load-resources ('raku') { (
     'Longest_string_challenge' => {'cmd' => "echo \"a\nbb\nccc\nddd\nee\nf\nggg\n\" | %l<exe> Longest_string_challenge%l<ext>\n"},
     'Loop_over_multiple_arrays_simultaneously3' => {'skip' => 'stub'},
     'Loop_over_multiple_arrays_simultaneously4' => {'skip' => 'stub'},
+    'Loop_over_multiple_arrays_simultaneously5' => {'skip' => 'stub'},
     'Loops_Foreach0' => {'skip' => 'fragment'},
     'Loops_Foreach1' => {'skip' => 'fragment'},
     'Loops_Foreach2' => {'skip' => 'fragment'},
@@ -636,6 +638,7 @@ multi load-resources ('raku') { (
     'Price_fraction1' => {'cmd' => "echo \".74\" | %l<exe> Price_fraction1%l<ext>\n"},
     'Price_fraction2' => {'cmd' => "echo \".35\" | %l<exe> Price_fraction2%l<ext>\n"},
     'Prime_conspiracy' => {'cmd' => "ulimit -t 10\n%l<exe> Prime_conspiracy%l<ext>"},
+    'Prime_words' => {'file' => 'unixdict.txt'},
     'Primes_-_allocate_descendants_to_their_ancestors' => {'cmd' => "ulimit -t 10\n%l<exe> Primes_-_allocate_descendants_to_their_ancestors%l<ext>"},
     'Primorial_numbers0' => {'cmd' => "ulimit -t 10\n%l<exe> Primorial_numbers0%l<ext>"},
     'Primorial_numbers1' => {'cmd' => "ulimit -t 10\n%l<exe> Primorial_numbers1%l<ext>"},
@@ -760,6 +763,7 @@ multi load-resources ('raku') { (
                   "%l<exe> Truth_table%l<ext> 'Jim & (Spock ^ Bones) | Scotty'\n"]
     },
     'URL_shortener' => {'skip' => 'runs forever'},
+    'Ulam_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Ulam_numbers%l<ext>"},
     'Untrusted_environment' => {'skip' => 'no code'},
     'Update_a_configuration_file' => {'file' => 'test.cfg',
         'cmd' => ["%l<exe> Update_a_configuration_file%l<ext> --/needspeeling --seedsremoved --numberofbananas=1024 --numberofstrawberries=62000 test.cfg\n",
@@ -804,7 +808,7 @@ multi load-resources ('raku') { (
     'Mad_Libs' => {'skip' => 'user interaction, game'},
     'Mastermind' => {'skip' => 'user interaction, game'},
     'Minesweeper_game' => {'skip' => 'user interaction, game'},
-    'Nim_Game' => {'skip' => 'user interaction, game'},
+    'Nim_game' => {'skip' => 'user interaction, game'},
     'Number_reversal_game' => {'skip' => 'user interaction, game'},
     'Penney_s_game' => {'skip' => 'user interaction, game'},
     'Pig_the_dice_game' => {'skip' => 'user interaction, game'},
