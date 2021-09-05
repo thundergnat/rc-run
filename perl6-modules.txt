@@ -1,7 +1,9 @@
+;
 Audio::PortAudio
 Audio::Sndfile
 Base64::Native
 Base::Any
+Base::Any:ver<0.1.2+>
 BigRoot
 Cairo
 Clifford
@@ -41,6 +43,9 @@ Lingua::EN::Numbers
 Log::Syslog::Native
 MagickWand
 MagickWand::Enums
+Math::Libgsl::BLAS
+Math::Libgsl::Constants
+Math::Libgsl::Matrix
 Math::Matrix
 Math::Primesieve
 MultiVector
@@ -51,18 +56,25 @@ OpenSSL::Digest
 PerlStore::FileStore
 Pod::To::HTML
 Prime::Factor
+Prime::Factor:ver<0.3.0+>
 Rat::Precise
 SDL2::Raw
 SOAP::Client
 SVG
 SVG::Plot
 Sort::Naturally
+String::Splice:ver<0.0.3>
+T
 Term::termios
 Terminal::ANSIColor
 Terminal::Boxer
 Terminal::Boxer:ver<0.2+>
 Terminal::Caca
 Text::Center
+Text::Levenshtein
+Text::Levenshtein;
+Text::Sorensen
+Text::Sorensen :sorensen
 TrigPi
 URI
 URI::Escape

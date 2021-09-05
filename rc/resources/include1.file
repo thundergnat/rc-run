@@ -1,0 +1,9 @@
+# included #include1 file >1>
+# test to ensure it only tries to execute #include of the right format
+
+# more code
+say .³³ for ^10;
+# and more comments
+
+#include    ./include2.file    # comments ok at end of include line
+# <1<

@@ -1,4 +1,4 @@
-Updated: 2020-12-05T00:53:42
+Updated: 2021-09-05T13:28:38
 
 INSTALLATION:
 
@@ -39,8 +39,8 @@ USAGE:
 
 There are several command line switches.
 
-RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
-          [-q|--quiet] [-d|--deps] [-p|--pause] [-b|--broken] [<run>]
+RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-o}--override] [-l|--local]
+    [-r|--remote] [-q|--quiet] [-d|--deps] [-p|--pause] [-b|--broken]  [<run>]
 
  --lang (Default perl6) Same as in <lang *> markup on site
 
@@ -50,6 +50,11 @@ RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
 --force (-f) will force running of tasks that would normally be skipped due to a
   skip parameter in the %resource hash. Does nothing unless the %resource hash
   has been loaded.
+
+--override (-o) override any time outs that will artificially end a task before
+  it has finished. Be cautious, many tasks run forever, or must be manually
+  halted. With -o active, they will run until you CTRL^C out of them, which will
+  also halt RC-run.  
 
 --local (-l) will try to use only local copies of already downloaded tasks.
 
@@ -64,6 +69,8 @@ RC-run.p6 [--lang=<Str>] [--skip=<Int>] [-f|--force] [-l|--local] [-r|--remote]
 --broken (-b) Pause after every task that is broken, either is marked as broken
   in the resource hash, or which fails and sets $!. (Not all failures are a
   problem. Several tasks fail by design to show failures and errors.)
+
+--overide (-o)
 
 [<run>] optional positional task name or file name (containing list of tasks)
         If not supplied, will download list of implemented tasks from site and

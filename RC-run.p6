@@ -5,10 +5,10 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2020-12-05T00:53:42";
+say "Version = 2021-09-05T13:28:38";
 #####################################
 
-sleep 1;
+#sleep 1;
 
 my %*SUB-MAIN-OPTS = :named-anywhere;
 
@@ -23,6 +23,7 @@ unit sub MAIN(
     Bool :d(:$deps),      #= Load dependencies
     Bool :p(:$pause),     #= pause after each task
     Bool :b(:$broken),    #= pause after each task which is broken or fails in some way
+    Bool :o(:$override),  #= override any manual timeouts (for very long runnig code)
     Int  :$sleep = 0,     #= sleep for $sleep after each task
     Bool :t(:$timer),     #= save timing data for each task
 );
@@ -102,6 +103,7 @@ for @tasks -> $title {
     say my $tasknum = $skip + ++$, ")  $title";
 
     my $name = $title.subst(/<-[-0..9A..Za..z]>/, '_', :g);
+    $name.=tc;
     my $taskdir = "$rc-run-dir/rc/%l<dir>/$name";
 
     my $modified = "$taskdir/$name.txt".IO.e ?? "$taskdir/$name.txt".IO.modified !! 0;
@@ -190,7 +192,9 @@ sub run-it ($dir, $code, $tasknum) {
         $tfile = open :a, "{$current}/{$lang}-time.txt";
     }
     my $time = 'NA: not run or killed before completion';
-    for @cmd -> $cmd {
+    for @cmd {
+        my $cmd = $_;
+        $cmd.=subst(/^'ulimit' .+? "\n"/, '') if $override;
         say "\nCommand line: {%c<cmd>}$cmd",%c<clr>;
         if $timer { $tfile.say: "Command line: $cmd".chomp }
         my $start = now;
@@ -244,11 +248,11 @@ sub fuzzy-search ($title) {
     }
     return '' unless @tasknames.elems;
     " Did you perhaps mean:\n\n\t" ~
-    @tasknames.grep( {.lc.contains($title.lc) or dld($_, $title) < (5 min $title.chars)} ).join("\n\t");
+    @tasknames.grep( {.lc.contains($title.lc) or dld($_, $title) < (5 min $title.chars)})>>.trans(' '=>'_').join("\n\t");
 }                # Damerau Levenshtein distance  ^^^
 
 multi check-dependencies ($fn, 'raku') {
-    my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \h* ';'>/);
+    my @use = $fn.IO.slurp.comb(/<?after ^^ \h* 'use '> \N+? <?before \s+|';'>/);
     if +@use {
         say %c<dep>, 'Checking dependencies...', %c<clr>;
         for @use -> $module {
@@ -361,19 +365,21 @@ multi load-resources ('raku') { (
 # Broken tasks
     'Amb1' => {'skip' => 'broken'},
     'Amb2' => {'skip' => 'broken'},
-    'Median_filter' => {'skip' => 'broken (needs version on github <https://github.com/azawawi/perl6-magickwand> not CPAN)'},
     'Modular_arithmetic' => {'skip' => 'broken (module wont install, pull request pending)'},
 
 # Normal tasks
+    '15_puzzle_solver' => {'cmd' => "ulimit -t 10\n%l<exe> 15_puzzle_solver%l<ext>"},
     '4-rings_or_4-squares_puzzle' => {'cmd' => "ulimit -t 5\n%l<exe> 4-rings_or_4-squares_puzzle%l<ext>"},
     'A_B0' => {'cmd' => "echo '13 9' | %l<exe> A_B0%l<ext>"},
     'A_B1' => {'cmd' => "echo '13 9' | %l<exe> A_B1%l<ext>"},
     'A_B2' => {'cmd' => "echo '13 9' | %l<exe> A_B2%l<ext>"},
     'Abbreviations__automatic' => {'file' => 'DoWAKA.txt'},
+    'ABC_words' => {'file' => 'unixdict.txt'},
     'Accumulator_factory1' => {'skip' => 'fragment'},
     'Active Directory/Search for a user' => {'skip' => 'module not in ecosystem yet'},
     'Active_Directory_Connect' => {'skip' => 'fragment'},
     'Addition_chains' => {'cmd' => "ulimit -t 10\n%l<exe> Addition_chains%l<ext>"},
+    'ADFGVX_cipher' => {'file' => 'unixdict.txt'},
     'Align_columns1' => {'file' => 'Align_columns1.txt', 'cmd' => "%l<exe> Align_columns1%l<ext> left Align_columns1.txt"},
     'Alternade_words' => {'file' => 'unixdict.txt'},
     'Anagrams0' => {'file' => 'unixdict.txt'},
@@ -412,6 +418,8 @@ multi load-resources ('raku') { (
     'Call_a_function7' => {'skip' => 'fragment'},
     'Call_a_function8' => {'skip' => 'fragment'},
     'Call_a_function9' => {'skip' => 'fragment'},
+    'Change_e_letters_to_i_in_words' => {'file' => 'unixdict.txt'},
+    'Changeable_words' => {'file' => 'unixdict.txt'},
     'Chat_server' => {'skip' => 'runs forever'},
     'Check_output_device_is_a_terminal' => {'skip' => 'ok to skip; no code'},
     'Checksumcolor' => {'cmd' => ["md5sum *.* | %l<exe> Checksumcolor%l<ext>"]},
@@ -423,6 +431,10 @@ multi load-resources ('raku') { (
     'Compare_a_list_of_strings' => {'skip' => 'fragment'},
     'Compiler_code_generator' => {'file' => 'ast.txt','cmd' => "%l<exe> Compiler_code_generator%l<ext>"},
     'Compiler_lexical_analyzer' => {'file' => 'test-case-3.txt','cmd' => "%l<exe> Compiler_lexical_analyzer%l<ext> test-case-3.txt"},
+    'Compiler_Simple_file_inclusion_pre_processor0' => {
+        'file' => ['preprocess.raku', 'include1.file', 'include2.file', 'include3.file'],
+        'cmd' => "%l<exe> Compiler_Simple_file_inclusion_pre_processor0%l<ext> preprocess.raku"
+    },
     'Compound_data_type0' => {'skip' => 'fragment'},
     'Compound_data_type1' => {'skip' => 'fragment'},
     'Conditional_structures0' => {'skip' => 'fragment'},
@@ -448,6 +460,7 @@ multi load-resources ('raku') { (
     'Dining_philosophers' => {'cmd' => "ulimit -t 1\n%l<exe> Dining_philosophers%l<ext>"},
     'Distributed_programming0' => {'skip' => 'runs forever'},
     'Distributed_programming1' => {'skip' => 'needs a server instance'},
+    'Distribution_of_0_Digits_in_factorial_series' => {'cmd' => "ulimit -t 15\n%l<exe> Distribution_of_0_Digits_in_factorial_series%l<ext>"},
     'Doubly-linked_list_Traversal' => {'skip' => 'fragment'},
     'Draw_a_clock' => {'cmd' => "ulimit -t 1\n%l<exe> Draw_a_clock%l<ext>\n"},
     'Draw_a_rotating_cube' => {'cmd' => "ulimit -t 10\n%l<exe> Draw_a_rotating_cube%l<ext>\n"},
@@ -465,12 +478,20 @@ multi load-resources ('raku') { (
     'Fibonacci_matrix-exponentiation' => {'cmd' => "ulimit -t 10\n%l<exe> Fibonacci_matrix-exponentiation%l<ext>"},
     'Fibonacci_sequence1' => {'skip' => 'fragment'},
     'Fibonacci_sequence2' => {'skip' => 'fragment'},
+    'Fibonacci_word' => {'cmd' => "ulimit -t 10\n%l<exe> Fibonacci_word%l<ext>"},
     'File_input_output0' => {'cmd' => ["cal > input.txt\n","%l<exe> File_input_output0%l<ext>"]},
     'File_input_output1' => {'cmd' => ["cal > input.txt\n","%l<exe> File_input_output1%l<ext>"]},
     'File_modification_time' => {'cmd' => "%l<exe> File_modification_time%l<ext> File_modification_time%l<ext>"},
     'File_size0' => {'cmd' => ["cal 2018 > input.txt\n", "%l<exe> File_size0%l<ext>"], :fail-by-design('or-at-least-expected') },
     'File_size1' => { :fail-by-design('or-at-least-expected') },
     'File_size_distribution' => {'cmd' => "%l<exe> File_size_distribution%l<ext> '..'"},
+    'Find_words_which_contains_all_the_vowels' => {'file' => 'unixdict.txt'},
+    'Find_words_which_first_and_last_three_letters_are_equals' => {'file' => 'unixdict.txt'},
+    'Find_words_which_contains_more_than_3_e_vowels0' => {'file' => 'unixdict.txt'},
+    'Find_words_which_contains_more_than_3_e_vowels1' => {'file' => 'unixdict.txt'},
+    'Find_words_whose_first_and_last_three_letters_are_equal' => {'file' => 'unixdict.txt'},
+    'Find_words_which_contain_the_most_consonants' => {'file' => 'unixdict.txt'},
+    'Find_words_with_alternating_vowels_and_consonants' => {'file' => 'unixdict.txt'},
     'Find_largest_left_truncatable_prime_in_a_given_base' => {'cmd' => "ulimit -t 15\n%l<exe> Find_largest_left_truncatable_prime_in_a_given_base%l<ext>"},
     'Find_limit_of_recursion' => {'cmd' => "ulimit -t 6\n%l<exe> Find_limit_of_recursion%l<ext>\n"},
     'Finite_state_machine' => {'skip' => 'user interaction'},
@@ -562,6 +583,7 @@ multi load-resources ('raku') { (
     'Knuth_shuffle1' => {'skip' => 'fragment'},
     'Last_letter-first_letter' => {'cmd' => "ulimit -t 15\n%l<exe> Last_letter-first_letter%l<ext>"},
     'Latin_Squares_in_reduced_form' => {'cmd' => "ulimit -t 10\n%l<exe> Latin_Squares_in_reduced_form%l<ext>"},
+    'Latin_Squares_in_reduced_form_Randomizing_using_Jacobson_and_Matthews__Technique' => {'cmd' => "ulimit -t 20\n%l<exe> Latin_Squares_in_reduced_form_Randomizing_using_Jacobson_and_Matthews__Technique%l<ext>"},
     'Leap_year0' => {'skip' => 'fragment'},
     'Leap_year1' => {'skip' => 'fragment'},
     'Left_factorials0' => {'cmd' => "ulimit -t 10\n%l<exe> Left_factorials0%l<ext>"},
@@ -570,8 +592,9 @@ multi load-resources ('raku') { (
     'Literals_Floating_point' => {'skip' => 'fragment'},
     'Literals_String2' => {'skip' => 'fragment'},
     'Long_primes' => {'cmd' => "ulimit -t 45\n%l<exe> Long_primes%l<ext>\n"},
-    'Longest_common_substring' => {'cmd' => "%l<exe> Longest_common_substring%l<ext> thisisatest testing123testing"},
+    'Longest_common_substring0' => {'cmd' => "%l<exe> Longest_common_substring%l<ext> thisisatest testing123testing"},
     'Longest_string_challenge' => {'cmd' => "echo \"a\nbb\nccc\nddd\nee\nf\nggg\n\" | %l<exe> Longest_string_challenge%l<ext>\n"},
+    'Longest_substrings_without_repeating_characters' => {'file' => 'unixdict.txt' },
     'Loop_over_multiple_arrays_simultaneously3' => {'skip' => 'stub'},
     'Loop_over_multiple_arrays_simultaneously4' => {'skip' => 'stub'},
     'Loop_over_multiple_arrays_simultaneously5' => {'skip' => 'stub'},
@@ -588,6 +611,7 @@ multi load-resources ('raku') { (
                   "%l<exe> Lucky_and_even_lucky_numbers%l<ext> 6000 -6100\n",
                   "%l<exe> Lucky_and_even_lucky_numbers%l<ext> 6000 -6100 evenlucky\n"]
     },
+    'Machine_code1' => {'skip' => 'too fiddly'},
     'Magic_8-ball' => {'cmd' => "echo \"?\n?\n?\n?\n?\n\n\" | %l<exe> Magic_8-ball%l<ext>\n"},
     'Magic_squares_of_doubly_even_order' => {'cmd' => "%l<exe> Magic_squares_of_doubly_even_order%l<ext> 12"},
     'Magic_squares_of_odd_order' => {'cmd' => "%l<exe> Magic_squares_of_odd_order%l<ext> 11"},
@@ -595,6 +619,7 @@ multi load-resources ('raku') { (
     'Markov_chain_text_generator' => {'file' => 'alice_oz.txt','cmd' => "%l<exe> Markov_chain_text_generator%l<ext> < alice_oz.txt --n=3 --words=200"},
     'Matrix_digital_rain' => {'cmd' => "ulimit -t 15\n%l<exe> Matrix_digital_rain%l<ext>"},
     'Matrix_chain_multiplication' => {'cmd' => ["echo '1, 5, 25, 30, 100, 70, 2, 1, 100, 250, 1, 1000, 2' | %l<exe> Matrix_chain_multiplication%l<ext>"]},
+    'Maximum_difference_between_adjacent_elements_of_list' => { :fail-by-design('or-at-least-expected') },
     'Memory_layout_of_a_data_structure0' => {'skip' => 'speculation'},
     'Memory_layout_of_a_data_structure1' => {'skip' => 'speculation'},
     'Menu' => {'cmd' => "echo \"2\n\" | %l<exe> Menu%l<ext>\n"},
@@ -603,6 +628,7 @@ multi load-resources ('raku') { (
     'Modulinos' => {'cmd' => "%l<exe> Modulinos%l<ext> test"},
     'Morse_code' => {'cmd' => "echo \"Howdy, World!\n\" | %l<exe> Morse_code%l<ext>\n"},
     'Mouse_position0' => {'skip' => 'jvm only'},
+    'Multi-base_primes1' => {'cmd' => "ulimit -t 20\n%l<exe> Multi-base_primes1%l<ext>"},
     'Multiple_distinct_objects' => {'skip' => 'fragment'},
     'Multiple_regression' => {'cmd' => "ulimit -t 10\n%l<exe> Multiple_regression%l<ext>"},
     'Multiplicative_order' => {'cmd' => "%l<exe> Multiplicative_order%l<ext> test"},
@@ -612,23 +638,31 @@ multi load-resources ('raku') { (
     'Narcissistic_decimal_number0' => {'cmd' => "ulimit -t 10\n%l<exe> Narcissistic_decimal_number0%l<ext>"},
     'Narcissistic_decimal_number1' => {'cmd' => "ulimit -t 10\n%l<exe> Narcissistic_decimal_number1%l<ext>"},
     'Nautical_bell' => {'skip' => 'long (24 hours)'},
+    'Non-transitive_dice' => {'cmd' => "ulimit -t 20\n%l<exe> Non-transitive_dice%l<ext>"},
     'Null_object2' => { :fail-by-design },
     'Number_names0' => {'skip' => 'user interaction'},
+    'Numbers_with_equal_rises_and_falls' => {'cmd' => "ulimit -t 20\n%l<exe> Numbers_with_equal_rises_and_falls%l<ext>"},
     'Numerical_integration' => {'cmd' => "ulimit -t 5\n%l<exe> Numerical_integration%l<ext>"},
+    'Odd_words' => {'file' => 'unixdict.txt'},
     'Odd_word_problem' => {'cmd' => ["echo 'we,are;not,in,kansas;any,more.' | %l<exe> Odd_word_problem%l<ext>\n",
                                      "echo 'what,is,the;meaning,of:life.' | %l<exe> Odd_word_problem%l<ext>\n"]
     },
     'One-time_pad0' => {'skip' => 'user interaction, manual intervention'},
     'One-time_pad1' => {'skip' => 'user interaction, manual intervention'},
-    'OpenGL' => {'cmd' => "ulimit -t 2\n%l<exe> OpenGL%l<ext>"},
+    'OpenGL' => {'cmd' => "ulimit -t 15\n%l<exe> OpenGL%l<ext>"},
+    'OpenGL_Utah_Teapot' => {'cmd' => "ulimit -t 2\n%l<exe> OpenGL_Utah_Teapot%l<ext>"},
     'Operator_precedence' => {'skip' => 'ok to skip; no code'},
     'Optional_parameters0' => {'skip' => 'fragment'},
     'Optional_parameters1' => {'skip' => 'fragment'},
+    'Order_by_pair_comparisons' => {'skip' => 'user interaction'},
     'Ordered_words' => {'file' => 'unixdict.txt','cmd' => "%l<exe> Ordered_words%l<ext> < unixdict.txt"},
+    'Pancake_numbers1' => {'cmd' => "ulimit -t 10\n%l<exe> Pancake_numbers1%l<ext>"},
     'Password_generator1' => {'cmd' => "%l<exe> Password_generator1%l<ext> --count=10"},
     'Parallel_brute_force1' => {'skip' => 'fragment'},
     'Parametrized_SQL_statement' => {'skip' => 'needs a database'},
+    'Perceptron' => {'cmd' => "ulimit -t 10\n%l<exe> Perceptron%l<ext>"},
     'Percolation_Mean_cluster_density' => {'cmd' => "ulimit -t 10\n%l<exe> Percolation_Mean_cluster_density%l<ext>"},
+    'Percolation_Site_percolation' => {'cmd' => "ulimit -t 10\n%l<exe> Percolation_Site_percolation%l<ext>"},
     'Pi' => {'cmd' => "ulimit -t 5\n%l<exe> Pi%l<ext>\n"},
     'Pick_random_element3' => {'skip' => 'fragment'},
     'Pierpont_primes' => {'cmd' => "ulimit -t 10\n%l<exe> Pierpont_primes%l<ext>"},
@@ -661,6 +695,8 @@ multi load-resources ('raku') { (
     'Rename_a_file' => {'cmd' => ["touch input.txt\n", "mkdir docs\n", "%l<exe> Rename_a_file%l<ext>\n", "ls ."], :fail-by-design('or-at-least-expected')},
     'Retrieve_and_search_chat_history' => {'cmd' => "%l<exe> Retrieve_and_search_chat_history%l<ext> github"},
     'Reverse_words_in_a_string' => { 'file' => 'reverse.txt','cmd' => "%l<exe> Reverse_words_in_a_string%l<ext> reverse.txt"},
+    'Reverse_the_order_of_lines_in_a_text_file_while_preserving_the_contents_of_each_line0' => { 'file' => 'reverse.txt','cmd' => "%l<exe> Reverse_the_order_of_lines_in_a_text_file_while_preserving_the_contents_of_each_line0%l<ext> < reverse.txt"},
+    'Reverse_the_order_of_lines_in_a_text_file_while_preserving_the_contents_of_each_line1' => { 'file' => 'nul.txt','cmd' => "%l<exe> Reverse_the_order_of_lines_in_a_text_file_while_preserving_the_contents_of_each_line1%l<ext>"},
     'Rosetta_Code_Count_examples' => {'skip' => 'long & tested often'},
     'Rosetta_Code_Find_bare_lang_tags' => {'file' => 'rcpage','cmd' => "%l<exe> Rosetta_Code_Find_bare_lang_tags%l<ext> rcpage"},
     'Rosetta_Code_Fix_code_tags0' => {'file' => 'rcpage','cmd' => "%l<exe> Rosetta_Code_Fix_code_tags0%l<ext> rcpage"},
@@ -714,6 +750,8 @@ multi load-resources ('raku') { (
     'Special_variables1' => {'skip' => 'fragment'},
     'Special_variables2' => {'skip' => 'fragment'},
     'Spiral_matrix1' => {'skip' => 'fragment'},
+    'Square_form_factorization0' => {'cmd' => "ulimit -t 10\n%l<exe> Square_form_factorization0%l<ext>\n"},
+    'Square_form_factorization1' => {'skip' => 'requires manual compiling'},
     'Square-free_integers' => {'cmd' => "ulimit -t 10\n%l<exe> Square-free_integers%l<ext>\n"},
     'Square_root_by_hand' => {'cmd' => "ulimit -t 15\n%l<exe> Square_root_by_hand%l<ext>"},
     'Stack' => {'skip' => 'fragment'},
@@ -764,6 +802,7 @@ multi load-resources ('raku') { (
     },
     'URL_shortener' => {'skip' => 'runs forever'},
     'Ulam_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Ulam_numbers%l<ext>"},
+    'Untouchable_numbers' => {'cmd' => "ulimit -t 10\n%l<exe> Untouchable_numbers%l<ext>"},
     'Untrusted_environment' => {'skip' => 'no code'},
     'Update_a_configuration_file' => {'file' => 'test.cfg',
         'cmd' => ["%l<exe> Update_a_configuration_file%l<ext> --/needspeeling --seedsremoved --numberofbananas=1024 --numberofstrawberries=62000 test.cfg\n",
@@ -781,8 +820,11 @@ multi load-resources ('raku') { (
     'Web_scraping' => {'skip' => 'site appears to be dead'},
     'Wireworld' => {'cmd' => "%l<exe> Wireworld%l<ext> --stop-on-repeat"},
     'Word_frequency' => {'file' => 'lemiz.txt', 'cmd' => "%l<exe> Word_frequency%l<ext> lemiz.txt 10"},
+    'Word_ladder' => {'file' => 'unixdict.txt'},
     'Word_search' => {'file' => 'unixdict.txt'},
-    'Word_wheel'  => {'file' => 'unixdict.txt'},
+    'Word_wheel' => {'file' => 'unixdict.txt'},
+    'Words_containing__the__substring' => {'file' => 'unixdict.txt'},
+    'Words_from_neighbour_ones' => {'file' => 'unixdict.txt'},
     'Write_entire_file0' => {'skip' => 'fragment'},
     'Write_entire_file1' => {'skip' => 'fragment'},
     'Yahoo__search_interface' => {'cmd' => "%l<exe> Yahoo__search_interface%l<ext> test"},
@@ -819,6 +861,7 @@ multi load-resources ('raku') { (
     'Snake_and_Ladder' => {'skip' => 'user interaction, game'},
     'Spoof_game' => {'skip' => 'user interaction, game'},
     'Tic-tac-toe' => {'skip' => 'user interaction, game'},
+    'Wordiff' => {'skip' => 'user interaction, game'},
 
 # Image tasks
     'Archimedean_spiral' => {'cmd' => ["%l<exe> Archimedean_spiral%l<ext>\n","$view Archimedean-spiral-perl6.png"]},
@@ -866,6 +909,7 @@ multi load-resources ('raku') { (
     'Penrose_tiling' => {'cmd' => ["%l<exe> Penrose_tiling%l<ext> > Penrose_tiling-perl6.svg\n","$view Penrose_tiling-perl6.svg"]},
     'Pentagram' => {'cmd' => ["%l<exe> Pentagram%l<ext> > Pentagram-perl6.svg\n","$view Pentagram-perl6.svg"]},
     'Percentage_difference_between_images' => {'file' => ['Lenna100.jpg','Lenna50.jpg'], 'cmd' => ["%l<exe> Percentage_difference_between_images%l<ext>", "$view Lenna100.jpg", "$view Lenna50.jpg"]},
+    'Peripheral_drift_illusion' => {'cmd' => ["%l<exe> Peripheral_drift_illusion%l<ext>\n","$view peripheral-drift-raku.svg"]},
     'Pinstripe_Display' => {'cmd' => ["%l<exe> Pinstripe_Display%l<ext>\n","$view pinstripes.pgm"]},
     'Pinstripe_Printer' => {'cmd' => ["%l<exe> Pinstripe_Printer%l<ext>\n","$view Pinstripe-printer-perl6.png"]},
     'Plasma_effect' => {'cmd' => ["%l<exe> Plasma_effect%l<ext>\n","$view Plasma-perl6.png"]},
@@ -877,6 +921,7 @@ multi load-resources ('raku') { (
                  ]
     },
     'Polyspiral1' => {'cmd' => "ulimit -t 25\n%l<exe> Polyspiral1%l<ext>\n"},
+    'Pseudorandom_number_generator_image' => {'cmd' => ["ulimit -t 10\n%l<exe> Pseudorandom_number_generator_images0%l<ext>","$view image250.png"] },
     'Pythagoras_tree' => {'cmd' => ["%l<exe> Pythagoras_tree%l<ext> > Pythagoras-tree-perl6.svg\n","$view Pythagoras-tree-perl6.svg"]},
     'Sierpinski_arrowhead_curve' => {'cmd' => ["%l<exe> Sierpinski_arrowhead_curve%l<ext>\n","$view sierpinski-arrowhead-curve-perl6.svg"]},
     'Sierpinski_curve' => {'cmd' => ["%l<exe> Sierpinski_curve%l<ext>\n","$view sierpinski-curve-perl6.svg"]},

@@ -1,0 +1,3 @@
+# nested #include2.file >2>
+say "Test for an nested include inside a line: {{ #include ./include3.file }}";
+# pointless but why not? <2<
