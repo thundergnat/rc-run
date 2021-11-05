@@ -5,7 +5,7 @@ use Text::Levenshtein::Damerau;
 use MONKEY-SEE-NO-EVAL;
 
 #####################################
-say "Version = 2021-09-05T13:28:38";
+say "Version = 2021-11-05T19:49:59";
 #####################################
 
 #sleep 1;
@@ -457,6 +457,7 @@ multi load-resources ('raku') { (
     'Define_a_primitive_data_type0' => { :fail-by-design },
     'Delete_a_file' => {'cmd' => ["touch input.txt\n","mkdir docs\n","ls .\n","%l<exe> Delete_a_file%l<ext>\n","ls .\n"]},
     'Detect_division_by_zero0' => { :fail-by-design },
+    'Digit_fifth_powers' => {'cmd' => "ulimit -t 20\n%l<exe> Digit_fifth_powers%l<ext>"},
     'Dining_philosophers' => {'cmd' => "ulimit -t 1\n%l<exe> Dining_philosophers%l<ext>"},
     'Distributed_programming0' => {'skip' => 'runs forever'},
     'Distributed_programming1' => {'skip' => 'needs a server instance'},
@@ -516,6 +517,9 @@ multi load-resources ('raku') { (
     'HTTPS1' => {'skip' => 'large'},
     'HTTPS_Authenticated' => {'skip' => 'needs a username and password'},
     'HTTPS_Client-authenticated' => {'skip' => 'needs certificate set up'},
+    'Halt_and_catch_fire0' => { :fail-by-design('or-at-least-expected') },
+    'Halt_and_catch_fire1' => { :fail-by-design('or-at-least-expected') },
+    'Halt_and_catch_fire2' => { :fail-by-design('or-at-least-expected') },
     'Handle_a_signal' => {'skip' => 'needs user intervention'},
     'Hello_world_Line_printer0' => {'skip' => 'needs line printer attached'},
     'Hello_world_Line_printer1' => {'skip' => 'needs line printer attached'},
@@ -581,6 +585,7 @@ multi load-resources ('raku') { (
     'Knapsack_problem_0-10' => {'cmd' => "ulimit -t 10\n%l<exe> Knapsack_problem_0-10%l<ext>"},
     'Knapsack_problem_Bounded0' => {'cmd' => "ulimit -t 10\n%l<exe> Knapsack_problem_Bounded0%l<ext>"},
     'Knuth_shuffle1' => {'skip' => 'fragment'},
+    'Largest_palindrome_product' => {'cmd' => "ulimit -t 10\n%l<exe> Largest_palindrome_product%l<ext>"},
     'Last_letter-first_letter' => {'cmd' => "ulimit -t 15\n%l<exe> Last_letter-first_letter%l<ext>"},
     'Latin_Squares_in_reduced_form' => {'cmd' => "ulimit -t 10\n%l<exe> Latin_Squares_in_reduced_form%l<ext>"},
     'Latin_Squares_in_reduced_form_Randomizing_using_Jacobson_and_Matthews__Technique' => {'cmd' => "ulimit -t 20\n%l<exe> Latin_Squares_in_reduced_form_Randomizing_using_Jacobson_and_Matthews__Technique%l<ext>"},
@@ -656,6 +661,8 @@ multi load-resources ('raku') { (
     'Optional_parameters1' => {'skip' => 'fragment'},
     'Order_by_pair_comparisons' => {'skip' => 'user interaction'},
     'Ordered_words' => {'file' => 'unixdict.txt','cmd' => "%l<exe> Ordered_words%l<ext> < unixdict.txt"},
+    'Own_digits_power_sum0' => {'cmd' => "ulimit -t 20\n%l<exe> Own_digits_power_sum0%l<ext>"},
+    'Own_digits_power_sum1' => {'cmd' => "ulimit -t 20\n%l<exe> Own_digits_power_sum1%l<ext>"},
     'Pancake_numbers1' => {'cmd' => "ulimit -t 10\n%l<exe> Pancake_numbers1%l<ext>"},
     'Password_generator1' => {'cmd' => "%l<exe> Password_generator1%l<ext> --count=10"},
     'Parallel_brute_force1' => {'skip' => 'fragment'},
@@ -682,6 +689,7 @@ multi load-resources ('raku') { (
     'Pythagorean_triples2' => {'cmd' => "ulimit -t 8\n%l<exe> Pythagorean_triples2%l<ext>\n"},
     'Pythagorean_triples3' => {'cmd' => "ulimit -t 8\n%l<exe> Pythagorean_triples3%l<ext>\n"},
     'Random_number_generator__included_' => {'skip' => 'ok to skip; no code'},
+    'Random_sentence_from_book' => {'file' => '36-0.txt'},
     'Raster_bars' => {'cmd' => ["ulimit -t 5\n%l<exe> Raster_bars%l<ext>\n"]},
     'Read_a_configuration_file' => {'file' => 'file.cfg','cmd' => ["cat file.cfg\n", "%l<exe> Read_a_configuration_file%l<ext>"]},
     'Read_a_file_character_by_character_UTF80' => {'file' => 'whatever','cmd' => "cat whatever | %l<exe> Read_a_file_character_by_character_UTF80%l<ext>"},
@@ -833,6 +841,7 @@ multi load-resources ('raku') { (
 
 # Game tasks
     '15_puzzle_game' => {'skip' => 'user interaction, game'},
+    '16_puzzle_game' => {'skip' => 'user interaction, game'},
     '2048' => {'skip' => 'user interaction, game'},
     '21_game' => {'skip' => 'user interaction, game'},
     '24_game' => {'skip' => 'user interaction, game'},
@@ -921,7 +930,7 @@ multi load-resources ('raku') { (
                  ]
     },
     'Polyspiral1' => {'cmd' => "ulimit -t 25\n%l<exe> Polyspiral1%l<ext>\n"},
-    'Pseudorandom_number_generator_image' => {'cmd' => ["ulimit -t 10\n%l<exe> Pseudorandom_number_generator_images0%l<ext>","$view image250.png"] },
+    'Pseudorandom_number_generator_image' => {'cmd' => ["ulimit -t 10\n%l<exe> Pseudorandom_number_generator_image%l<ext>","$view image250.png"] },
     'Pythagoras_tree' => {'cmd' => ["%l<exe> Pythagoras_tree%l<ext> > Pythagoras-tree-perl6.svg\n","$view Pythagoras-tree-perl6.svg"]},
     'Sierpinski_arrowhead_curve' => {'cmd' => ["%l<exe> Sierpinski_arrowhead_curve%l<ext>\n","$view sierpinski-arrowhead-curve-perl6.svg"]},
     'Sierpinski_curve' => {'cmd' => ["%l<exe> Sierpinski_curve%l<ext>\n","$view sierpinski-curve-perl6.svg"]},
